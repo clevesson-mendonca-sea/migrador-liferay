@@ -135,9 +135,10 @@ class PageCreator:
         self.page_cache = {}
         self.error_tracker = ErrorTracker()
 
-    async def create_page(self, title: str, friendly_url: str, parent_id: int = 0, hierarchy: List[str] = None) -> int:
+    async def create_page(self, title: str, friendly_url: str, parent_id: int = 0, hierarchy: List[str] = None, visible: bool = True) -> int:
         normalized_title = normalize_page_name(title)
         normalized_url = normalize_friendly_url(friendly_url)
+        visible = str(visible).lower()
 
         params = {
             "groupId": str(self.config.site_id),
@@ -147,7 +148,7 @@ class PageCreator:
             "title": normalized_title,
             "description": "",
             "type": "portlet",
-            "hidden": "false",
+            "hidden": visible,
             "friendlyURL": f"/{normalized_url}"
         }
         
@@ -192,7 +193,7 @@ class PageCreator:
             
         return page_id
 
-    async def create_hierarchy(self, hierarchy: list, final_title: str, final_url: str) -> int:
+    async def create_hierarchy(self, hierarchy: list, final_title: str, final_url: str, visible: bool) -> int:
         current_path = ""
         parent_id = 0
         last_page_id = 0
@@ -217,14 +218,12 @@ class PageCreator:
         # Cria página final se for diferente do último nível
         if (not hierarchy_levels or 
             normalize_page_name(final_title).lower() != normalize_page_name(hierarchy_levels[-1]).lower()):
-            print(hierarchy_levels)
-            print(final_title)
-            print(final_url)
             final_page_id = await self.create_page(
                 normalize_page_name(final_title), 
                 normalize_friendly_url(final_url), 
                 parent_id, 
-                hierarchy
+                hierarchy,
+                visible
             )
             
             if final_page_id:

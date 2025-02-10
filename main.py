@@ -50,7 +50,9 @@ async def get_sheet_data():
     for row in rows:
         if all(row[:1]) and len(row) > 6 and row[6]:
             hierarchy = parse_hierarchy(row[6])
-            title = hierarchy[-1] if hierarchy else "Sem Título"  # Pega o último item da hierarquia
+            title = hierarchy[-1] if hierarchy else "Sem Título"
+            visibility = row[7].lower() if len(row) > 7 and row[7] else 'menu'
+            is_visible = visibility == 'menu'
             
             if title.strip():
                 pages.append({
@@ -58,12 +60,10 @@ async def get_sheet_data():
                     'url': row[0],
                     'destination': row[0],
                     'hierarchy': hierarchy,
+                    'visible': is_visible,
                 })
 
-
     return pages
-
-
 
 async def migrate_pages(pages):
     config = Config()
@@ -83,7 +83,8 @@ async def migrate_pages(pages):
             page_id = await creator.create_hierarchy(
                 hierarchy=page['hierarchy'],
                 final_title=page['title'],
-                final_url=page['destination'].strip('/').split('/')[-1]
+                final_url=page['destination'].strip('/').split('/')[-1],
+                visible=page['visible']
             )
             print(page['destination'].strip('/').split('/')[-1])
 
