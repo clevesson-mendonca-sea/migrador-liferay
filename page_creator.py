@@ -137,7 +137,7 @@ class PageCreator:
 
     async def create_page(self, title: str, friendly_url: str, parent_id: int = 0, hierarchy: List[str] = None) -> int:
         normalized_title = normalize_page_name(title)
-        normalized_url = normalize_friendly_url(title)
+        normalized_url = normalize_friendly_url(friendly_url)
 
         params = {
             "groupId": str(self.config.site_id),
@@ -178,12 +178,12 @@ class PageCreator:
         
         return 0
 
-    async def ensure_page_exists(self, title: str, cache_key: str, parent_id: int = 0, hierarchy: List[str] = None) -> int:
+    async def ensure_page_exists(self, title: str, cache_key: str, parent_id: int = 0, friendly_url: str = "", hierarchy: List[str] = None) -> int:
         if cache_key in self.page_cache:
             return self.page_cache[cache_key]
 
         normalized_title = normalize_page_name(title)
-        friendly_url = normalize_friendly_url(title)
+        friendly_url = normalize_friendly_url(friendly_url)
 
         page_id = await self.create_page(normalized_title, friendly_url, parent_id, hierarchy)
         
@@ -205,7 +205,7 @@ class PageCreator:
             normalized_level = normalize_page_name(level)
             current_path += f" > {normalized_level}" if current_path else normalized_level
             
-            level_id = await self.ensure_page_exists(normalized_level, current_path, parent_id, hierarchy)
+            level_id = await self.ensure_page_exists(normalized_level, current_path, parent_id, final_url , hierarchy)
             
             if level_id:
                 parent_id = level_id
@@ -217,9 +217,12 @@ class PageCreator:
         # Cria página final se for diferente do último nível
         if (not hierarchy_levels or 
             normalize_page_name(final_title).lower() != normalize_page_name(hierarchy_levels[-1]).lower()):
+            print(hierarchy_levels)
+            print(final_title)
+            print(final_url)
             final_page_id = await self.create_page(
                 normalize_page_name(final_title), 
-                normalize_friendly_url(final_title), 
+                normalize_friendly_url(final_url), 
                 parent_id, 
                 hierarchy
             )

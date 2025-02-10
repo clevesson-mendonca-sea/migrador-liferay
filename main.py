@@ -43,21 +43,27 @@ async def get_sheet_data():
             token.write(creds.to_json())
 
     gc = gspread.authorize(creds)
-    sheet = gc.open_by_key(Config.sheet_id).worksheet("[Novo] Mapeamento")
-    rows = sheet.get_all_values()[2:]
+    sheet = gc.open_by_key(Config.sheet_id).worksheet("Mapeamento Manual")
+    rows = sheet.get_all_values()[1:]
 
     pages = []
     for row in rows:
-        if all(row[:2]) and len(row) > 6 and row[6]:
-            title = os.path.basename(row[1]).replace('-', ' ').title()
+        if all(row[:1]) and len(row) > 6 and row[6]:
+            hierarchy = parse_hierarchy(row[6])
+            title = hierarchy[-1] if hierarchy else "Sem Título"  # Pega o último item da hierarquia
+            
             if title.strip():
                 pages.append({
                     'title': title,
                     'url': row[0],
-                    'destination': row[1],
-                    'hierarchy': parse_hierarchy(row[6])
+                    'destination': row[0],
+                    'hierarchy': hierarchy,
                 })
+
+
     return pages
+
+
 
 async def migrate_pages(pages):
     config = Config()
@@ -79,6 +85,7 @@ async def migrate_pages(pages):
                 final_title=page['title'],
                 final_url=page['destination'].strip('/').split('/')[-1]
             )
+            print(page['destination'].strip('/').split('/')[-1])
 
             if page_id:
                 logger.info(f"Página criada: {page['title']} (ID: {page_id})")
@@ -150,7 +157,7 @@ async def main():
 
     try:
         pages = await get_sheet_data()
-        
+
         if not pages:
             logger.error("Nenhuma página válida encontrada na planilha")
             return
