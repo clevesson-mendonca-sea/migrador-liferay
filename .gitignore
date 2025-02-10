@@ -1,2 +1,10 @@
 client_secret.json
 token.json
+__pycache__
+
+folder_migration_errors.json
+content_migration_errors.txt
+migration_errors.txt
+migration_errors.json
+
+.env
