@@ -1,0 +1,922 @@
+
+=== Content Error Log Entry: 2025-02-09 15:19:44 ===
+Page URL: https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+Title: Fale Com A Secretaria
+Hierarchy: Raiz > Fale com a Secretaria
+Error: No content found for https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:19:48 ===
+Page URL: https://www.casacivil.df.gov.br/category/telefones-uteis/
+Title: Telefones Uteis
+Hierarchy: Raiz > Telefones úteis
+Error: No content found for https://www.casacivil.df.gov.br/category/telefones-uteis/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:20:05 ===
+Page URL: https://www.casacivil.df.gov.br/agenda-do-secretario/
+Title: Agenda Do Secretario
+Hierarchy: Raiz > A Casa Civil > Agenda do Secretário
+Error: No content found for https://www.casacivil.df.gov.br/agenda-do-secretario/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:22:20 ===
+Page URL: Usar a url:
+/nosso-natal-vai-levar-roda-gigante-e-patinacao-no-gelo-para-a-esplanada-a-partir-de-1-de-dezembro
+Title: Nosso Natal Vai Levar Roda Gigante E Patinacao No Gelo Para A Esplanada A Partir De 1 De Dezembro
+Hierarchy: Raiz > A Casa Civil > Nosso Natal vai levar roda-gigante e patinação no gelo para a Esplanada a partir de 1º de dezembro
+Error: No content found for Usar a url:
+/nosso-natal-vai-levar-roda-gigante-e-patinacao-no-gelo-para-a-esplanada-a-partir-de-1-de-dezembro
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:22:33 ===
+Page URL: Usar a url:
+/gdf-e-superior-tribunal-militar-assinam-acordo-de-cooperacao-em-prol-das-mulheres-2
+Title: Gdf E Superior Tribunal Militar Assinam Acordo De Cooperacao Em Prol Das Mulheres
+Hierarchy: Raiz > A Casa Civil > GDF e Superior Tribunal Militar assinam acordo de cooperação em prol das mulheres
+Error: No content found for Usar a url:
+/gdf-e-superior-tribunal-militar-assinam-acordo-de-cooperacao-em-prol-das-mulheres-2
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:22:37 ===
+Page URL: Usar a url:
+/comeca-a-pintura-das-fachadas-do-teatro-nacional-claudio-santoro-2
+Title: Comeca A Pintura Das Fachadas Do Teatro Nacional Claudio Santoro
+Hierarchy: Raiz > A Casa Civil > Começa a pintura das fachadas do Teatro Nacional Claudio Santoro
+Error: No content found for Usar a url:
+/comeca-a-pintura-das-fachadas-do-teatro-nacional-claudio-santoro-2
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:22:42 ===
+Page URL: https://www.casacivil.df.gov.br/agenda-pautas-e-atas/
+Title: Agenda Pautas E Atas
+Hierarchy: Raiz > A Casa Civil > Agenda do Secretário
+Error: No content found for https://www.casacivil.df.gov.br/agenda-pautas-e-atas/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:22:48 ===
+Page URL: https://www.casacivil.df.gov.br/category/secretaria/
+Title: Secretaria
+Hierarchy: Raiz > A Casa Civil > A Secretaria
+Error: No content found for https://www.casacivil.df.gov.br/category/secretaria/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:23:04 ===
+Page URL: Usar a url:
+/servicos
+Title: Servicos
+Hierarchy: Raiz > Serviços
+Error: No content found for Usar a url:
+/servicos
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:23:08 ===
+Page URL: https://www.casacivil.df.gov.br/category/carta-de-servicos/
+Title: Carta De Servicos
+Hierarchy: Raiz > Serviços > Carta de Serviços
+Error: No content found for https://www.casacivil.df.gov.br/category/carta-de-servicos/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:23:14 ===
+Page URL: https://www.casacivil.df.gov.br/publicacao-no-dodf/
+Title: Publicacao No Dodf
+Hierarchy: Raiz > Serviços > Carta de Serviços > Publicação DODF
+Error: No content found for https://www.casacivil.df.gov.br/publicacao-no-dodf/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:23:19 ===
+Page URL: https://www.casacivil.df.gov.br/copia-de-processos-e-legislacoes/
+Title: Copia De Processos E Legislacoes
+Hierarchy: Raiz > Serviços > Carta de Serviços > Cópia de Processos e Legislações
+Error: No content found for https://www.casacivil.df.gov.br/copia-de-processos-e-legislacoes/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:23:23 ===
+Page URL: https://www.casacivil.df.gov.br/servicos-de-ouvidoria/
+Title: Servicos De Ouvidoria
+Hierarchy: Raiz > Serviços > Carta de Serviços > Serviços de Ouvidoria
+Error: No content found for https://www.casacivil.df.gov.br/servicos-de-ouvidoria/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:23:29 ===
+Page URL: https://www.casacivil.df.gov.br/servico-de-informacoes-ao-cidadao-sic/
+Title: Servico De Informacoes Ao Cidadao Sic
+Hierarchy: Raiz > Serviços > Carta de Serviços > Serviço de Informações ao Cidadão – SIC
+Error: No content found for https://www.casacivil.df.gov.br/servico-de-informacoes-ao-cidadao-sic/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:23:35 ===
+Page URL: https://www.casacivil.df.gov.br/pesquisa-de-satisfacao/
+Title: Pesquisa De Satisfacao
+Hierarchy: Raiz > Serviços > Carta de Serviços > Avalie nossa Carta de Serviços
+Error: No content found for https://www.casacivil.df.gov.br/pesquisa-de-satisfacao/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:23:42 ===
+Page URL: https://www.casacivil.df.gov.br/__trashed-2/
+Title: __Trashed 2
+Hierarchy: Raiz > Serviços > Carta de Serviços > Versão PDF
+Error: No content found for https://www.casacivil.df.gov.br/__trashed-2/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:25:03 ===
+Page URL: Usar a url:
+/sistemas
+Title: Sistemas
+Hierarchy: Raiz > Sistemas
+Error: No content found for Usar a url:
+/sistemas
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:25:10 ===
+Page URL: Usar a url:
+/abertura-chamados
+Title: Abertura Chamados
+Hierarchy: Raiz > Sistemas > Abertura de Chamados
+Error: No content found for Usar a url:
+/abertura-chamados
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:25:16 ===
+Page URL: Usar a url:
+/gestao-df
+Title: Gestao Df
+Hierarchy: Raiz > Sistemas > Gestão do DF
+Error: No content found for Usar a url:
+/gestao-df
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:25:31 ===
+Page URL: Usar a url:
+/sigrhnet
+Title: Sigrhnet
+Hierarchy: Raiz > Sistemas > SIGRHNET
+Error: No content found for Usar a url:
+/sigrhnet
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:25:35 ===
+Page URL: Usar a url:
+/dflegis
+Title: Dflegis
+Hierarchy: Raiz > Sistemas > DFLEGIS
+Error: No content found for Usar a url:
+/dflegis
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:25:40 ===
+Page URL: Usar a url:
+/gestao-e-governanca
+Title: Gestao E Governanca
+Hierarchy: Raiz > Gestão e Governança
+Error: No content found for Usar a url:
+/gestao-e-governanca
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:26:38 ===
+Page URL: https://www.casacivil.df.gov.br/category/dispensa-eletronica/
+Title: Dispensa Eletronica
+Hierarchy: Raiz > Gestão e Governança > Dispensa Eletrônica > Dispensa Eletrônica
+Error: No content found for https://www.casacivil.df.gov.br/category/dispensa-eletronica/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:26:57 ===
+Page URL: https://www.casacivil.df.gov.br/o-comite-interno-de-governanca-cig/
+Title: O Comite Interno De Governanca Cig
+Hierarchy: Raiz > Gestão e Governança > Comitê Interno de Governança – CIG
+Error: No content found for https://www.casacivil.df.gov.br/o-comite-interno-de-governanca-cig/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:27:04 ===
+Page URL: https://www.casacivil.df.gov.br/category/cig/
+Title: Cig
+Hierarchy: Raiz > Gestão e Governança > Comitê Interno de Governança – CIG > Comitê Interno de Governança – CIG
+Error: No content found for https://www.casacivil.df.gov.br/category/cig/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:27:15 ===
+Page URL: Usar a url:
+/marco-regulatorio
+Title: Marco Regulatorio
+Hierarchy: Raiz > Gestão e Governança > Marco Regulatório das Organizações da Sociedade Civil
+Error: No content found for Usar a url:
+/marco-regulatorio
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:27:26 ===
+Page URL: https://www.casacivil.df.gov.br/category/planejamento-governamental/
+Title: Planejamento Governamental
+Hierarchy: Raiz > Gestão e Governança > Planejamento Governamental > Planejamento Governamental
+Error: No content found for https://www.casacivil.df.gov.br/category/planejamento-governamental/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:27:36 ===
+Page URL: https://www.casacivil.df.gov.br/category/leis-e-normas-orcamentarias/
+Title: Leis E Normas Orcamentarias
+Hierarchy: Raiz > Gestão e Governança > Leis e Normas Orçamentárias > Leis e Normas Orçamentárias
+Error: No content found for https://www.casacivil.df.gov.br/category/leis-e-normas-orcamentarias/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:27:40 ===
+Page URL: https://www.casacivil.df.gov.br/category/governanca/
+Title: Governanca
+Hierarchy: Raiz > Gestão e Governança > Governança
+Error: No content found for https://www.casacivil.df.gov.br/category/governanca/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:27:51 ===
+Page URL: Usar a url:
+/comissoes
+Title: Comissoes
+Hierarchy: Raiz > Comissões
+Error: No content found for Usar a url:
+/comissoes
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:28:30 ===
+Page URL: https://www.casacivil.df.gov.br/category/comissoes-e-grupos-de-trabalho/
+Title: Comissoes E Grupos De Trabalho
+Hierarchy: Raiz > Comissões > Comissões
+Error: No content found for https://www.casacivil.df.gov.br/category/comissoes-e-grupos-de-trabalho/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:28:34 ===
+Page URL: Usar a url:
+/lai
+Title: Lai
+Hierarchy: Raiz > LAI
+Error: No content found for Usar a url:
+/lai
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:28:40 ===
+Page URL: https://www.casacivil.df.gov.br/category/acesso-a-informacao/
+Title: Acesso A Informacao
+Hierarchy: Raiz > Lei de Acesso à Informação
+Error: No content found for https://www.casacivil.df.gov.br/category/acesso-a-informacao/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:28:47 ===
+Page URL: https://www.casacivil.df.gov.br/institucional-3/
+Title: Institucional3
+Hierarchy: Raiz > Lei de Acesso à Informação > Institucional
+Error: No content found for https://www.casacivil.df.gov.br/institucional-3/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:29:01 ===
+Page URL: https://www.casacivil.df.gov.br/category/institucional/
+Title: Institucional
+Hierarchy: Raiz > Lei de Acesso à Informação > Institucional > Institucional
+Error: No content found for https://www.casacivil.df.gov.br/category/institucional/
+==================================================
+000
+=== Content Error Log Entry: 2025-02-09 15:55:55 ===
+Page URL: Usar a url:
+/lgpd
+Title: Lgpd
+Hierarchy: Raiz > LGPD
+Error: No content found for Usar a url:
+/lgpd
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:58:09 ===
+Page URL: https://www.casacivil.df.gov.br/plano-de-acao-anual/
+Title: Plano De Acao Anual
+Hierarchy: Raiz > A Ouvidoria > Plano de ação anual
+Error: No content found for https://www.casacivil.df.gov.br/plano-de-acao-anual/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:58:15 ===
+Page URL: https://www.casacivil.df.gov.br/relatorio-de-ouvidoria/
+Title: Relatorio De Ouvidoria
+Hierarchy: Raiz > A Ouvidoria > Relatórios de Ouvidoria
+Error: No content found for https://www.casacivil.df.gov.br/relatorio-de-ouvidoria/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:58:22 ===
+Page URL: https://www.casacivil.df.gov.br/servico-de-informacoes-ao-cidadao-sic-2/
+Title: Servico De Informacoes Ao Cidadao Sic 2
+Hierarchy: Raiz > A Ouvidoria > Serviço de Informações ao Cidadão – SIC
+Error: No content found for https://www.casacivil.df.gov.br/servico-de-informacoes-ao-cidadao-sic-2/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:58:34 ===
+Page URL: https://www.casacivil.df.gov.br/category/subsecretarias/
+Title: Subsecretarias
+Hierarchy: Raiz > Subsecretarias
+Error: No content found for https://www.casacivil.df.gov.br/category/subsecretarias/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:58:38 ===
+Page URL: https://www.casacivil.df.gov.br/category/subsecretarias/subsecretaria-de-compliance/
+Title: Subsecretaria De Compliance
+Hierarchy: Raiz > Subsecretarias > Subsecretaria de Compliance
+Error: No content found for https://www.casacivil.df.gov.br/category/subsecretarias/subsecretaria-de-compliance/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:58:42 ===
+Page URL: https://www.casacivil.df.gov.br/legislacao-basica/
+Title: Legislacao Basica
+Hierarchy: Raiz > Subsecretarias > Subsecretaria de Compliance > Legislação básica
+Error: No content found for https://www.casacivil.df.gov.br/legislacao-basica/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:58:46 ===
+Page URL: https://www.casacivil.df.gov.br/legislacao-correlata/
+Title: Legislacao Correlata
+Hierarchy: Raiz > Subsecretarias > Subsecretaria de Compliance > Legislação correlata
+Error: No content found for https://www.casacivil.df.gov.br/legislacao-correlata/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:58:49 ===
+Page URL: https://www.casacivil.df.gov.br/voce-sabia/
+Title: Voce Sabia
+Hierarchy: Raiz > Subsecretarias > Subsecretaria de Compliance > Você sabia?
+Error: Could not find or create folder for: Voce Sabia
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:58:53 ===
+Page URL: https://www.casacivil.df.gov.br/category/subsecretaria-de-governanca/
+Title: Subsecretaria De Governanca
+Hierarchy: Raiz > Subsecretarias > Subsecretaria de Governança
+Error: No content found for https://www.casacivil.df.gov.br/category/subsecretaria-de-governanca/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:58:58 ===
+Page URL: https://www.casacivil.df.gov.br/decreto/
+Title: Decreto
+Hierarchy: Raiz > Subsecretarias > Subsecretaria de Governança > DECRETO
+Error: No content found for https://www.casacivil.df.gov.br/decreto/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:59:02 ===
+Page URL: https://www.casacivil.df.gov.br/conselho-de-governanca/
+Title: Conselho De Governanca
+Hierarchy: Raiz > Subsecretarias > Subsecretaria de Governança > Conselho de Governança
+Error: No content found for https://www.casacivil.df.gov.br/conselho-de-governanca/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:59:14 ===
+Page URL: https://www.casacivil.df.gov.br/agenda-pauta-ata-resolucao/
+Title: Agenda Pauta Ata Resolucao
+Hierarchy: Raiz > Subsecretarias > Subsecretaria de Governança > Agenda, pautas, atas e resoluções
+Error: No content found for https://www.casacivil.df.gov.br/agenda-pauta-ata-resolucao/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:59:18 ===
+Page URL: https://www.casacivil.df.gov.br/regimento-interno-do-conselho/
+Title: Regimento Interno Do Conselho
+Hierarchy: Raiz > Subsecretarias > Subsecretaria de Governança > Regimento Interno do Conselho
+Error: No content found for https://www.casacivil.df.gov.br/regimento-interno-do-conselho/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:59:22 ===
+Page URL: https://www.casacivil.df.gov.br/comite-interno-de-governanca/
+Title: Comite Interno De Governanca
+Hierarchy: Raiz > Subsecretarias > Subsecretaria de Governança > Comitê Interno de Governança
+Error: No content found for https://www.casacivil.df.gov.br/comite-interno-de-governanca/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:59:27 ===
+Page URL: https://www.casacivil.df.gov.br/category/superintendencias/
+Title: Superintendencias
+Hierarchy: Raiz > Superintendências
+Error: No content found for https://www.casacivil.df.gov.br/category/superintendencias/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 15:59:41 ===
+Page URL: https://www.casacivil.df.gov.br/category/imprensa/
+Title: Imprensa
+Hierarchy: Raiz > Imprensa
+Error: No content found for https://www.casacivil.df.gov.br/category/imprensa/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 16:00:08 ===
+Page URL: https://www.casacivil.df.gov.br/category/unidade-de-coordenacao-das-empresas-estatais/
+Title: Unidade De Coordenacao Das Empresas Estatais
+Hierarchy: Raiz > Unidade de Coordenação das Empresas Estatais
+Error: No content found for https://www.casacivil.df.gov.br/category/unidade-de-coordenacao-das-empresas-estatais/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 16:00:11 ===
+Page URL: https://www.casacivil.df.gov.br/o-processo-de-adequacao-a-lei-13-303-2016/
+Title: O Processo De Adequacao A Lei 13 303 2016
+Hierarchy: Raiz > Unidade de Coordenação das Empresas Estatais > O Processo de Adequação à Lei 13.303/2016
+Error: Could not find or create folder for: O Processo De Adequacao A Lei 13 303 2016
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 16:00:23 ===
+Page URL: https://www.casacivil.df.gov.br/estatais-conheca/
+Title: Estatais Conheca
+Hierarchy: Raiz > Unidade de Coordenação das Empresas Estatais > As Empresas Estatais do Distrito Federal
+Error: No content found for https://www.casacivil.df.gov.br/estatais-conheca/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 16:00:29 ===
+Page URL: https://www.casacivil.df.gov.br/estatais-legislacao/
+Title: Estatais Legislacao
+Hierarchy: Raiz > Unidade de Coordenação das Empresas Estatais > Legislação Aplicável às Empresas Estatais
+Error: No content found for https://www.casacivil.df.gov.br/estatais-legislacao/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 16:00:49 ===
+Page URL: https://www.casacivil.df.gov.br/category/sem-categoria/
+Title: Sem Categoria
+Hierarchy: Raiz > Categoria
+Error: No content found for https://www.casacivil.df.gov.br/category/sem-categoria/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 16:02:07 ===
+Page URL: https://www.casacivil.df.gov.br/pmdf-forma-498-policiais-em-curso-de-aperfeicoamento-de-pracas/
+Title: Pmdf Forma 498 Policiais Em Curso De Aperfeicoamento De Pracas
+Hierarchy: Raiz > Categoria > ?‍♂PMDF forma 498 policiais em curso de aperfeiçoamento de praças
+Error: Could not find or create folder for: Pmdf Forma 498 Policiais Em Curso De Aperfeicoamento De Pracas
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 16:04:07 ===
+Page URL: https://www.casacivil.df.gov.br/confira-o-que-abre-e-fecha-no-df-no-dia-de-finados/
+Title: Confira O Que Abre E Fecha No Df No Dia De Finados
+Hierarchy: Raiz > Categoria > Confira o que abre e fecha no DF no Dia de Finados
+Error: Could not find or create folder for: Confira O Que Abre E Fecha No Df No Dia De Finados
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 16:04:12 ===
+Page URL: https://www.casacivil.df.gov.br/cartao-creche-anunciado-por-ibaneis-bancara-5-mil-criancas-no-df/
+Title: Cartao Creche Anunciado Por Ibaneis Bancara 5 Mil Criancas No Df
+Hierarchy: Raiz > Categoria > Cartão-Creche anunciado por Ibaneis bancará 5 mil crianças no DF
+Error: Could not find or create folder for: Cartao Creche Anunciado Por Ibaneis Bancara 5 Mil Criancas No Df
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 16:10:04 ===
+Page URL: https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+Title: Fale Com A Secretaria
+Hierarchy: Raiz > Fale com a Secretaria
+Error: No content found for https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 16:10:08 ===
+Page URL: https://www.casacivil.df.gov.br/category/telefones-uteis/
+Title: Telefones Uteis
+Hierarchy: Raiz > Telefones úteis
+Error: No content found for https://www.casacivil.df.gov.br/category/telefones-uteis/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 16:10:16 ===
+Page URL: https://www.casacivil.df.gov.br/agenda-do-secretario/
+Title: Agenda Do Secretario
+Hierarchy: Raiz > A Casa Civil > Agenda do Secretário
+Error: No content found for https://www.casacivil.df.gov.br/agenda-do-secretario/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 16:13:48 ===
+Page URL: https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+Title: Fale Com A Secretaria
+Hierarchy: Raiz > Fale com a Secretaria
+Error: No content found for https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 16:14:36 ===
+Page URL: https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+Title: Fale Com A Secretaria
+Hierarchy: Raiz > Fale com a Secretaria
+Error: No content found for https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 16:14:40 ===
+Page URL: https://www.casacivil.df.gov.br/category/telefones-uteis/
+Title: Telefones Uteis
+Hierarchy: Raiz > Telefones úteis
+Error: No content found for https://www.casacivil.df.gov.br/category/telefones-uteis/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 16:14:49 ===
+Page URL: https://www.casacivil.df.gov.br/agenda-do-secretario/
+Title: Agenda Do Secretario
+Hierarchy: Raiz > A Casa Civil > Agenda do Secretário
+Error: No content found for https://www.casacivil.df.gov.br/agenda-do-secretario/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 16:18:37 ===
+Page URL: https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+Title: Fale Com A Secretaria
+Hierarchy: Raiz > Fale com a Secretaria
+Error: No content found for https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 16:18:49 ===
+Page URL: https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+Title: Fale Com A Secretaria
+Hierarchy: Raiz > Fale com a Secretaria
+Error: No content found for https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 16:18:53 ===
+Page URL: https://www.casacivil.df.gov.br/category/telefones-uteis/
+Title: Telefones Uteis
+Hierarchy: Raiz > Telefones úteis
+Error: No content found for https://www.casacivil.df.gov.br/category/telefones-uteis/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 16:19:18 ===
+Page URL: https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+Title: Fale Com A Secretaria
+Hierarchy: Raiz > Fale com a Secretaria
+Error: No content found for https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 16:19:22 ===
+Page URL: https://www.casacivil.df.gov.br/category/telefones-uteis/
+Title: Telefones Uteis
+Hierarchy: Raiz > Telefones úteis
+Error: No content found for https://www.casacivil.df.gov.br/category/telefones-uteis/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 16:25:42 ===
+Page URL: https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+Title: Fale Com A Secretaria
+Hierarchy: Raiz > Fale com a Secretaria
+Error: No content found for https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 16:25:46 ===
+Page URL: https://www.casacivil.df.gov.br/category/telefones-uteis/
+Title: Telefones Uteis
+Hierarchy: Raiz > Telefones úteis
+Error: No content found for https://www.casacivil.df.gov.br/category/telefones-uteis/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 16:32:03 ===
+Page URL: https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+Title: Fale Com A Secretaria
+Hierarchy: Raiz > Fale com a Secretaria
+Error: No content found for https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 16:32:06 ===
+Page URL: https://www.casacivil.df.gov.br/category/telefones-uteis/
+Title: Telefones Uteis
+Hierarchy: Raiz > Telefones úteis
+Error: No content found for https://www.casacivil.df.gov.br/category/telefones-uteis/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 16:34:44 ===
+Page URL: https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+Title: Fale Com A Secretaria
+Hierarchy: Raiz > Fale com a Secretaria
+Error: No content found for https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 16:34:48 ===
+Page URL: https://www.casacivil.df.gov.br/category/telefones-uteis/
+Title: Telefones Uteis
+Hierarchy: Raiz > Telefones úteis
+Error: No content found for https://www.casacivil.df.gov.br/category/telefones-uteis/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 16:36:07 ===
+Page URL: https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+Title: Fale Com A Secretaria
+Hierarchy: Raiz > Fale com a Secretaria
+Error: No content found for https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 16:36:11 ===
+Page URL: https://www.casacivil.df.gov.br/category/telefones-uteis/
+Title: Telefones Uteis
+Hierarchy: Raiz > Telefones úteis
+Error: No content found for https://www.casacivil.df.gov.br/category/telefones-uteis/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 16:38:18 ===
+Page URL: https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+Title: Fale Com A Secretaria
+Hierarchy: Raiz > Fale com a Secretaria
+Error: No content found for https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 16:38:22 ===
+Page URL: https://www.casacivil.df.gov.br/category/telefones-uteis/
+Title: Telefones Uteis
+Hierarchy: Raiz > Telefones úteis
+Error: No content found for https://www.casacivil.df.gov.br/category/telefones-uteis/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 16:54:11 ===
+Page URL: https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+Title: Fale Com A Secretaria
+Hierarchy: Raiz > Fale com a Secretaria
+Error: No content found for https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 16:54:15 ===
+Page URL: https://www.casacivil.df.gov.br/category/telefones-uteis/
+Title: Telefones Uteis
+Hierarchy: Raiz > Telefones úteis
+Error: No content found for https://www.casacivil.df.gov.br/category/telefones-uteis/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 16:54:56 ===
+Page URL: https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+Title: Fale Com A Secretaria
+Hierarchy: Raiz > Fale com a Secretaria
+Error: No content found for https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 16:55:01 ===
+Page URL: https://www.casacivil.df.gov.br/category/telefones-uteis/
+Title: Telefones Uteis
+Hierarchy: Raiz > Telefones úteis
+Error: No content found for https://www.casacivil.df.gov.br/category/telefones-uteis/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 17:04:03 ===
+Page URL: https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+Title: Fale Com A Secretaria
+Hierarchy: Raiz > Fale com a Secretaria
+Error: No content found for https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 17:04:09 ===
+Page URL: https://www.casacivil.df.gov.br/category/telefones-uteis/
+Title: Telefones Uteis
+Hierarchy: Raiz > Telefones úteis
+Error: No content found for https://www.casacivil.df.gov.br/category/telefones-uteis/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 17:05:14 ===
+Page URL: https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+Title: Fale Com A Secretaria
+Hierarchy: Raiz > Fale com a Secretaria
+Error: No content found for https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 17:05:20 ===
+Page URL: https://www.casacivil.df.gov.br/category/telefones-uteis/
+Title: Telefones Uteis
+Hierarchy: Raiz > Telefones úteis
+Error: No content found for https://www.casacivil.df.gov.br/category/telefones-uteis/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 17:07:40 ===
+Page URL: https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+Title: Fale Com A Secretaria
+Hierarchy: Raiz > Fale com a Secretaria
+Error: No content found for https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 17:07:47 ===
+Page URL: https://www.casacivil.df.gov.br/category/telefones-uteis/
+Title: Telefones Uteis
+Hierarchy: Raiz > Telefones úteis
+Error: No content found for https://www.casacivil.df.gov.br/category/telefones-uteis/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 17:07:51 ===
+Page URL: Usar a url:
+/a-casa-civil
+Title: A Casa Civil
+Hierarchy: Raiz > A Casa Civil
+Error: Unexpected error during content migration: 'WebContentCreator' object has no attribute 'add_content_to_page'
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migration/web_content_creator.py", line 314, in migrate_content
+    success = await self.add_content_to_page(page_id, existing_content_id)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'WebContentCreator' object has no attribute 'add_content_to_page'
+
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 17:08:19 ===
+Page URL: https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+Title: Fale Com A Secretaria
+Hierarchy: Raiz > Fale com a Secretaria
+Error: No content found for https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 17:08:32 ===
+Page URL: https://www.casacivil.df.gov.br/category/telefones-uteis/
+Title: Telefones Uteis
+Hierarchy: Raiz > Telefones úteis
+Error: No content found for https://www.casacivil.df.gov.br/category/telefones-uteis/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 17:09:10 ===
+Page URL: https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+Title: Fale Com A Secretaria
+Hierarchy: Raiz > Fale com a Secretaria
+Error: No content found for https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 17:09:17 ===
+Page URL: https://www.casacivil.df.gov.br/category/telefones-uteis/
+Title: Telefones Uteis
+Hierarchy: Raiz > Telefones úteis
+Error: No content found for https://www.casacivil.df.gov.br/category/telefones-uteis/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 17:09:37 ===
+Page URL: https://www.casacivil.df.gov.br/agenda-do-secretario/
+Title: Agenda Do Secretario
+Hierarchy: Raiz > A Casa Civil > Agenda do Secretário
+Error: No content found for https://www.casacivil.df.gov.br/agenda-do-secretario/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 17:41:38 ===
+Page URL: https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+Title: Fale Com A Secretaria
+Hierarchy: Raiz > Fale com a Secretaria
+Error: No content found for https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 17:41:43 ===
+Page URL: https://www.casacivil.df.gov.br/category/telefones-uteis/
+Title: Telefones Uteis
+Hierarchy: Raiz > Telefones úteis
+Error: No content found for https://www.casacivil.df.gov.br/category/telefones-uteis/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 17:41:55 ===
+Page URL: https://www.casacivil.df.gov.br/agenda-do-secretario/
+Title: Agenda Do Secretario
+Hierarchy: Raiz > A Casa Civil > Agenda do Secretário
+Error: No content found for https://www.casacivil.df.gov.br/agenda-do-secretario/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 17:42:39 ===
+Page URL: https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+Title: Fale Com A Secretaria
+Hierarchy: Raiz > Fale com a Secretaria
+Error: No content found for https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 17:42:45 ===
+Page URL: https://www.casacivil.df.gov.br/category/telefones-uteis/
+Title: Telefones Uteis
+Hierarchy: Raiz > Telefones úteis
+Error: No content found for https://www.casacivil.df.gov.br/category/telefones-uteis/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 17:47:24 ===
+Page URL: https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+Title: Fale Com A Secretaria
+Hierarchy: Raiz > Fale com a Secretaria
+Error: No content found for https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 17:47:28 ===
+Page URL: https://www.casacivil.df.gov.br/category/telefones-uteis/
+Title: Telefones Uteis
+Hierarchy: Raiz > Telefones úteis
+Error: No content found for https://www.casacivil.df.gov.br/category/telefones-uteis/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 17:47:30 ===
+Page URL: Usar a url:
+/a-casa-civil
+Title: A Casa Civil
+Hierarchy: Raiz > A Casa Civil
+Error: Unexpected error during content migration: 'WebContentCreator' object has no attribute 'add_content_to_page'
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migration/web_content_creator.py", line 357, in migrate_content
+    success = await self.add_content_to_page(page_id, existing_content_id)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'WebContentCreator' object has no attribute 'add_content_to_page'
+
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 17:47:31 ===
+Page URL: https://www.casacivil.df.gov.br/perfil-do-chefe-da-casa-civil/
+Title: Perfil Do Chefe Da Casa Civil
+Hierarchy: Raiz > A Casa Civil > Perfil do chefe da Casa Civil
+Error: Unexpected error during content migration: 'WebContentCreator' object has no attribute 'add_content_to_page'
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migration/web_content_creator.py", line 357, in migrate_content
+    success = await self.add_content_to_page(page_id, existing_content_id)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'WebContentCreator' object has no attribute 'add_content_to_page'
+
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 17:47:35 ===
+Page URL: https://www.casacivil.df.gov.br/agenda-do-secretario/
+Title: Agenda Do Secretario
+Hierarchy: Raiz > A Casa Civil > Agenda do Secretário
+Error: No content found for https://www.casacivil.df.gov.br/agenda-do-secretario/
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 17:49:32 ===
+Page URL: https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+Title: Fale Com A Secretaria
+Hierarchy: Raiz > Fale com a Secretaria
+Error: Unexpected error during content migration: 'WebContentCreator' object has no attribute 'fetch_content'
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migration/web_content_creator.py", line 449, in migrate_content
+    html_content = await self.fetch_content(source_url)
+                         ^^^^^^^^^^^^^^^^^^
+AttributeError: 'WebContentCreator' object has no attribute 'fetch_content'
+
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 17:49:36 ===
+Page URL: https://www.casacivil.df.gov.br/category/telefones-uteis/
+Title: Telefones Uteis
+Hierarchy: Raiz > Telefones úteis
+Error: Unexpected error during content migration: 'WebContentCreator' object has no attribute 'fetch_content'
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migration/web_content_creator.py", line 449, in migrate_content
+    html_content = await self.fetch_content(source_url)
+                         ^^^^^^^^^^^^^^^^^^
+AttributeError: 'WebContentCreator' object has no attribute 'fetch_content'
+
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 22:07:37 ===
+Page URL: https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+Title: Fale Com A Secretaria
+Hierarchy: Raiz > Fale com a Secretaria
+Error: Unexpected error during content migration: 'WebContentCreator' object has no attribute 'fetch_and_validate_content'
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migration/web_content_creator.py", line 296, in migrate_content
+    html_content, is_valid = await self.fetch_and_validate_content(source_url)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'WebContentCreator' object has no attribute 'fetch_and_validate_content'
+
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 22:07:37 ===
+Page URL: https://www.casacivil.df.gov.br/category/telefones-uteis/
+Title: Telefones Uteis
+Hierarchy: Raiz > Telefones úteis
+Error: Unexpected error during content migration: 'WebContentCreator' object has no attribute 'fetch_and_validate_content'
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migration/web_content_creator.py", line 296, in migrate_content
+    html_content, is_valid = await self.fetch_and_validate_content(source_url)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'WebContentCreator' object has no attribute 'fetch_and_validate_content'
+
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 22:07:38 ===
+Page URL: Usar a url:
+/a-casa-civil
+Title: A Casa Civil
+Hierarchy: Raiz > A Casa Civil
+Error: Unexpected error during content migration: 'WebContentCreator' object has no attribute 'fetch_and_validate_content'
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migration/web_content_creator.py", line 296, in migrate_content
+    html_content, is_valid = await self.fetch_and_validate_content(source_url)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'WebContentCreator' object has no attribute 'fetch_and_validate_content'
+
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 22:07:39 ===
+Page URL: https://www.casacivil.df.gov.br/perfil-do-chefe-da-casa-civil/
+Title: Perfil Do Chefe Da Casa Civil
+Hierarchy: Raiz > A Casa Civil > Perfil do chefe da Casa Civil
+Error: Unexpected error during content migration: 'WebContentCreator' object has no attribute 'fetch_and_validate_content'
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migration/web_content_creator.py", line 296, in migrate_content
+    html_content, is_valid = await self.fetch_and_validate_content(source_url)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'WebContentCreator' object has no attribute 'fetch_and_validate_content'
+
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 22:07:40 ===
+Page URL: https://www.casacivil.df.gov.br/agenda-do-secretario/
+Title: Agenda Do Secretario
+Hierarchy: Raiz > A Casa Civil > Agenda do Secretário
+Error: Unexpected error during content migration: 'WebContentCreator' object has no attribute 'fetch_and_validate_content'
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migration/web_content_creator.py", line 296, in migrate_content
+    html_content, is_valid = await self.fetch_and_validate_content(source_url)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'WebContentCreator' object has no attribute 'fetch_and_validate_content'
+
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 22:07:41 ===
+Page URL: https://www.casacivil.df.gov.br/quem-e-quem/
+Title: Quem E Quem
+Hierarchy: Raiz > A Casa Civil > Quem é Quem
+Error: Unexpected error during content migration: 'WebContentCreator' object has no attribute 'fetch_and_validate_content'
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migration/web_content_creator.py", line 296, in migrate_content
+    html_content, is_valid = await self.fetch_and_validate_content(source_url)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'WebContentCreator' object has no attribute 'fetch_and_validate_content'
+
+==================================================
+
+=== Content Error Log Entry: 2025-02-09 22:07:42 ===
+Page URL: https://www.casacivil.df.gov.br/regimento-interno/
+Title: Regimento Interno
+Hierarchy: Raiz > A Casa Civil > Regimento Interno
+Error: Unexpected error during content migration: 'WebContentCreator' object has no attribute 'fetch_and_validate_content'
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migration/web_content_creator.py", line 296, in migrate_content
+    html_content, is_valid = await self.fetch_and_validate_content(source_url)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'WebContentCreator' object has no attribute 'fetch_and_validate_content'
+
+==================================================
