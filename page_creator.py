@@ -135,10 +135,21 @@ class PageCreator:
         self.page_cache = {}
         self.error_tracker = ErrorTracker()
 
-    async def create_page(self, title: str, friendly_url: str, parent_id: int = 0, hierarchy: List[str] = None, page_type: str = "portlet") -> int:
+    async def create_page(self, title: str, friendly_url: str, parent_id: int = 0, hierarchy: List[str] = None, page_type: str = "portlet", type_settings: str = "") -> int:
         normalized_title = normalize_page_name(title)
         normalized_url = normalize_friendly_url(friendly_url)
         print(f"Criando PAGINAA '{normalized_title}' com tipo: {page_type}")
+
+
+        if page_type == "porlet":
+            type_settings = "column-1=com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_layout-template-id=2_columns_ii"
+        elif page_type == "node":
+            type_settings = ""
+        elif page_type == "url":
+            type_settings = ""
+        elif page_type == "link_to_layout":
+            type_settings = ""
+
 
         params = {
             "groupId": str(self.config.site_id),
@@ -148,10 +159,13 @@ class PageCreator:
             "title": normalized_title,
             "description": "",
             "type": page_type,
+            "typeSettings": type_settings,
             "hidden": "false",
             "friendlyURL": f"/{normalized_url}"
         }
         
+        print(params)
+
         try:
             async with self.session.post(
                 f"{self.config.liferay_url}/api/jsonws/layout/add-layout",
@@ -179,21 +193,21 @@ class PageCreator:
         
         return 0
 
-    async def ensure_page_exists(self, title: str, cache_key: str, parent_id: int = 0, friendly_url: str = "", hierarchy: List[str] = None, page_type: str ="portlet") -> int:
+    async def ensure_page_exists(self, title: str, cache_key: str, parent_id: int = 0, friendly_url: str = "", hierarchy: List[str] = None, page_type: str ="portlet", type_settings: str = "") -> int:
         if cache_key in self.page_cache:
             return self.page_cache[cache_key]
 
         normalized_title = normalize_page_name(title)
         friendly_url = normalize_friendly_url(friendly_url)
 
-        page_id = await self.create_page(normalized_title, friendly_url, parent_id, hierarchy, page_type)
+        page_id = await self.create_page(normalized_title, friendly_url, parent_id, hierarchy, page_type, type_settings)
         
         if page_id:
             self.page_cache[cache_key] = page_id
             
         return page_id
 
-    async def create_hierarchy(self, hierarchy: list, final_title: str, final_url: str, page_type: str = "widget") -> int:
+    async def create_hierarchy(self, hierarchy: list, final_title: str, final_url: str, page_type: str = "widget", type_settings: str = "") -> int:
         current_path = ""
         parent_id = 0
         last_page_id = 0
@@ -227,7 +241,8 @@ class PageCreator:
                 normalize_friendly_url(final_url), 
                 parent_id, 
                 hierarchy,
-                page_type
+                page_type,
+                type_settings
             )
 
             print(f"Página final criada: {final_title} (ID: {final_page_id}) Tipo da página {page_type}")

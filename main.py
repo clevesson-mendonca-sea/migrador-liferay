@@ -120,7 +120,8 @@ async def migrate_pages(pages):
                 hierarchy=page['hierarchy'],
                 final_title=page['title'],
                 final_url=page['destination'].strip('/').split('/')[-1],
-                page_type=page['type']
+                page_type=page['type'],
+                type_settings=page['type']
             )
             
             print(page['destination'].strip('/').split('/')[-1])
