@@ -6,6 +6,7 @@ from datetime import datetime
 import json
 import os
 import unicodedata
+import uuid
 
 from requests_cache import logger
 
@@ -135,10 +136,23 @@ class PageCreator:
         self.page_cache = {}
         self.error_tracker = ErrorTracker()
 
-    async def create_page(self, title: str, friendly_url: str, parent_id: int = 0, hierarchy: List[str] = None, visible: bool = True) -> int:
+    async def create_page(self, title: str, friendly_url: str, parent_id: int = 0, hierarchy: List[str] = None, visible: bool = True, web_content_id: str = None) -> int:
         normalized_title = normalize_page_name(title)
         normalized_url = normalize_friendly_url(friendly_url)
-        visible = str(visible).lower()
+        hidden = str(not visible).lower()
+
+        is_defined_page = isinstance(friendly_url, str) and "Usar a URL:" in friendly_url
+        page_type = "note" if is_defined_page else "portlet"
+
+        article_id = str(uuid.uuid4().hex)
+
+        # Configura typeSettings apenas se NÃO for uma página definida
+        type_settings = []
+        if not is_defined_page:
+            type_settings.extend([
+                "layout-template-id=1_column",
+                "column-1=com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_" + article_id[:8],
+            ])
 
         params = {
             "groupId": str(self.config.site_id),
@@ -147,11 +161,12 @@ class PageCreator:
             "name": normalized_title,
             "title": normalized_title,
             "description": "",
-            "type": "portlet",
-            "hidden": visible,
-            "friendlyURL": f"/{normalized_url}"
+            "type": page_type,
+            "hidden": hidden,
+            "friendlyURL": f"/{normalized_url}",
+            "typeSettings": "\n".join(type_settings) if type_settings else ""
         }
-        
+    
         try:
             async with self.session.post(
                 f"{self.config.liferay_url}/api/jsonws/layout/add-layout",
@@ -164,7 +179,7 @@ class PageCreator:
                     page_id = result.get('layoutId') or result.get('plid')
                     
                     if page_id:
-                        print(f"Page created: {normalized_title}, ID: {page_id}")
+                        print(f"Page created with web content: {normalized_title}, ID: {page_id}")
                         return int(page_id)
                 
         except Exception as e:
@@ -179,20 +194,27 @@ class PageCreator:
         
         return 0
 
-    async def ensure_page_exists(self, title: str, cache_key: str, parent_id: int = 0, friendly_url: str = "", hierarchy: List[str] = None) -> int:
+    async def ensure_page_exists(self, title: str, cache_key: str, parent_id: int = 0, friendly_url: str = "", hierarchy: List[str] = None, visible: bool = True, web_content_id: str = None) -> int:
         if cache_key in self.page_cache:
             return self.page_cache[cache_key]
 
         normalized_title = normalize_page_name(title)
         friendly_url = normalize_friendly_url(friendly_url)
 
-        page_id = await self.create_page(normalized_title, friendly_url, parent_id, hierarchy)
+        page_id = await self.create_page(
+            normalized_title, 
+            friendly_url, 
+            parent_id, 
+            hierarchy, 
+            visible,
+            web_content_id
+        )
         
         if page_id:
             self.page_cache[cache_key] = page_id
             
         return page_id
-
+    
     async def create_hierarchy(self, hierarchy: list, final_title: str, final_url: str, visible: bool) -> int:
         current_path = ""
         parent_id = 0
@@ -206,7 +228,14 @@ class PageCreator:
             normalized_level = normalize_page_name(level)
             current_path += f" > {normalized_level}" if current_path else normalized_level
             
-            level_id = await self.ensure_page_exists(normalized_level, current_path, parent_id, final_url , hierarchy)
+            level_id = await self.ensure_page_exists(
+                normalized_level, 
+                current_path, 
+                parent_id, 
+                final_url, 
+                hierarchy,
+                visible
+            )
             
             if level_id:
                 parent_id = level_id

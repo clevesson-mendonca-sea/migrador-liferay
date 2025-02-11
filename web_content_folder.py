@@ -126,7 +126,8 @@ class FolderCreator:
             headers={
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
-            }
+            },
+            connector=aiohttp.TCPConnector(ssl=False)
         )
 
     async def create_folder(self, title: str, parent_id: int = 0, folder_type: str = 'journal', hierarchy: List[str] = None) -> int:
@@ -333,7 +334,8 @@ class FolderCreator:
             headers={
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
-            }
+            },
+            connector=aiohttp.TCPConnector(ssl=False)
         )
 
     async def create_folder(self, title: str, parent_id: int = 0, folder_type: str = 'journal', hierarchy: List[str] = None) -> int:

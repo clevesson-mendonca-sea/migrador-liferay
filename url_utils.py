@@ -10,8 +10,7 @@ class UrlUtils:
         if not url:
             return ""
             
-        # Remove qualquer texto 'Usar a url:' que possa ter vindo da planilha
-        url = url.replace('Usar a url:', '').strip()
+        # url = url.replace('Usar a url:', '').strip()
         
         # Se a URL não começa com http, adiciona https://
         if not url.startswith('http'):

@@ -51,9 +51,9 @@ async def get_sheet_data():
         if all(row[:1]) and len(row) > 6 and row[6]:
             hierarchy = parse_hierarchy(row[6])
             title = hierarchy[-1] if hierarchy else "Sem Título"
-            visibility = row[7].lower() if len(row) > 7 and row[7] else 'menu'
+            visibility = row[7].strip().lower() if len(row) > 7 and row[7] else 'menu'
             is_visible = visibility == 'menu'
-            
+
             if title.strip():
                 pages.append({
                     'title': title,
@@ -72,8 +72,10 @@ async def migrate_pages(pages):
 
     async with aiohttp.ClientSession(headers={
         "Authorization": f"Basic {auth}",
-        "Content-Type": "application/x-www-form-urlencoded"
-    }) as session:
+        "Content-Type": "application/x-www-form-urlencoded",
+    }, 
+        connector=aiohttp.TCPConnector(ssl=False)
+    ) as session:
         creator.session = session
 
         for page in pages:
@@ -86,7 +88,6 @@ async def migrate_pages(pages):
                 final_url=page['destination'].strip('/').split('/')[-1],
                 visible=page['visible']
             )
-            print(page['destination'].strip('/').split('/')[-1])
 
             if page_id:
                 logger.info(f"Página criada: {page['title']} (ID: {page_id})")

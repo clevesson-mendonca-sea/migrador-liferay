@@ -55,7 +55,8 @@ class WebContentCreator:
             headers={
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
-            }
+            },
+            connector=aiohttp.TCPConnector(ssl=False)
         )
         await self.folder_creator.initialize_session()
         await self.document_creator.initialize_session()
