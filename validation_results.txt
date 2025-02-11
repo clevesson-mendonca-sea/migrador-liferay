@@ -1,0 +1,526 @@
+
+=== Validation Error: 2025-02-11 09:36:27 ===
+URL: De
+Type: Fetch Error
+Details: Não foi possível buscar página original
+==================================================
+
+=== Validation Error: 2025-02-11 09:36:31 ===
+URL: https://www.casacivil.df.gov.br
+Type: Content Error
+Details: Conteúdo não encontrado (#conteudo ou .col-md-8.col-md-offset-1)
+==================================================
+
+=== Validation Error: 2025-02-11 09:36:33 ===
+URL: https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+Type: Content Error
+Details: Conteúdo não encontrado (#conteudo ou .col-md-8.col-md-offset-1)
+==================================================
+
+=== Validation Error: 2025-02-11 09:36:35 ===
+URL: https://www.casacivil.df.gov.br/category/telefones-uteis/
+Type: Content Error
+Details: Conteúdo não encontrado (#conteudo ou .col-md-8.col-md-offset-1)
+==================================================
+
+=== Validation Error: 2025-02-11 09:36:35 ===
+URL: Usar a url:
+/a-casa-civil
+Type: Fetch Error
+Details: Não foi possível buscar página original
+==================================================
+
+=== Validation Error: 2025-02-11 09:36:38 ===
+URL: https://www.casacivil.df.gov.br/perfil-do-chefe-da-casa-civil/
+Type: Validation Error
+Details: Erro durante validação: 'ContentValidator' object has no attribute 'check_images'
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/content_validator.py", line 211, in validate_page
+    if not self.check_images(str(migrated_content), destination_url):
+           ^^^^^^^^^^^^^^^^^
+AttributeError: 'ContentValidator' object has no attribute 'check_images'
+
+==================================================
+
+=== Validation Error: 2025-02-11 09:36:40 ===
+URL: https://www.casacivil.df.gov.br/agenda-do-secretario/
+Type: Content Error
+Details: Conteúdo não encontrado (#conteudo ou .col-md-8.col-md-offset-1)
+==================================================
+
+=== Validation Error: 2025-02-11 09:36:42 ===
+URL: https://www.casacivil.df.gov.br/quem-e-quem/
+Type: Validation Error
+Details: Erro durante validação: 'ContentValidator' object has no attribute 'check_images'
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/content_validator.py", line 211, in validate_page
+    if not self.check_images(str(migrated_content), destination_url):
+           ^^^^^^^^^^^^^^^^^
+AttributeError: 'ContentValidator' object has no attribute 'check_images'
+
+==================================================
+
+=== Validation Error: 2025-02-11 09:36:44 ===
+URL: https://www.casacivil.df.gov.br/regimento-interno/
+Type: Validation Error
+Details: Erro durante validação: 'ContentValidator' object has no attribute 'check_images'
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/content_validator.py", line 211, in validate_page
+    if not self.check_images(str(migrated_content), destination_url):
+           ^^^^^^^^^^^^^^^^^
+AttributeError: 'ContentValidator' object has no attribute 'check_images'
+
+==================================================
+
+=== Validation Error: 2025-02-11 09:37:20 ===
+URL: De
+Type: Fetch Error
+Details: Não foi possível buscar página original
+==================================================
+
+=== Validation Error: 2025-02-11 09:37:28 ===
+URL: https://www.casacivil.df.gov.br
+Type: Content Error
+Details: Conteúdo não encontrado (#conteudo ou .col-md-8.col-md-offset-1)
+==================================================
+
+=== Validation Error: 2025-02-11 09:37:31 ===
+URL: https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+Type: Content Error
+Details: Conteúdo não encontrado (#conteudo ou .col-md-8.col-md-offset-1)
+==================================================
+
+=== Validation Error: 2025-02-11 09:37:33 ===
+URL: https://www.casacivil.df.gov.br/category/telefones-uteis/
+Type: Content Error
+Details: Conteúdo não encontrado (#conteudo ou .col-md-8.col-md-offset-1)
+==================================================
+
+=== Validation Error: 2025-02-11 09:37:33 ===
+URL: Usar a url:
+/a-casa-civil
+Type: Fetch Error
+Details: Não foi possível buscar página original
+==================================================
+
+=== Validation Error: 2025-02-11 09:37:35 ===
+URL: https://www.casacivil.df.gov.br/perfil-do-chefe-da-casa-civil/
+Type: Validation Error
+Details: Erro durante validação: 'ContentValidator' object has no attribute 'normalize_content'
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/content_validator.py", line 257, in validate_page
+    original_text = self.normalize_content(str(original_content))
+                    ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ContentValidator' object has no attribute 'normalize_content'
+
+==================================================
+
+=== Validation Error: 2025-02-11 09:37:37 ===
+URL: https://www.casacivil.df.gov.br/agenda-do-secretario/
+Type: Content Error
+Details: Conteúdo não encontrado (#conteudo ou .col-md-8.col-md-offset-1)
+==================================================
+
+=== Validation Error: 2025-02-11 09:37:40 ===
+URL: https://www.casacivil.df.gov.br/quem-e-quem/
+Type: Validation Error
+Details: Erro durante validação: 'ContentValidator' object has no attribute 'normalize_content'
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/content_validator.py", line 257, in validate_page
+    original_text = self.normalize_content(str(original_content))
+                    ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ContentValidator' object has no attribute 'normalize_content'
+
+==================================================
+
+=== Validation Error: 2025-02-11 09:37:42 ===
+URL: https://www.casacivil.df.gov.br/regimento-interno/
+Type: Validation Error
+Details: Erro durante validação: 'ContentValidator' object has no attribute 'normalize_content'
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/content_validator.py", line 257, in validate_page
+    original_text = self.normalize_content(str(original_content))
+                    ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ContentValidator' object has no attribute 'normalize_content'
+
+==================================================
+
+=== Validation Error: 2025-02-11 09:37:44 ===
+URL: https://www.casacivil.df.gov.br/organograma/
+Type: Validation Error
+Details: Erro durante validação: 'ContentValidator' object has no attribute 'normalize_content'
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/content_validator.py", line 257, in validate_page
+    original_text = self.normalize_content(str(original_content))
+                    ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ContentValidator' object has no attribute 'normalize_content'
+
+==================================================
+
+=== Validation Error: 2025-02-11 09:37:48 ===
+URL: https://www.casacivil.df.gov.br/http-www-casacivil-df-gov-br-wp-conteudo-uploads-2020-09-organograma-caci-pdf/
+Type: Content Error
+Details: Div .gdf-web-content não encontrada
+==================================================
+
+=== Validation Error: 2025-02-11 09:38:08 ===
+URL: De
+Type: Fetch Error
+Details: Não foi possível buscar página original
+==================================================
+
+=== Validation Error: 2025-02-11 09:38:12 ===
+URL: https://www.casacivil.df.gov.br
+Type: Content Error
+Details: Conteúdo não encontrado (#conteudo ou .col-md-8.col-md-offset-1)
+==================================================
+
+=== Validation Error: 2025-02-11 09:38:14 ===
+URL: https://www.casacivil.df.gov.br/fale-com-a-secretaria/
+Type: Content Error
+Details: Conteúdo não encontrado (#conteudo ou .col-md-8.col-md-offset-1)
+==================================================
+
+=== Validation Error: 2025-02-11 09:38:16 ===
+URL: https://www.casacivil.df.gov.br/category/telefones-uteis/
+Type: Content Error
+Details: Conteúdo não encontrado (#conteudo ou .col-md-8.col-md-offset-1)
+==================================================
+
+=== Validation Error: 2025-02-11 09:38:16 ===
+URL: Usar a url:
+/a-casa-civil
+Type: Fetch Error
+Details: Não foi possível buscar página original
+==================================================
+
+=== Validation Error: 2025-02-11 09:38:20 ===
+URL: https://www.casacivil.df.gov.br/agenda-do-secretario/
+Type: Content Error
+Details: Conteúdo não encontrado (#conteudo ou .col-md-8.col-md-offset-1)
+==================================================
+
+=== Validation Error: 2025-02-11 09:38:37 ===
+URL: https://www.casacivil.df.gov.br/http-www-casacivil-df-gov-br-wp-conteudo-uploads-2020-09-organograma-caci-pdf/
+Type: Content Error
+Details: Div .gdf-web-content não encontrada
+==================================================
+
+=== Validation Error: 2025-02-11 09:38:55 ===
+URL: Usar a url:
+/nosso-natal-vai-levar-roda-gigante-e-patinacao-no-gelo-para-a-esplanada-a-partir-de-1-de-dezembro
+Type: Fetch Error
+Details: Não foi possível buscar página original
+==================================================
+
+=== Validation Error: 2025-02-11 09:38:55 ===
+URL: Usar a url:
+/publicado-o-calendario-escolar-da-rede-publica-do-distrito-federal-para-2025
+Type: Fetch Error
+Details: Não foi possível buscar página original
+==================================================
+
+=== Validation Error: 2025-02-11 09:38:55 ===
+URL: Usar a url:
+/gdf-e-superior-tribunal-militar-assinam-acordo-de-cooperacao-em-prol-das-mulheres-2
+Type: Fetch Error
+Details: Não foi possível buscar página original
+==================================================
+
+=== Validation Error: 2025-02-11 09:38:55 ===
+URL: Usar a url:
+/comeca-a-pintura-das-fachadas-do-teatro-nacional-claudio-santoro-2
+Type: Fetch Error
+Details: Não foi possível buscar página original
+==================================================
+
+=== Validation Error: 2025-02-11 09:39:00 ===
+URL: https://www.casacivil.df.gov.br/category/secretaria/
+Type: Content Error
+Details: Conteúdo não encontrado (#conteudo ou .col-md-8.col-md-offset-1)
+==================================================
+
+=== Validation Error: 2025-02-11 09:39:03 ===
+URL: Usar a url:
+/servicos
+Type: Fetch Error
+Details: Não foi possível buscar página original
+==================================================
+
+=== Validation Error: 2025-02-11 09:39:30 ===
+URL: Usar a url:
+/dodf
+Type: Fetch Error
+Details: Não foi possível buscar página original
+==================================================
+
+=== Validation Error: 2025-02-11 09:39:34 ===
+URL: Usar a url:
+/sistemas
+Type: Fetch Error
+Details: Não foi possível buscar página original
+==================================================
+
+=== Validation Error: 2025-02-11 09:39:34 ===
+URL: Usar a url:
+/abertura-chamados
+Type: Fetch Error
+Details: Não foi possível buscar página original
+==================================================
+
+=== Validation Error: 2025-02-11 09:39:35 ===
+URL: Usar a url:
+/gestao-df
+Type: Fetch Error
+Details: Não foi possível buscar página original
+==================================================
+
+=== Validation Error: 2025-02-11 09:39:35 ===
+URL: Usar a url:
+/sei
+Type: Fetch Error
+Details: Não foi possível buscar página original
+==================================================
+
+=== Validation Error: 2025-02-11 09:39:35 ===
+URL: Usar a url:
+/sigrhnet
+Type: Fetch Error
+Details: Não foi possível buscar página original
+==================================================
+
+=== Validation Error: 2025-02-11 09:39:35 ===
+URL: Usar a url:
+/dflegis
+Type: Fetch Error
+Details: Não foi possível buscar página original
+==================================================
+
+=== Validation Error: 2025-02-11 09:39:35 ===
+URL: Usar a url:
+/gestao-e-governanca
+Type: Fetch Error
+Details: Não foi possível buscar página original
+==================================================
+
+=== Validation Error: 2025-02-11 09:39:48 ===
+URL: https://www.casacivil.df.gov.br/category/dispensa-eletronica/
+Type: Content Error
+Details: Conteúdo não encontrado (#conteudo ou .col-md-8.col-md-offset-1)
+==================================================
+
+=== Validation Error: 2025-02-11 09:39:56 ===
+URL: https://www.casacivil.df.gov.br/category/cig/
+Type: Content Error
+Details: Conteúdo não encontrado (#conteudo ou .col-md-8.col-md-offset-1)
+==================================================
+
+=== Validation Error: 2025-02-11 09:39:56 ===
+URL: Usar a url:
+/marco-regulatorio
+Type: Fetch Error
+Details: Não foi possível buscar página original
+==================================================
+
+=== Validation Error: 2025-02-11 09:40:01 ===
+URL: https://www.casacivil.df.gov.br/category/planejamento-governamental/
+Type: Content Error
+Details: Conteúdo não encontrado (#conteudo ou .col-md-8.col-md-offset-1)
+==================================================
+
+=== Validation Error: 2025-02-11 09:40:06 ===
+URL: https://www.casacivil.df.gov.br/category/leis-e-normas-orcamentarias/
+Type: Content Error
+Details: Conteúdo não encontrado (#conteudo ou .col-md-8.col-md-offset-1)
+==================================================
+
+=== Validation Error: 2025-02-11 09:40:08 ===
+URL: https://www.casacivil.df.gov.br/category/governanca/
+Type: Content Error
+Details: Conteúdo não encontrado (#conteudo ou .col-md-8.col-md-offset-1)
+==================================================
+
+=== Validation Error: 2025-02-11 09:40:10 ===
+URL: Usar a url:
+/comissoes
+Type: Fetch Error
+Details: Não foi possível buscar página original
+==================================================
+
+=== Validation Error: 2025-02-11 09:40:20 ===
+URL: https://www.casacivil.df.gov.br/category/comissoes-e-grupos-de-trabalho/
+Type: Content Error
+Details: Conteúdo não encontrado (#conteudo ou .col-md-8.col-md-offset-1)
+==================================================
+
+=== Validation Error: 2025-02-11 09:40:20 ===
+URL: Usar a url:
+/lai
+Type: Fetch Error
+Details: Não foi possível buscar página original
+==================================================
+
+=== Validation Error: 2025-02-11 09:40:30 ===
+URL: https://casacivil-hml.df.gov.br:8443/institucional3
+Type: Content Error
+Details: Div .gdf-web-content não encontrada
+==================================================
+
+=== Validation Error: 2025-02-11 09:40:37 ===
+URL: https://www.casacivil.df.gov.br/category/institucional/
+Type: Content Error
+Details: Conteúdo não encontrado (#conteudo ou .col-md-8.col-md-offset-1)
+==================================================
+
+=== Validation Error: 2025-02-11 09:40:39 ===
+URL: https://casacivil-hml.df.gov.br:8443/perguntas-frequentes-lai-faq
+Type: Content Error
+Details: Div .gdf-web-content não encontrada
+==================================================
+
+=== Validation Error: 2025-02-11 09:40:50 ===
+URL: https://casacivil-hml.df.gov.br:8443/contratos
+Type: Content Error
+Details: Div .gdf-web-content não encontrada
+==================================================
+
+=== Validation Error: 2025-02-11 09:41:02 ===
+URL: https://casacivil-hml.df.gov.br:8443/convenios
+Type: Content Error
+Details: Div .gdf-web-content não encontrada
+==================================================
+
+=== Validation Error: 2025-02-11 09:41:06 ===
+URL: https://casacivil-hml.df.gov.br:8443/resultados-alcancados
+Type: Content Error
+Details: Div .gdf-web-content não encontrada
+==================================================
+
+=== Validation Error: 2025-02-11 09:41:21 ===
+URL: Usar a url:
+/lgpd
+Type: Fetch Error
+Details: Não foi possível buscar página original
+==================================================
+
+=== Validation Error: 2025-02-11 09:41:21 ===
+URL: Usar a url:
+/ouvidoria
+Type: Fetch Error
+Details: Não foi possível buscar página original
+==================================================
+
+=== Validation Error: 2025-02-11 09:42:03 ===
+URL: https://casacivil-hml.df.gov.br:8443/relatorio-de-ouvidoria
+Type: Content Error
+Details: Div .gdf-web-content não encontrada
+==================================================
+
+=== Validation Error: 2025-02-11 09:42:19 ===
+URL: https://casacivil-hml.df.gov.br:8443/voce-sabia
+Type: Content Error
+Details: Div .gdf-web-content não encontrada
+==================================================
+
+=== Validation Error: 2025-02-11 09:42:43 ===
+URL: https://www.casacivil.df.gov.br/category/imprensa/
+Type: Content Error
+Details: Conteúdo não encontrado (#conteudo ou .col-md-8.col-md-offset-1)
+==================================================
+
+=== Validation Error: 2025-02-11 09:43:01 ===
+URL: https://casacivil-hml.df.gov.br:8443/estatais-legislacao
+Type: Content Error
+Details: Div .gdf-web-content não encontrada
+==================================================
+
+=== Validation Error: 2025-02-11 09:43:05 ===
+URL: https://www.casacivil.df.gov.br/category/sem-categoria/
+Type: Content Error
+Details: Conteúdo não encontrado (#conteudo ou .col-md-8.col-md-offset-1)
+==================================================
+
+=== Validation Error: 2025-02-11 09:43:58 ===
+URL: https://www.casacivil.df.gov.br/category/vinculados/
+Type: Content Error
+Details: Conteúdo não encontrado (#conteudo ou .col-md-8.col-md-offset-1)
+==================================================
+
+=== Validation Error: 2025-02-11 09:44:03 ===
+URL: https://casacivil-hml.df.gov.br:8443/secretaria-de-estado-da-juventude
+Type: Content Error
+Details: Div .gdf-web-content não encontrada
+==================================================
+
+=== Validation Error: 2025-02-11 09:44:07 ===
+URL: https://casacivil-hml.df.gov.br:8443/secretaria-de-estado-de-projetos-especiais
+Type: Content Error
+Details: Div .gdf-web-content não encontrada
+==================================================
+
+=== Validation Error: 2025-02-11 09:44:09 ===
+URL: https://casacivil-hml.df.gov.br:8443/secretaria-de-estado-de-relacoes-institucionais
+Type: Content Error
+Details: Div .gdf-web-content não encontrada
+==================================================
+
+=== Validation Error: 2025-02-11 09:44:11 ===
+URL: https://casacivil-hml.df.gov.br:8443/secretaria-de-estado-de-governo
+Type: Content Error
+Details: Div .gdf-web-content não encontrada
+==================================================
+
+=== Validation Error: 2025-02-11 09:44:13 ===
+URL: https://casacivil-hml.df.gov.br:8443/secretaria-extraordinaria-da-pessoa-com-deficiencia-do-distrito-federal
+Type: Content Error
+Details: Div .gdf-web-content não encontrada
+==================================================
+
+=== Validation Error: 2025-02-11 09:44:16 ===
+URL: https://casacivil-hml.df.gov.br:8443/secretaria-extraordinaria-da-familia
+Type: Content Error
+Details: Div .gdf-web-content não encontrada
+==================================================
+
+=== Validation Error: 2025-02-11 09:44:35 ===
+URL: https://casacivil-hml.df.gov.br:8443/banner-programas
+Type: Content Error
+Details: Div .gdf-web-content não encontrada
+==================================================
+
+=== Validation Error: 2025-02-11 09:44:37 ===
+URL: https://casacivil-hml.df.gov.br:8443/gerenciar-modulos-da-home
+Type: Content Error
+Details: Div .gdf-web-content não encontrada
+==================================================
+
+=== Validation Error: 2025-02-11 09:44:38 ===
+URL: Não migrar
+Type: Fetch Error
+Details: Não foi possível buscar página migrada
+==================================================
+
+=== Validation Error: 2025-02-11 09:44:41 ===
+URL: https://casacivil-hml.df.gov.br:8443/flickr
+Type: Content Error
+Details: Div .gdf-web-content não encontrada
+==================================================
+
+=== Validation Error: 2025-02-11 09:44:43 ===
+URL: https://casacivil-hml.df.gov.br:8443/audio
+Type: Content Error
+Details: Div .gdf-web-content não encontrada
+==================================================
+
+=== Validation Error: 2025-02-11 09:44:45 ===
+URL: https://casacivil-hml.df.gov.br:8443/video
+Type: Content Error
+Details: Div .gdf-web-content não encontrada
+==================================================
+
+=== Validation Error: 2025-02-11 09:44:47 ===
+URL: Usar a url:
+/6-botoes
+Type: Fetch Error
+Details: Não foi possível buscar página original
+==================================================

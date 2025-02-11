@@ -1,6 +1,7 @@
 import asyncio
 import base64
 import logging
+import traceback
 import aiohttp
 from dotenv import load_dotenv
 import os
@@ -10,6 +11,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from page_creator import PageCreator
 from web_content_folder import FolderCreator
 from web_content_creator import WebContentCreator
+from content_validator import ContentValidator
 import argparse
 
 load_dotenv()
@@ -31,39 +33,51 @@ def parse_hierarchy(hierarchy_str: str) -> list:
     return [x.strip() for x in hierarchy_str.split('>')]
 
 async def get_sheet_data():
-    if os.path.exists('token.json'):
-        creds = Credentials.from_authorized_user_file('token.json', ['https://www.googleapis.com/auth/spreadsheets.readonly'])
-    else:
-        flow = InstalledAppFlow.from_client_secrets_file(
-            'client_secret.json',
-            ['https://www.googleapis.com/auth/spreadsheets.readonly']
-        )
-        creds = flow.run_local_server(port=0)
-        with open('token.json', 'w') as token:
-            token.write(creds.to_json())
+   if os.path.exists('token.json'):
+       creds = Credentials.from_authorized_user_file('token.json', ['https://www.googleapis.com/auth/spreadsheets.readonly'])
+   else:
+       flow = InstalledAppFlow.from_client_secrets_file(
+           'client_secret.json',
+           ['https://www.googleapis.com/auth/spreadsheets.readonly']
+       )
+       creds = flow.run_local_server(port=0)
+       with open('token.json', 'w') as token:
+           token.write(creds.to_json())
 
-    gc = gspread.authorize(creds)
-    sheet = gc.open_by_key(Config.sheet_id).worksheet("Mapeamento Manual")
-    rows = sheet.get_all_values()[1:]
+   gc = gspread.authorize(creds)
+   spreadsheet = gc.open_by_key(Config.sheet_id)
+   
+   # Busca primeira aba que contenha "mapeamento" no título
+   worksheet = None
+   for sheet in spreadsheet.worksheets():
+       if "mapeamento" in sheet.title.lower():
+           print(f"Aba encontrada: {sheet.title}")
+           worksheet = sheet
+           break
+           
+   if not worksheet:
+       raise Exception("Nenhuma aba que contenha 'mapeamento' encontrada na planilha")
+       
+   rows = worksheet.get_all_values()[1:]
 
-    pages = []
-    for row in rows:
-        if all(row[:1]) and len(row) > 6 and row[6]:
-            hierarchy = parse_hierarchy(row[6])
-            title = hierarchy[-1] if hierarchy else "Sem Título"
-            visibility = row[7].strip().lower() if len(row) > 7 and row[7] else 'menu'
-            is_visible = visibility == 'menu'
+   pages = []
+   for row in rows:
+       if all(row[:2]) and len(row) > 6 and row[6]:  # Verifica se tem as duas primeiras colunas
+           hierarchy = parse_hierarchy(row[6])
+           title = hierarchy[-1] if hierarchy else "Sem Título"
+           visibility = row[7].strip().lower() if len(row) > 7 and row[7] else 'menu'
+           is_visible = visibility == 'menu'
 
-            if title.strip():
-                pages.append({
-                    'title': title,
-                    'url': row[0],
-                    'destination': row[0],
-                    'hierarchy': hierarchy,
-                    'visible': is_visible,
-                })
+           if title.strip():
+               pages.append({
+                   'title': title,
+                   'source_url': row[0],  # Coluna 0 (De)
+                   'destination_url': row[1],  # Coluna 1 (Para)
+                   'hierarchy': hierarchy,
+                   'visible': is_visible,
+               })
 
-    return pages
+   return pages
 
 async def migrate_pages(pages):
     config = Config()
@@ -150,56 +164,87 @@ async def migrate_contents(pages):
     
     return content_mapping
 
-async def main():
-    parser = argparse.ArgumentParser(description='Migração de conteúdo Liferay')
-    parser.add_argument('--folders', action='store_true', help='Migrar apenas pastas')
-    parser.add_argument('--contents', action='store_true', help='Migrar apenas conteúdos')
-    parser.add_argument('--pages', action='store_true', help='Migrar apenas páginas')
-    args = parser.parse_args()
-
-    try:
-        pages = await get_sheet_data()
-
-        if not pages:
-            logger.error("Nenhuma página válida encontrada na planilha")
-            return
-
-        # Dicionário para mapear títulos de páginas para IDs de conteúdo
-        content_mapping = {}
-
-        if args.folders:
-            logger.info("Iniciando migração de pastas...")
-            await migrate_folders(pages)
-        elif args.contents:
-            logger.info("Iniciando migração de conteúdos...")
-            content_mapping = await migrate_contents(pages)
-        elif args.pages:
-            logger.info("Iniciando migração de páginas...")
-            await migrate_pages(pages)
-        else:
-            logger.info("Iniciando migração completa...")
-            await migrate_pages(pages)
-            await migrate_folders(pages)
-            content_mapping = await migrate_contents(pages)
-            await migrate_pages(pages)
-        
-        # Adiciona conteúdo às páginas
-        if content_mapping:
-            config = Config()
-            content_creator = WebContentCreator(config)
-            try:
-                await content_creator.initialize_session()
-                await content_creator.add_content_to_created_pages(content_mapping)
-            finally:
-                await content_creator.close()
-            
-        logger.info("Migração concluída!")
-        
-    except KeyboardInterrupt:
-        logger.info("Migração interrompida")
-    except Exception as e:
-        logger.error(f"Erro fatal: {str(e)}")
-        raise
+async def validate_content(pages):
+    config = Config()
+    validator = ContentValidator(config)
     
+    try:
+        await validator.initialize_session()
+        
+        for page in pages:
+            logger.info(f"\nValidando página: {page['title']}")
+            logger.info(f"URL Original: {page['source_url']}")
+            logger.info(f"URL Migrada: {page['destination_url']}")
+            
+            is_valid = await validator.validate_page(
+                source_url=page['source_url'],
+                destination_url=page['destination_url'],
+                title=page['title']
+            )
+            
+            if is_valid:
+                logger.info(f"✓ Página validada com sucesso: {page['title']}")
+            else:
+                logger.error(f"✗ Erros encontrados na página: {page['title']}")
+
+    finally:
+        await validator.close()
+
+async def main():
+   parser = argparse.ArgumentParser(description='Migração de conteúdo Liferay')
+   parser.add_argument('--folders', action='store_true', help='Migrar apenas pastas')
+   parser.add_argument('--contents', action='store_true', help='Migrar apenas conteúdos')
+   parser.add_argument('--pages', action='store_true', help='Migrar apenas páginas')
+   parser.add_argument('--validate', action='store_true', help='Validar conteúdo migrado')
+   args = parser.parse_args()
+
+   try:
+       pages = await get_sheet_data()
+
+       if not pages:
+           logger.error("Nenhuma página válida encontrada na planilha")
+           return
+
+       content_mapping = {}
+
+       if args.validate:
+           logger.info("Iniciando validação do conteúdo...")
+           await validate_content(pages)
+           return
+           
+       if args.folders:
+           logger.info("Iniciando migração de pastas...")
+           await migrate_folders(pages)
+       elif args.contents:
+           logger.info("Iniciando migração de conteúdos...")
+           content_mapping = await migrate_contents(pages)
+       elif args.pages:
+           logger.info("Iniciando migração de páginas...")
+           await migrate_pages(pages)
+       else:
+           logger.info("Iniciando migração completa...")
+           await migrate_pages(pages)
+           await migrate_folders(pages)
+           content_mapping = await migrate_contents(pages)
+           await migrate_pages(pages)
+
+       if content_mapping:
+           config = Config()
+           content_creator = WebContentCreator(config)
+           try:
+               await content_creator.initialize_session()
+               await content_creator.add_content_to_created_pages(content_mapping)
+           finally:
+               await content_creator.close()
+           
+       logger.info("Migração concluída!")
+       
+   except KeyboardInterrupt:
+       logger.info("Migração interrompida")
+   except Exception as e:
+       logger.error(f"Erro fatal: {str(e)}")
+       logger.error(traceback.format_exc())
+       raise
+   
 if __name__ == "__main__":
-    asyncio.run(main())
+   asyncio.run(main())

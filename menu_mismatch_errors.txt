@@ -1,0 +1,322 @@
+
+=== Validation Error: 2025-02-11 09:38:58 ===
+URL: https://www.casacivil.df.gov.br/agenda-pautas-e-atas/
+Type: Menu Mismatch
+Details: Menu não corresponde ao original:
+Diferenças no menu:
+Link 1: URL diferente - Original: '/nosso-natal-vai-levar-roda-gigante-e-patinacao-no-gelo-para-a-esplanada-a-partir-de-1o-de-dezembro/' vs Migrado: '/w//nosso-natal-vai-levar-roda-gigante-e-patinacao-no-gelo-para-a-esplanada-a-partir-de-1o-de-dezembro'
+Link 2: URL diferente - Original: '/publicado-o-calendario-escolar-da-rede-publica-do-distrito-federal-para-2025/' vs Migrado: '/publicado-o-calendario-escolar-da-rede-publica-do-distrito-federal-para-2025'
+Link 3: URL diferente - Original: '/gdf-e-superior-tribunal-militar-assinam-acordo-de-cooperacao-em-prol-das-mulheres/' vs Migrado: '/gdf-e-superior-tribunal-militar-assinam-acordo-de-cooperacao-em-prol-das-mulheres'
+Link 4: URL diferente - Original: '/comeca-a-pintura-das-fachadas-do-teatro-nacional-claudio-santoro/' vs Migrado: '/comeca-a-pintura-das-fachadas-do-teatro-nacional-claudio-santoro'
+Link 5: URL diferente - Original: '/http-www-casacivil-df-gov-br-wp-conteudo-uploads-2020-09-organograma-caci-pdf/' vs Migrado: '/organograma-2'
+Link 6: URL diferente - Original: '/agenda-pautas-e-atas/' vs Migrado: '/agenda-pautas-e-atas'
+Link 7: URL diferente - Original: '/posse-de-servidores/' vs Migrado: '/posse-de-servidores'
+Link 8: URL diferente - Original: '/%f0%9f%93%85-agenda-do-chefe-da-casa-civil/' vs Migrado: '/agenda-do-chefe-da-casa-civil'
+Link 9: URL diferente - Original: '/perfil-secretario-adjunto-das-cidades/' vs Migrado: '/perfil-secretario-adjunto-das-cidades'
+Link 10: URL diferente - Original: '/perfil-secretaria-adjunta-de-governanca-e-compliance/' vs Migrado: '/perfil-secretaria-adjunta-de-governanca-e-compliance'
+==================================================
+
+=== Validation Error: 2025-02-11 09:39:05 ===
+URL: https://www.casacivil.df.gov.br/category/carta-de-servicos/
+Type: Menu Mismatch
+Details: Menu não corresponde ao original:
+Diferença no número de links: Original (7) vs Migrado (6)
+==================================================
+
+=== Validation Error: 2025-02-11 09:39:07 ===
+URL: https://www.casacivil.df.gov.br/publicacao-no-dodf/
+Type: Menu Mismatch
+Details: Menu não corresponde ao original:
+Diferença no número de links: Original (7) vs Migrado (6)
+==================================================
+
+=== Validation Error: 2025-02-11 09:39:09 ===
+URL: https://www.casacivil.df.gov.br/copia-de-processos-e-legislacoes/
+Type: Menu Mismatch
+Details: Menu não corresponde ao original:
+Diferença no número de links: Original (7) vs Migrado (6)
+==================================================
+
+=== Validation Error: 2025-02-11 09:39:11 ===
+URL: https://www.casacivil.df.gov.br/servicos-de-ouvidoria/
+Type: Menu Mismatch
+Details: Menu não corresponde ao original:
+Diferença no número de links: Original (7) vs Migrado (6)
+==================================================
+
+=== Validation Error: 2025-02-11 09:39:13 ===
+URL: https://www.casacivil.df.gov.br/servico-de-informacoes-ao-cidadao-sic/
+Type: Menu Mismatch
+Details: Menu não corresponde ao original:
+Diferença no número de links: Original (7) vs Migrado (6)
+==================================================
+
+=== Validation Error: 2025-02-11 09:39:15 ===
+URL: https://www.casacivil.df.gov.br/pesquisa-de-satisfacao/
+Type: Menu Mismatch
+Details: Menu não corresponde ao original:
+Diferença no número de links: Original (7) vs Migrado (6)
+==================================================
+
+=== Validation Error: 2025-02-11 09:39:17 ===
+URL: https://www.casacivil.df.gov.br/__trashed-2/
+Type: Menu Mismatch
+Details: Menu não corresponde ao original:
+Diferença no número de links: Original (7) vs Migrado (6)
+==================================================
+
+=== Validation Error: 2025-02-11 09:39:53 ===
+URL: https://www.casacivil.df.gov.br/o-comite-interno-de-governanca-cig/
+Type: Menu Mismatch
+Details: Menu não corresponde ao original:
+Diferenças no menu:
+Link 1: URL diferente - Original: '/o-comite-interno-de-governanca-cig/' vs Migrado: '/o-comite-interno-de-governanca-cig'
+==================================================
+
+=== Validation Error: 2025-02-11 09:40:22 ===
+URL: https://www.casacivil.df.gov.br/category/acesso-a-informacao/
+Type: Menu Mismatch
+Details: Menu não corresponde ao original:
+Diferença no número de links: Original (19) vs Migrado (18)
+==================================================
+
+=== Validation Error: 2025-02-11 09:41:23 ===
+URL: https://www.casacivil.df.gov.br/category/ouvidoria/
+Type: Menu Mismatch
+Details: Menu não corresponde ao original:
+Diferenças no menu:
+Link 1: URL diferente - Original: '/a-ouvidoria-da-casa-civil-3/' vs Migrado: '/a-ouvidoria-da-casa-civil-3'
+Link 2: URL diferente - Original: '/perfil-do-ouvidor-2/' vs Migrado: '/perfil-do-ouvidor-2'
+Link 3: URL diferente - Original: '/tipos-de-manifestacao-2/' vs Migrado: '/tipos-de-manifestacao-2'
+Link 4: URL diferente - Original: '/painel-da-ouvidoria/' vs Migrado: '/painel-da-ouvidoria'
+Link 5: URL diferente - Original: '/canais-de-atendimento-2/' vs Migrado: '/canais-de-atendimento-2'
+Link 6: URL diferente - Original: '/requisitos-e-documentos-2/' vs Migrado: '/requisitos-e-documentos-2'
+Link 7: URL diferente - Original: '/passo-a-passo/' vs Migrado: '/passo-a-passo'
+Link 8: URL diferente - Original: '/perguntas-frequentes-2/' vs Migrado: '/perguntas-frequentes-2'
+Link 9: URL diferente - Original: '/plano-de-acao-anual/' vs Migrado: '/plano-de-acao-anual'
+Link 10: URL diferente - Original: '/relatorio-de-ouvidoria/' vs Migrado: '/relatorio-de-ouvidoria'
+Link 11: URL diferente - Original: '/servico-de-informacoes-ao-cidadao-sic-2/' vs Migrado: '/servico-de-informacoes-ao-cidadao-sic-2'
+Link 12: URL diferente - Original: '/texto_ouvidoria/' vs Migrado: '/a-ouvidoria1'
+==================================================
+
+=== Validation Error: 2025-02-11 09:42:01 ===
+URL: https://www.casacivil.df.gov.br/plano-de-acao-anual/
+Type: Menu Mismatch
+Details: Menu não corresponde ao original:
+Diferenças no menu:
+Link 1: URL diferente - Original: '/a-ouvidoria-da-casa-civil-3/' vs Migrado: '/a-ouvidoria-da-casa-civil-3'
+Link 2: URL diferente - Original: '/perfil-do-ouvidor-2/' vs Migrado: '/perfil-do-ouvidor-2'
+Link 3: URL diferente - Original: '/tipos-de-manifestacao-2/' vs Migrado: '/tipos-de-manifestacao-2'
+Link 4: URL diferente - Original: '/painel-da-ouvidoria/' vs Migrado: '/painel-da-ouvidoria'
+Link 5: URL diferente - Original: '/canais-de-atendimento-2/' vs Migrado: '/canais-de-atendimento-2'
+Link 6: URL diferente - Original: '/requisitos-e-documentos-2/' vs Migrado: '/requisitos-e-documentos-2'
+Link 7: URL diferente - Original: '/passo-a-passo/' vs Migrado: '/passo-a-passo'
+Link 8: URL diferente - Original: '/perguntas-frequentes-2/' vs Migrado: '/perguntas-frequentes-2'
+Link 9: URL diferente - Original: '/plano-de-acao-anual/' vs Migrado: '/plano-de-acao-anual'
+Link 10: URL diferente - Original: '/relatorio-de-ouvidoria/' vs Migrado: '/relatorio-de-ouvidoria'
+Link 11: URL diferente - Original: '/servico-de-informacoes-ao-cidadao-sic-2/' vs Migrado: '/servico-de-informacoes-ao-cidadao-sic-2'
+Link 12: URL diferente - Original: '/texto_ouvidoria/' vs Migrado: '/a-ouvidoria1'
+==================================================
+
+=== Validation Error: 2025-02-11 09:42:06 ===
+URL: https://www.casacivil.df.gov.br/servico-de-informacoes-ao-cidadao-sic-2/
+Type: Menu Mismatch
+Details: Menu não corresponde ao original:
+Diferenças no menu:
+Link 1: URL diferente - Original: '/a-ouvidoria-da-casa-civil-3/' vs Migrado: '/a-ouvidoria-da-casa-civil-3'
+Link 2: URL diferente - Original: '/perfil-do-ouvidor-2/' vs Migrado: '/perfil-do-ouvidor-2'
+Link 3: URL diferente - Original: '/tipos-de-manifestacao-2/' vs Migrado: '/tipos-de-manifestacao-2'
+Link 4: URL diferente - Original: '/painel-da-ouvidoria/' vs Migrado: '/painel-da-ouvidoria'
+Link 5: URL diferente - Original: '/canais-de-atendimento-2/' vs Migrado: '/canais-de-atendimento-2'
+Link 6: URL diferente - Original: '/requisitos-e-documentos-2/' vs Migrado: '/requisitos-e-documentos-2'
+Link 7: URL diferente - Original: '/passo-a-passo/' vs Migrado: '/passo-a-passo'
+Link 8: URL diferente - Original: '/perguntas-frequentes-2/' vs Migrado: '/perguntas-frequentes-2'
+Link 9: URL diferente - Original: '/plano-de-acao-anual/' vs Migrado: '/plano-de-acao-anual'
+Link 10: URL diferente - Original: '/relatorio-de-ouvidoria/' vs Migrado: '/relatorio-de-ouvidoria'
+Link 11: URL diferente - Original: '/servico-de-informacoes-ao-cidadao-sic-2/' vs Migrado: '/servico-de-informacoes-ao-cidadao-sic-2'
+Link 12: URL diferente - Original: '/texto_ouvidoria/' vs Migrado: '/a-ouvidoria1'
+==================================================
+
+=== Validation Error: 2025-02-11 09:42:08 ===
+URL: https://www.casacivil.df.gov.br/texto_ouvidoria/
+Type: Menu Mismatch
+Details: Menu não corresponde ao original:
+Diferenças no menu:
+Link 1: URL diferente - Original: '/a-ouvidoria-da-casa-civil-3/' vs Migrado: '/a-ouvidoria-da-casa-civil-3'
+Link 2: URL diferente - Original: '/perfil-do-ouvidor-2/' vs Migrado: '/perfil-do-ouvidor-2'
+Link 3: URL diferente - Original: '/tipos-de-manifestacao-2/' vs Migrado: '/tipos-de-manifestacao-2'
+Link 4: URL diferente - Original: '/painel-da-ouvidoria/' vs Migrado: '/painel-da-ouvidoria'
+Link 5: URL diferente - Original: '/canais-de-atendimento-2/' vs Migrado: '/canais-de-atendimento-2'
+Link 6: URL diferente - Original: '/requisitos-e-documentos-2/' vs Migrado: '/requisitos-e-documentos-2'
+Link 7: URL diferente - Original: '/passo-a-passo/' vs Migrado: '/passo-a-passo'
+Link 8: URL diferente - Original: '/perguntas-frequentes-2/' vs Migrado: '/perguntas-frequentes-2'
+Link 9: URL diferente - Original: '/plano-de-acao-anual/' vs Migrado: '/plano-de-acao-anual'
+Link 10: URL diferente - Original: '/relatorio-de-ouvidoria/' vs Migrado: '/relatorio-de-ouvidoria'
+Link 11: URL diferente - Original: '/servico-de-informacoes-ao-cidadao-sic-2/' vs Migrado: '/servico-de-informacoes-ao-cidadao-sic-2'
+Link 12: URL diferente - Original: '/texto_ouvidoria/' vs Migrado: '/a-ouvidoria1'
+==================================================
+
+=== Validation Error: 2025-02-11 09:42:10 ===
+URL: https://www.casacivil.df.gov.br/category/subsecretarias/
+Type: Menu Mismatch
+Details: Menu não corresponde ao original:
+Diferenças no menu:
+Link 1: URL diferente - Original: '/legislacao-basica/' vs Migrado: '/legislacao-basica'
+Link 2: URL diferente - Original: '/legislacao-correlata/' vs Migrado: '/legislacao-correlata'
+Link 3: URL diferente - Original: '/voce-sabia/' vs Migrado: '/voce-sabia'
+==================================================
+
+=== Validation Error: 2025-02-11 09:42:12 ===
+URL: https://www.casacivil.df.gov.br/category/subsecretarias/subsecretaria-de-compliance/
+Type: Menu Mismatch
+Details: Menu não corresponde ao original:
+Diferenças no menu:
+Link 1: URL diferente - Original: '/legislacao-basica/' vs Migrado: '/legislacao-basica'
+Link 2: URL diferente - Original: '/legislacao-correlata/' vs Migrado: '/legislacao-correlata'
+Link 3: URL diferente - Original: '/voce-sabia/' vs Migrado: '/voce-sabia'
+==================================================
+
+=== Validation Error: 2025-02-11 09:42:15 ===
+URL: https://www.casacivil.df.gov.br/legislacao-basica/
+Type: Menu Mismatch
+Details: Menu não corresponde ao original:
+Diferenças no menu:
+Link 1: URL diferente - Original: '/legislacao-basica/' vs Migrado: '/legislacao-basica'
+Link 2: URL diferente - Original: '/legislacao-correlata/' vs Migrado: '/legislacao-correlata'
+Link 3: URL diferente - Original: '/voce-sabia/' vs Migrado: '/voce-sabia'
+==================================================
+
+=== Validation Error: 2025-02-11 09:42:17 ===
+URL: https://www.casacivil.df.gov.br/legislacao-correlata/
+Type: Menu Mismatch
+Details: Menu não corresponde ao original:
+Diferenças no menu:
+Link 1: URL diferente - Original: '/legislacao-basica/' vs Migrado: '/legislacao-basica'
+Link 2: URL diferente - Original: '/legislacao-correlata/' vs Migrado: '/legislacao-correlata'
+Link 3: URL diferente - Original: '/voce-sabia/' vs Migrado: '/voce-sabia'
+==================================================
+
+=== Validation Error: 2025-02-11 09:42:21 ===
+URL: https://www.casacivil.df.gov.br/category/subsecretaria-de-governanca/
+Type: Menu Mismatch
+Details: Menu não corresponde ao original:
+Diferenças no menu:
+Link 1: URL diferente - Original: '/decreto/' vs Migrado: '/decreto'
+Link 2: Texto diferente - Original: 'CONSELHO DE GOVERNANÇA' vs Migrado: 'Conselho de Governança'
+Link 2: URL diferente - Original: '/conselho-de-governanca/' vs Migrado: '/conselho-de-governanca'
+Link 3: Texto diferente - Original: ': : Agenda, pautas, atas e resoluções' vs Migrado: 'Agenda, pautas, atas e resoluções'
+Link 3: URL diferente - Original: '/agenda-pauta-ata-resolucao/' vs Migrado: '/agenda-pauta-ata-resolucao'
+Link 4: Texto diferente - Original: ': : Regimento Interno do Conselho' vs Migrado: 'Regimento Interno do Conselho'
+Link 4: URL diferente - Original: '/regimento-interno-do-conselho/' vs Migrado: '/regimento-interno-do-conselho'
+Link 5: Texto diferente - Original: 'COMITÊ INTERNO DE GOVERNANÇA' vs Migrado: 'Comitê Interno de Governança'
+Link 5: URL diferente - Original: '/comite-interno-de-governanca/' vs Migrado: '/comite-interno-de-governanca'
+==================================================
+
+=== Validation Error: 2025-02-11 09:42:24 ===
+URL: https://www.casacivil.df.gov.br/decreto/
+Type: Menu Mismatch
+Details: Menu não corresponde ao original:
+Diferenças no menu:
+Link 1: URL diferente - Original: '/decreto/' vs Migrado: '/decreto'
+Link 2: Texto diferente - Original: 'CONSELHO DE GOVERNANÇA' vs Migrado: 'Conselho de Governança'
+Link 2: URL diferente - Original: '/conselho-de-governanca/' vs Migrado: '/conselho-de-governanca'
+Link 3: Texto diferente - Original: ': : Agenda, pautas, atas e resoluções' vs Migrado: 'Agenda, pautas, atas e resoluções'
+Link 3: URL diferente - Original: '/agenda-pauta-ata-resolucao/' vs Migrado: '/agenda-pauta-ata-resolucao'
+Link 4: Texto diferente - Original: ': : Regimento Interno do Conselho' vs Migrado: 'Regimento Interno do Conselho'
+Link 4: URL diferente - Original: '/regimento-interno-do-conselho/' vs Migrado: '/regimento-interno-do-conselho'
+Link 5: Texto diferente - Original: 'COMITÊ INTERNO DE GOVERNANÇA' vs Migrado: 'Comitê Interno de Governança'
+Link 5: URL diferente - Original: '/comite-interno-de-governanca/' vs Migrado: '/comite-interno-de-governanca'
+==================================================
+
+=== Validation Error: 2025-02-11 09:42:26 ===
+URL: https://www.casacivil.df.gov.br/conselho-de-governanca/
+Type: Menu Mismatch
+Details: Menu não corresponde ao original:
+Diferenças no menu:
+Link 1: URL diferente - Original: '/decreto/' vs Migrado: '/decreto'
+Link 2: Texto diferente - Original: 'CONSELHO DE GOVERNANÇA' vs Migrado: 'Conselho de Governança'
+Link 2: URL diferente - Original: '/conselho-de-governanca/' vs Migrado: '/conselho-de-governanca'
+Link 3: Texto diferente - Original: ': : Agenda, pautas, atas e resoluções' vs Migrado: 'Agenda, pautas, atas e resoluções'
+Link 3: URL diferente - Original: '/agenda-pauta-ata-resolucao/' vs Migrado: '/agenda-pauta-ata-resolucao'
+Link 4: Texto diferente - Original: ': : Regimento Interno do Conselho' vs Migrado: 'Regimento Interno do Conselho'
+Link 4: URL diferente - Original: '/regimento-interno-do-conselho/' vs Migrado: '/regimento-interno-do-conselho'
+Link 5: Texto diferente - Original: 'COMITÊ INTERNO DE GOVERNANÇA' vs Migrado: 'Comitê Interno de Governança'
+Link 5: URL diferente - Original: '/comite-interno-de-governanca/' vs Migrado: '/comite-interno-de-governanca'
+==================================================
+
+=== Validation Error: 2025-02-11 09:42:28 ===
+URL: https://www.casacivil.df.gov.br/agenda-pauta-ata-resolucao/
+Type: Menu Mismatch
+Details: Menu não corresponde ao original:
+Diferenças no menu:
+Link 1: URL diferente - Original: '/decreto/' vs Migrado: '/decreto'
+Link 2: Texto diferente - Original: 'CONSELHO DE GOVERNANÇA' vs Migrado: 'Conselho de Governança'
+Link 2: URL diferente - Original: '/conselho-de-governanca/' vs Migrado: '/conselho-de-governanca'
+Link 3: Texto diferente - Original: ': : Agenda, pautas, atas e resoluções' vs Migrado: 'Agenda, pautas, atas e resoluções'
+Link 3: URL diferente - Original: '/agenda-pauta-ata-resolucao/' vs Migrado: '/agenda-pauta-ata-resolucao'
+Link 4: Texto diferente - Original: ': : Regimento Interno do Conselho' vs Migrado: 'Regimento Interno do Conselho'
+Link 4: URL diferente - Original: '/regimento-interno-do-conselho/' vs Migrado: '/regimento-interno-do-conselho'
+Link 5: Texto diferente - Original: 'COMITÊ INTERNO DE GOVERNANÇA' vs Migrado: 'Comitê Interno de Governança'
+Link 5: URL diferente - Original: '/comite-interno-de-governanca/' vs Migrado: '/comite-interno-de-governanca'
+==================================================
+
+=== Validation Error: 2025-02-11 09:42:31 ===
+URL: https://www.casacivil.df.gov.br/regimento-interno-do-conselho/
+Type: Menu Mismatch
+Details: Menu não corresponde ao original:
+Diferenças no menu:
+Link 1: URL diferente - Original: '/decreto/' vs Migrado: '/decreto'
+Link 2: Texto diferente - Original: 'CONSELHO DE GOVERNANÇA' vs Migrado: 'Conselho de Governança'
+Link 2: URL diferente - Original: '/conselho-de-governanca/' vs Migrado: '/conselho-de-governanca'
+Link 3: Texto diferente - Original: ': : Agenda, pautas, atas e resoluções' vs Migrado: 'Agenda, pautas, atas e resoluções'
+Link 3: URL diferente - Original: '/agenda-pauta-ata-resolucao/' vs Migrado: '/agenda-pauta-ata-resolucao'
+Link 4: Texto diferente - Original: ': : Regimento Interno do Conselho' vs Migrado: 'Regimento Interno do Conselho'
+Link 4: URL diferente - Original: '/regimento-interno-do-conselho/' vs Migrado: '/regimento-interno-do-conselho'
+Link 5: Texto diferente - Original: 'COMITÊ INTERNO DE GOVERNANÇA' vs Migrado: 'Comitê Interno de Governança'
+Link 5: URL diferente - Original: '/comite-interno-de-governanca/' vs Migrado: '/comite-interno-de-governanca'
+==================================================
+
+=== Validation Error: 2025-02-11 09:42:33 ===
+URL: https://www.casacivil.df.gov.br/comite-interno-de-governanca/
+Type: Menu Mismatch
+Details: Menu não corresponde ao original:
+Diferenças no menu:
+Link 1: URL diferente - Original: '/decreto/' vs Migrado: '/decreto'
+Link 2: Texto diferente - Original: 'CONSELHO DE GOVERNANÇA' vs Migrado: 'Conselho de Governança'
+Link 2: URL diferente - Original: '/conselho-de-governanca/' vs Migrado: '/conselho-de-governanca'
+Link 3: Texto diferente - Original: ': : Agenda, pautas, atas e resoluções' vs Migrado: 'Agenda, pautas, atas e resoluções'
+Link 3: URL diferente - Original: '/agenda-pauta-ata-resolucao/' vs Migrado: '/agenda-pauta-ata-resolucao'
+Link 4: Texto diferente - Original: ': : Regimento Interno do Conselho' vs Migrado: 'Regimento Interno do Conselho'
+Link 4: URL diferente - Original: '/regimento-interno-do-conselho/' vs Migrado: '/regimento-interno-do-conselho'
+Link 5: Texto diferente - Original: 'COMITÊ INTERNO DE GOVERNANÇA' vs Migrado: 'Comitê Interno de Governança'
+Link 5: URL diferente - Original: '/comite-interno-de-governanca/' vs Migrado: '/comite-interno-de-governanca'
+==================================================
+
+=== Validation Error: 2025-02-11 09:42:36 ===
+URL: https://www.casacivil.df.gov.br/category/superintendencias/
+Type: Menu Mismatch
+Details: Menu não corresponde ao original:
+Diferenças no menu:
+Link 1: URL diferente - Original: '/telefones-uteis/' vs Migrado: '/telefones-uteis'
+==================================================
+
+=== Validation Error: 2025-02-11 09:42:54 ===
+URL: https://www.casacivil.df.gov.br/category/unidade-de-coordenacao-das-empresas-estatais/
+Type: Menu Mismatch
+Details: Menu não corresponde ao original:
+Diferença no número de links: Original (4) vs Migrado (3)
+==================================================
+
+=== Validation Error: 2025-02-11 09:42:56 ===
+URL: https://www.casacivil.df.gov.br/o-processo-de-adequacao-a-lei-13-303-2016/
+Type: Menu Mismatch
+Details: Menu não corresponde ao original:
+Diferença no número de links: Original (4) vs Migrado (3)
+==================================================
+
+=== Validation Error: 2025-02-11 09:42:59 ===
+URL: https://www.casacivil.df.gov.br/estatais-conheca/
+Type: Menu Mismatch
+Details: Menu não corresponde ao original:
+Diferença no número de links: Original (4) vs Migrado (3)
+==================================================
