@@ -60,23 +60,53 @@ async def get_sheet_data():
        
    rows = worksheet.get_all_values()[1:]
 
+    # Primeiro, obtém os tipos originais
+   page_type = [
+        row[15] if len(row) > 15 and row[15].strip() not in ["", "-"] else "widget"
+        for row in rows
+   ]
+
+    # Primeiro formato básico (remover espaços, lowercase, etc)
+   page_type_formatted = [
+        item.lower().replace("tipo de página: ", "").strip()
+        for item in page_type
+    ]
+
+    # Depois faz a conversão para os tipos do Liferay
+   page_type_formatted = [
+        "portlet" if item == "widget" else
+        "node" if item == "definida" else
+        "link_to_layout" if item == "vincular a uma pagina desse site" else
+        "url" if item == "vincular a uma url" else
+        "portlet"  # default caso nenhuma condição seja atendida
+        for item in page_type_formatted
+    ]
+
+    # Debug print
+   """ for original, converted in zip(page_type, page_type_formatted):
+        print(f"Tipo original: '{original}' -> Tipo convertido: '{converted}'") """
+
    pages = []
-   for row in rows:
-       if all(row[:2]) and len(row) > 6 and row[6]:  # Verifica se tem as duas primeiras colunas
-           hierarchy = parse_hierarchy(row[6])
-           title = hierarchy[-1] if hierarchy else "Sem Título"
-           visibility = row[7].strip().lower() if len(row) > 7 and row[7] else 'menu'
-           is_visible = visibility == 'menu'
+   for index, row in enumerate(rows):
+        if all(row[:1]) and len(row) > 6 and row[6]:
+            hierarchy = parse_hierarchy(row[6])
+            title = hierarchy[-1] if hierarchy else "Sem Título"  # Pega o último item da hierarquia
 
-           if title.strip():
-               pages.append({
-                   'title': title,
-                   'source_url': row[0],  # Coluna 0 (De)
-                   'destination_url': row[1],  # Coluna 1 (Para)
-                   'hierarchy': hierarchy,
-                   'visible': is_visible,
-               })
+            if title.strip():
+                page_data = {
+                    'title': title,
+                    'url': row[0],
+                    'destination': row[0],
+                    'hierarchy': hierarchy,
+                    'type': page_type_formatted[index]  # Adiciona o tipo de página formatado
+                }
+                pages.append(page_data)
+                # print(pages)
+                # Log detalhado para acompanhar os valores sendo processados
+                """ print(f"Página processada: {page_data}") """
 
+    # Log final mostrando todas as páginas geradas
+   print(f"Total de páginas processadas: {len(pages)}")
    return pages
 
 async def migrate_pages(pages):
@@ -95,21 +125,27 @@ async def migrate_pages(pages):
         for page in pages:
             logger.info(f"\nProcessando página: {page['title']}")
             logger.info(f"Hierarquia: {' > '.join(page['hierarchy'])}")
+            logger.info(f"Tipo de pagina: {page['type']}")
+            
+            
+            # Log para debug
             
             page_id = await creator.create_hierarchy(
                 hierarchy=page['hierarchy'],
                 final_title=page['title'],
                 final_url=page['destination'].strip('/').split('/')[-1],
-                visible=page['visible']
+                page_type=page['type'],
+                type_settings=page['type']
             )
+            
+            print(page['destination'].strip('/').split('/')[-1])
 
             if page_id:
-                logger.info(f"Página criada: {page['title']} (ID: {page_id})")
+                logger.info(f"Página criada: {page['title']} (ID: {page_id}) tipo({page['type']})")
             else:
-                logger.error(f"Falha ao criar página: {page['title']}")
+                logger.error(f"Falha ao criar página: {page['title']} {page['type']}")
 
         await creator.retry_failed_pages()
-
 async def migrate_folders(pages):
     config = Config()
     folder_creator = FolderCreator(config)
