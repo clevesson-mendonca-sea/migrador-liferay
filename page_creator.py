@@ -164,7 +164,7 @@ class PageCreator:
             "type": page_type,
             "hidden": hidden,
             "friendlyURL": f"/{normalized_url}",
-            "typeSettings": "\n".join(type_settings) if type_settings else ""
+            "typeSettings": "column-1=com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_b7oEtrCdwse4 layout-template-id=2_columns_ii"
         }
     
         try:
