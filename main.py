@@ -33,47 +33,40 @@ def parse_hierarchy(hierarchy_str: str) -> list:
     return [x.strip() for x in hierarchy_str.split('>')]
 
 async def get_sheet_data():
-   if os.path.exists('token.json'):
-       creds = Credentials.from_authorized_user_file('token.json', ['https://www.googleapis.com/auth/spreadsheets.readonly'])
-   else:
-       flow = InstalledAppFlow.from_client_secrets_file(
-           'client_secret.json',
-           ['https://www.googleapis.com/auth/spreadsheets.readonly']
-       )
-       creds = flow.run_local_server(port=0)
-       with open('token.json', 'w') as token:
-           token.write(creds.to_json())
+    if os.path.exists('token.json'):
+        creds = Credentials.from_authorized_user_file('token.json', ['https://www.googleapis.com/auth/spreadsheets.readonly'])
+    else:
+        flow = InstalledAppFlow.from_client_secrets_file(
+            'client_secret.json',
+            ['https://www.googleapis.com/auth/spreadsheets.readonly']
+        )
+        creds = flow.run_local_server(port=0)
+        with open('token.json', 'w') as token:
+            token.write(creds.to_json())
 
-   gc = gspread.authorize(creds)
-   spreadsheet = gc.open_by_key(Config.sheet_id)
-   
-   # Busca primeira aba que contenha "mapeamento" no título
-   worksheet = None
-   for sheet in spreadsheet.worksheets():
-       if "mapeamento" in sheet.title.lower():
-           print(f"Aba encontrada: {sheet.title}")
-           worksheet = sheet
-           break
-           
-   if not worksheet:
-       raise Exception("Nenhuma aba que contenha 'mapeamento' encontrada na planilha")
-       
-   rows = worksheet.get_all_values()[1:]
+    gc = gspread.authorize(creds)
+    workbook = gc.open_by_key(Config.sheet_id)
+    
+    sheet = next(
+      sheet for sheet in workbook.worksheets() 
+      if "mapeamento" in sheet.title.lower()
+    )
+    rows = sheet.get_all_values()[1:]
 
     # Primeiro, obtém os tipos originais
-   page_type = [
+    page_type = [
         row[15] if len(row) > 15 and row[15].strip() not in ["", "-"] else "widget"
         for row in rows
-   ]
+    ]
 
     # Primeiro formato básico (remover espaços, lowercase, etc)
-   page_type_formatted = [
+    page_type_formatted = [
         item.lower().replace("tipo de página: ", "").strip()
         for item in page_type
     ]
 
     # Depois faz a conversão para os tipos do Liferay
-   page_type_formatted = [
+    page_type_formatted = [
         "portlet" if item == "widget" else
         "node" if item == "definida" else
         "link_to_layout" if item == "vincular a uma pagina desse site" else
@@ -82,12 +75,8 @@ async def get_sheet_data():
         for item in page_type_formatted
     ]
 
-    # Debug print
-   """ for original, converted in zip(page_type, page_type_formatted):
-        print(f"Tipo original: '{original}' -> Tipo convertido: '{converted}'") """
-
-   pages = []
-   for index, row in enumerate(rows):
+    pages = []
+    for index, row in enumerate(rows):
         if all(row[:1]) and len(row) > 6 and row[6]:
             hierarchy = parse_hierarchy(row[6])
             title = hierarchy[-1] if hierarchy else "Sem Título"  # Pega o último item da hierarquia
@@ -106,8 +95,8 @@ async def get_sheet_data():
                 """ print(f"Página processada: {page_data}") """
 
     # Log final mostrando todas as páginas geradas
-   print(f"Total de páginas processadas: {len(pages)}")
-   return pages
+    print(f"Total de páginas processadas: {len(pages)}")
+    return pages
 
 async def migrate_pages(pages):
     config = Config()
@@ -116,10 +105,8 @@ async def migrate_pages(pages):
 
     async with aiohttp.ClientSession(headers={
         "Authorization": f"Basic {auth}",
-        "Content-Type": "application/x-www-form-urlencoded",
-    }, 
-        connector=aiohttp.TCPConnector(ssl=False)
-    ) as session:
+        "Content-Type": "application/x-www-form-urlencoded"
+    }) as session:
         creator.session = session
 
         for page in pages:
@@ -134,18 +121,16 @@ async def migrate_pages(pages):
                 hierarchy=page['hierarchy'],
                 final_title=page['title'],
                 final_url=page['destination'].strip('/').split('/')[-1],
-                page_type=page['type'],
-                type_settings=page['type']
+                page_type=page['type']
             )
             
-            print(page['destination'].strip('/').split('/')[-1])
-
             if page_id:
                 logger.info(f"Página criada: {page['title']} (ID: {page_id}) tipo({page['type']})")
             else:
                 logger.error(f"Falha ao criar página: {page['title']} {page['type']}")
 
         await creator.retry_failed_pages()
+      
 async def migrate_folders(pages):
     config = Config()
     folder_creator = FolderCreator(config)
