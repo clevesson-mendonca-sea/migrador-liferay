@@ -102,21 +102,23 @@ async def get_sheet_data():
 async def migrate_pages(pages):
     config = Config()
     creator = PageCreator(config)
-    auth = base64.b64encode(f"{config.liferay_user}:{config.liferay_pass}".encode()).decode()
+    
+    auth = aiohttp.BasicAuth(
+        login=config.liferay_user,
+        password=config.liferay_pass
+    )
 
-    async with aiohttp.ClientSession(headers={
-        "Authorization": f"Basic {auth}",
-        "Content-Type": "application/x-www-form-urlencoded"
-    }) as session:
+    async with aiohttp.ClientSession(
+        auth=auth,
+        headers={"Content-Type": "application/json"},
+        connector=aiohttp.TCPConnector(ssl=False)
+    ) as session:
         creator.session = session
 
         for page in pages:
             logger.info(f"\nProcessando página: {page['title']}")
             logger.info(f"Hierarquia: {' > '.join(page['hierarchy'])}")
             logger.info(f"Tipo de pagina: {page['type']}")
-            
-            
-            # Log para debug
             
             page_id = await creator.create_hierarchy(
                 hierarchy=page['hierarchy'],
@@ -131,7 +133,7 @@ async def migrate_pages(pages):
                 logger.error(f"Falha ao criar página: {page['title']} {page['type']}")
 
         await creator.retry_failed_pages()
-      
+        
 async def migrate_folders(pages):
     config = Config()
     folder_creator = FolderCreator(config)
