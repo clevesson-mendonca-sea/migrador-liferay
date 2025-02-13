@@ -391,11 +391,18 @@ class DocumentCreator:
                                 logger.info(f"Documento migrado com sucesso para: {friendly_url}")
                                 return friendly_url
 
-                    elif upload_response.status == 409:
-                        logger.warning(f"Conflito detectado (409) ao migrar documento: {doc_url}")
-                        
+                    elif upload_response.status == 409:  # Conflito: documento já existe
+                        logger.warning(f"Tentando resolver conflito para: {doc_url}")
+                        # Tenta buscar o documento existente
+                        try:
+                            existing_doc = await self._find_existing_document(filename, folder_id)
+                            if existing_doc:
+                                return existing_doc.get('contentUrl')
+                        except Exception as e:
+                            logger.error(f"Erro ao buscar documento existente: {str(e)}")
+
                         return {
-                            "doc_url": doc_url,
+                            "doc_url": "{doc_url}",
                             "page_url": page_url,
                             "hierarchy": hierarchy,
                             "status": 409,
@@ -416,6 +423,34 @@ class DocumentCreator:
         
         return None
 
+    async def _find_existing_document(self, filename: str, folder_id: Optional[int] = None) -> Optional[Dict[str, Any]]:
+        """
+        Busca um documento existente pelo nome do arquivo
+        """
+        try:
+            # Constrói a URL de busca
+            if folder_id:
+                search_url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/document-folders/{folder_id}/documents"
+            else:
+                search_url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/sites/{self.config.site_id}/documents"
+            
+            params = {
+                'filter': f"title eq '{filename}'",
+                'fields': 'id,contentUrl'
+            }
+            
+            async with self.session.get(search_url, params=params) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    items = data.get('items', [])
+                    if items:
+                        return items[0]
+            
+            return None
+            
+        except Exception as e:
+            logger.error(f"Erro ao buscar documento existente: {str(e)}")
+            return None
 
     async def close(self):
         if self.session:
