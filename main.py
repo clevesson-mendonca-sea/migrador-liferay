@@ -11,6 +11,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from page_creator import PageCreator
 from web_content_folder import FolderCreator
 from web_content_creator import WebContentCreator
+from document_creator import DocumentCreator
 from content_validator import ContentValidator
 import argparse
 
@@ -85,7 +86,7 @@ async def get_sheet_data():
                 page_data = {
                     'title': title,
                     'url': row[0],
-                    'destination': row[0],
+                    'destination': row[1],
                     'hierarchy': hierarchy,
                     'type': page_type_formatted[index]  # Adiciona o tipo de página formatado
                 }
@@ -185,6 +186,82 @@ async def migrate_contents(pages):
     
     return content_mapping
 
+async def migrate_documents(pages):
+    config = Config()
+    doc_creator = DocumentCreator(config)
+    folder_creator = FolderCreator(config)
+    
+    try:
+        await doc_creator.initialize_session()
+        await folder_creator.initialize_session()
+        
+        folder_cache = {}  # Cache para evitar buscar a mesma pasta múltiplas vezes
+        
+        for page in pages:
+            # Pula entradas que não são URLs válidas
+            if not doc_creator._validate_url(page['url']):
+                logger.warning(f"Pulando URL inválida: {page['url']}")
+                continue
+                
+            logger.info(f"\nProcessando página: {page['url']}")
+            logger.info(f"Hierarquia: {' > '.join(page['hierarchy'])}")
+            
+            try:
+                # Busca ou cria a pasta usando cache
+                hierarchy_key = tuple(page['hierarchy'])
+                if hierarchy_key not in folder_cache:
+                    folder_id = await folder_creator.create_folder_hierarchy(
+                        hierarchy=page['hierarchy'],
+                        final_title=page['hierarchy'][-1],
+                        folder_type='documents'
+                    )
+                    folder_cache[hierarchy_key] = folder_id
+                else:
+                    folder_id = folder_cache[hierarchy_key]
+                
+                if folder_id:
+                    logger.info(f"Usando pasta com ID: {folder_id}")
+                    
+                    # Processa a página e seus arquivos
+                    migrated_urls = await doc_creator.process_page_content(
+                        page_url=page['url'],
+                        folder_id=folder_id
+                    )
+                    
+                    if migrated_urls:
+                        logger.info(f"✓ Arquivos migrados da página {page['url']}:")
+                        for url in migrated_urls:
+                            logger.info(f"  - {url}")
+                    else:
+                        logger.warning(f"Nenhum arquivo encontrado/migrado da página {page['url']}")
+                        
+                else:
+                    logger.error(f"✗ Não foi possível encontrar/criar pasta para a página: {page['url']}")
+            
+            except Exception as e:
+                logger.error(f"Erro ao processar página {page['url']}: {str(e)}")
+                logger.error(traceback.format_exc())
+                continue
+                
+    finally:
+        await doc_creator.close()
+        await folder_creator.close()
+        
+async def get_folder_id_by_hierarchy(folder_creator, hierarchy):
+    """
+    Busca ou cria a pasta baseada na hierarquia e retorna seu ID
+    """
+    try:
+        folder_id = await folder_creator.create_folder_hierarchy(
+            hierarchy=hierarchy,
+            final_title=hierarchy[-1],
+            folder_type='document'  # Tipo correto para documentos
+        )
+        return folder_id
+    except Exception as e:
+        logger.error(f"Erro ao buscar/criar pasta para hierarquia {' > '.join(hierarchy)}: {str(e)}")
+        return None
+
 async def validate_content(pages):
     config = Config()
     validator = ContentValidator(config)
@@ -194,12 +271,12 @@ async def validate_content(pages):
         
         for page in pages:
             logger.info(f"\nValidando página: {page['title']}")
-            logger.info(f"URL Original: {page['source_url']}")
-            logger.info(f"URL Migrada: {page['destination_url']}")
+            logger.info(f"URL Original: {page['url']}")
+            logger.info(f"URL Migrada: {page['destination']}")
             
             is_valid = await validator.validate_page(
-                source_url=page['source_url'],
-                destination_url=page['destination_url'],
+                source_url=page['url'],
+                destination_url=page['destination'],
                 title=page['title']
             )
             
@@ -216,6 +293,7 @@ async def main():
    parser.add_argument('--folders', action='store_true', help='Migrar apenas pastas')
    parser.add_argument('--contents', action='store_true', help='Migrar apenas conteúdos')
    parser.add_argument('--pages', action='store_true', help='Migrar apenas páginas')
+   parser.add_argument('--documents', action='store_true', help='Migrar apenas documentos')
    parser.add_argument('--validate', action='store_true', help='Validar conteúdo migrado')
    args = parser.parse_args()
 
@@ -232,7 +310,10 @@ async def main():
            logger.info("Iniciando validação do conteúdo...")
            await validate_content(pages)
            return
-           
+    
+       if args.documents:
+            logger.info("Iniciando migração de documentos...")
+            await migrate_documents(pages)
        if args.folders:
            logger.info("Iniciando migração de pastas...")
            await migrate_folders(pages)

@@ -218,10 +218,7 @@ class PageCreator:
         # Cria página final se for diferente do último nível
         if (not hierarchy_levels or 
             normalize_page_name(final_title).lower() != normalize_page_name(hierarchy_levels[-1]).lower()):
-            print(hierarchy_levels)
-            print(final_title)
-            print(final_url)
-
+            
             final_page_id = await self.create_page(
                 normalize_page_name(final_title), 
                 normalize_friendly_url(final_url), 
