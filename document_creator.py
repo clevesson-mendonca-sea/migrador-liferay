@@ -270,6 +270,33 @@ class DocumentCreator:
         
         return has_valid_pattern
 
+    async def get_friendly_url(self, doc_id, folder_id):
+        """
+        Obtém a friendly URL do documento usando a estrutura correta do Liferay
+        """
+        document_url = f"/o/headless-delivery/v1.0/documents/{doc_id}"
+        full_url = f"{self.config.liferay_url}{document_url}"
+        
+        try:
+            async with self.session.get(full_url) as response:
+                if response.status == 200:
+                    result = await response.json()
+                    
+                    if result.get("contentUrl"):
+                        friendly_url = result["contentUrl"]
+                        logger.info(f"Friendly URL obtida: {friendly_url}")
+                        return friendly_url
+                        
+                    logger.error("contentUrl não encontrada no documento")
+                    return None
+                
+                logger.error(f"Erro ao obter detalhes do documento: {response.status}")
+                return None
+                
+        except Exception as e:
+            logger.error(f"Erro ao obter friendly URL: {str(e)}")
+            logger.error(traceback.format_exc())
+            return None
 
     async def migrate_document(self, doc_url: str, folder_id: Optional[int] = None, page_url: str = "", hierarchy: str = "") -> Optional[str]:
         try:
@@ -364,6 +391,17 @@ class DocumentCreator:
                                 logger.info(f"Documento migrado com sucesso para: {friendly_url}")
                                 return friendly_url
 
+                    elif upload_response.status == 409:
+                        logger.warning(f"Conflito detectado (409) ao migrar documento: {doc_url}")
+                        
+                        return {
+                            "doc_url": doc_url,
+                            "page_url": page_url,
+                            "hierarchy": hierarchy,
+                            "status": 409,
+                            "message": "Documento já existe ou conflito detectado."
+                        }
+
                     error_msg = f"Falha no upload: {upload_response.status}\nResposta: {response_text}"
                     logger.error(f"Falha no upload: {upload_response.status}")
                     logger.error(f"Resposta do servidor: {response_text}")
@@ -378,33 +416,6 @@ class DocumentCreator:
         
         return None
 
-    async def get_friendly_url(self, doc_id, folder_id):
-        """
-        Obtém a friendly URL do documento usando a estrutura correta do Liferay
-        """
-        document_url = f"/o/headless-delivery/v1.0/documents/{doc_id}"
-        full_url = f"{self.config.liferay_url}{document_url}"
-        
-        try:
-            async with self.session.get(full_url) as response:
-                if response.status == 200:
-                    result = await response.json()
-                    
-                    if result.get("contentUrl"):
-                        friendly_url = result["contentUrl"]
-                        logger.info(f"Friendly URL obtida: {friendly_url}")
-                        return friendly_url
-                        
-                    logger.error("contentUrl não encontrada no documento")
-                    return None
-                
-                logger.error(f"Erro ao obter detalhes do documento: {response.status}")
-                return None
-                
-        except Exception as e:
-            logger.error(f"Erro ao obter friendly URL: {str(e)}")
-            logger.error(traceback.format_exc())
-            return None
 
     async def close(self):
         if self.session:
