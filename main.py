@@ -56,13 +56,13 @@ async def get_sheet_data():
 
     # Primeiro, obtém os tipos originais
     page_type = [
-        row[15] if len(row) > 15 and row[15].strip() not in ["", "-"] else "widget"
+        row[14] if len(row) > 14 and row[14].strip() not in ["", "-"] else "widget"
         for row in rows
     ]
 
     # Primeiro formato básico (remover espaços, lowercase, etc)
     page_type_formatted = [
-        item.lower().replace("tipo de página: ", "").strip()
+        item.lower().replace("página ", "").strip()
         for item in page_type
     ]
 
@@ -81,14 +81,17 @@ async def get_sheet_data():
         if all(row[:1]) and len(row) > 6 and row[6]:
             hierarchy = parse_hierarchy(row[6])
             title = hierarchy[-1] if hierarchy else "Sem Título"  # Pega o último item da hierarquia
-
+            visibility = row[7].strip().lower() if len(row) > 7 and row[7] else 'menu'
+            is_visible = visibility == 'menu'
+            print(row[0].strip('/').split('/')[-1])
             if title.strip():
                 page_data = {
                     'title': title,
                     'url': row[0],
                     'destination': row[1],
                     'hierarchy': hierarchy,
-                    'type': page_type_formatted[index]  # Adiciona o tipo de página formatado
+                    'type': page_type_formatted[index],
+                    'visible': is_visible
                 }
                 pages.append(page_data)
                 # print(pages)
@@ -123,8 +126,9 @@ async def migrate_pages(pages):
             page_id = await creator.create_hierarchy(
                 hierarchy=page['hierarchy'],
                 final_title=page['title'],
-                final_url=page['destination'].strip('/').split('/')[-1],
-                page_type=page['type']
+                final_url=page['url'].strip('/').split('/')[-1],
+                page_type=page['type'],
+                visible=page['visible']
             )
             
             if page_id:
