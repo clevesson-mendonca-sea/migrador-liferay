@@ -174,7 +174,7 @@ class PageCreator:
                             "groupId": str(self.config.site_id),
                             "privateLayout": "false",
                             "layoutId": page_id,
-                            "typeSettings": "column-1=com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_b7oEtrCdwse4\nlayout-template-id=2_columns_ii"
+                            "typeSettings": "column-1=com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_b7oEtrCdwse4\nlayout-template-id=1_column"
                         }
 
                         async with self.session.post(
