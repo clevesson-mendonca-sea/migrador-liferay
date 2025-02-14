@@ -84,7 +84,7 @@ class WebContentCreator:
 
             logger.info(f"Fetching content from: {full_url}")
             
-            async with self.session.get(full_url) as response:
+            async with self.session.get(full_url, ssl=False) as response:
                 if response.status == 200:
                     html = await response.text()
                     soup = BeautifulSoup(html, 'html.parser')
@@ -243,7 +243,7 @@ class WebContentCreator:
             else:
                 url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/sites/{self.config.site_id}/documents"
 
-            async with self.session.get(url) as response:
+            async with self.session.get(url, ssl=False) as response:
                 if response.status == 200:
                     data = await response.json()
                     for doc in data.get('items', []):
@@ -335,7 +335,7 @@ class WebContentCreator:
         url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/structured-content-folders/{folder_id}/structured-contents"
 
         try:
-            async with self.session.post(url, json=content_data) as response:
+            async with self.session.post(url, json=content_data, ssl=False) as response:
                 response_text = await response.text()
                 if response.status in (200, 201):
                     result = json.loads(response_text)
@@ -361,7 +361,7 @@ class WebContentCreator:
         url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/structured-content-folders/{folder_id}/structured-contents"
         
         try:
-            async with self.session.get(url) as response:
+            async with self.session.get(url, ssl=False) as response:
                 if response.status == 200:
                     data = await response.json()
                     for content in data.get('items', []):
@@ -393,7 +393,7 @@ class WebContentCreator:
         try:
             url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/sites/{self.config.site_id}/site-pages"
             
-            async with self.session.get(url) as response:
+            async with self.session.get(url, ssl=False) as response:
                 if response.status == 200:
                     data = await response.json()
                     for page in data.get('items', []):
@@ -548,7 +548,7 @@ class WebContentCreator:
             # Busca todas as páginas do site
             url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/sites/{self.config.site_id}/site-pages"
             
-            async with self.session.get(url) as response:
+            async with self.session.get(url, ssl=False) as response:
                 if response.status == 200:
                     pages_data = await response.json()
                     
@@ -593,7 +593,7 @@ class WebContentCreator:
                     "groupId": str(self.config.site_id)
                 }
                 
-                async with self.session.post(prefs_url, params=prefs_params) as response:
+                async with self.session.post(prefs_url, params=prefs_params, ssl=False) as response:
                     if response.status == 200:
                         logger.info(f"Conteúdo {content_id} adicionado à página {page_id}")
                         return True
