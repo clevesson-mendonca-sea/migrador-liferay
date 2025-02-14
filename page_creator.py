@@ -137,13 +137,11 @@ class PageCreator:
         self.page_cache = {}
         self.error_tracker = ErrorTracker()
 
-    async def create_page(self, title: str, friendly_url: str, parent_id: int = 0, hierarchy: List[str] = None, page_type: str = "portlet", visible: bool = True) -> int:
+    async def create_page(self, title: str, friendly_url: str, parent_id: int = 0, hierarchy: List[str] = None, page_type: str = "portlet", visible: bool = True, column_type: str = "1_column") -> int:
         normalized_title = normalize_page_name(title)
         normalized_url = normalize_friendly_url(friendly_url)
         hidden = str(not visible).lower()
-
         
-        print(normalized_url)
         params = {
             "groupId": str(self.config.site_id),
             "privateLayout": "false",
@@ -174,8 +172,11 @@ class PageCreator:
                             "groupId": str(self.config.site_id),
                             "privateLayout": "false",
                             "layoutId": page_id,
-                            "typeSettings": "column-1=com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_b7oEtrCdwse4\nlayout-template-id=1_column"
-                        }
+                            "typeSettings": (
+                                    "column-1=com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_\n"
+                                    f"layout-template-id={column_type}\n"
+                                    )
+                         }
 
                         async with self.session.post(
                             f"{self.config.liferay_url}/api/jsonws/layout/update-layout",
@@ -202,21 +203,21 @@ class PageCreator:
 
 
 
-    async def ensure_page_exists(self, title: str, cache_key: str, parent_id: int = 0, friendly_url: str = "", hierarchy: List[str] = None, page_type: str ="portlet", visible: bool = True) -> int:
+    async def ensure_page_exists(self, title: str, cache_key: str, parent_id: int = 0, friendly_url: str = "", hierarchy: List[str] = None, page_type: str ="portlet", visible: bool = True, column_type: str = "1_column") -> int:
         if cache_key in self.page_cache:
             return self.page_cache[cache_key]
 
         normalized_title = normalize_page_name(title)
         friendly_url = normalize_friendly_url(friendly_url)
 
-        page_id = await self.create_page(normalized_title, friendly_url, parent_id, hierarchy, page_type, visible)
+        page_id = await self.create_page(normalized_title, friendly_url, parent_id, hierarchy, page_type, visible, column_type)
         
         if page_id:
             self.page_cache[cache_key] = page_id
             
         return page_id
 
-    async def create_hierarchy(self, hierarchy: list, final_title: str, final_url: str, page_type: str = "widget", visible: bool = True) -> int:
+    async def create_hierarchy(self, hierarchy: list, final_title: str, final_url: str, page_type: str = "widget", visible: bool = True, column_type: str = "1_column") -> int:
         current_path = ""
         parent_id = 0
         last_page_id = 0
@@ -228,8 +229,7 @@ class PageCreator:
         for level in hierarchy_levels:
             normalized_level = normalize_page_name(level)
             current_path += f" > {normalized_level}" if current_path else normalized_level
-            
-            level_id = await self.ensure_page_exists(normalized_level, current_path, parent_id, final_url , hierarchy, page_type)
+            level_id = await self.ensure_page_exists(normalized_level, current_path, parent_id, final_url , hierarchy, page_type, visible, column_type)
             
             if level_id:
                 parent_id = level_id
@@ -248,7 +248,8 @@ class PageCreator:
                 parent_id, 
                 hierarchy,
                 page_type,
-                visible
+                visible,
+                column_type
             )
 
             print(f"Página final criada: {final_title} (ID: {final_page_id}) Tipo da página {page_type}")
