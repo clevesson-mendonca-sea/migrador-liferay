@@ -175,7 +175,7 @@ async def migrate_contents(pages):
         for page in pages:
             logger.info(f"\nProcessando conteúdo: {page['title']}")
             logger.info(f"Hierarquia: {' > '.join(page['hierarchy'])}")
-            
+            # print(page['title'])
             content_id = await content_creator.migrate_content(
                 source_url=page['url'],
                 title=page['title'],
@@ -187,6 +187,7 @@ async def migrate_contents(pages):
                 content_mapping[page['title']] = content_id
             else:
                 logger.error(f"Falha ao migrar conteúdo: {page['title']}")
+
     finally:
         await content_creator.close()
     
@@ -222,6 +223,7 @@ async def migrate_documents(pages):
                         folder_type='documents'
                     )
                     folder_cache[hierarchy_key] = folder_id
+                    print(page['title'])
                 else:
                     folder_id = folder_cache[hierarchy_key]
                 
