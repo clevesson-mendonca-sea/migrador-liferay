@@ -6,6 +6,8 @@ from datetime import datetime
 import json
 import os
 import unicodedata
+from dotenv import load_dotenv
+
 
 from requests_cache import logger
 
@@ -139,8 +141,8 @@ class PageCreator:
         normalized_title = normalize_page_name(title)
         normalized_url = normalize_friendly_url(friendly_url)
         hidden = str(not visible).lower()
+
         
-        typeSettings = "column-1=com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_b7oEtrCdwse4 layout-template-id=2_columns_ii"
         print(normalized_url)
         params = {
             "groupId": str(self.config.site_id),
@@ -152,8 +154,9 @@ class PageCreator:
             "type": page_type,
             "hidden": hidden,
             "friendlyURL": f"/{normalized_url}",
-            "typeSettings": typeSettings
         }
+
+
         
         try:
             async with self.session.post(
@@ -165,10 +168,24 @@ class PageCreator:
                 if response.status in (200, 201):
                     result = await response.json()
                     page_id = result.get('layoutId') or result.get('plid')
-                    
+
                     if page_id:
-                        print(f"Página criada: {normalized_title} (ID: {page_id}) | Tipo: {page_type}")  # <-- Adiciona o log do tipo
-                        return int(page_id)
+                        update = {
+                            "groupId": str(self.config.site_id),
+                            "privateLayout": "false",
+                            "layoutId": page_id,
+                            "typeSettings": "column-1=com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_b7oEtrCdwse4\nlayout-template-id=1_column"
+                        }
+
+                        async with self.session.post(
+                            f"{self.config.liferay_url}/api/jsonws/layout/update-layout",
+                            params=update
+                        ) as update_response:
+                            update_response_text = await update_response.text()
+                            print(update_response_text)
+                            if update_response.status in (200, 201):
+                                print(f"Página criada e atualizada: {normalized_title} (ID: {page_id}) | Tipo: {page_type}")
+                                return int(page_id)
                 
         except Exception as e:
             error = PageError(
@@ -181,6 +198,9 @@ class PageCreator:
             self.error_tracker.add_error(error)
         
         return 0
+    
+
+
 
     async def ensure_page_exists(self, title: str, cache_key: str, parent_id: int = 0, friendly_url: str = "", hierarchy: List[str] = None, page_type: str ="portlet", visible: bool = True) -> int:
         if cache_key in self.page_cache:
