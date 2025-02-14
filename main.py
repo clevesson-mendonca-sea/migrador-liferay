@@ -76,6 +76,21 @@ async def get_sheet_data():
         for item in page_type_formatted
     ]
 
+    # Obtém os tipos de coluna (1 Coluna, 30/70)
+    column_type = [
+        row[18] if len(row) > 18 and row[18].strip() not in ["", "-"] else "1_column"
+        for row in rows
+    ]
+
+    # Faz a conversão para os tipos do Liferay (1_column - 1 coluna, 2_columns_ii - 2 colunas 30/70)
+    column_type_formatted = [
+        "1_column" if item.strip().lower() == "1 coluna" else
+        "2_columns_ii" if item.strip().lower() == "30/70" else
+        "1_column"
+        for item in column_type
+    ]
+
+
     pages = []
     for index, row in enumerate(rows):
         if all(row[:1]) and len(row) > 6 and row[6]:
@@ -83,7 +98,7 @@ async def get_sheet_data():
             title = hierarchy[-1] if hierarchy else "Sem Título"  # Pega o último item da hierarquia
             visibility = row[7].strip().lower() if len(row) > 7 and row[7] else 'menu'
             is_visible = visibility == 'menu'
-            print(row[0].strip('/').split('/')[-1])
+            # print(row[0].strip('/').split('/')[-1])
             if title.strip():
                 page_data = {
                     'title': title,
@@ -91,7 +106,8 @@ async def get_sheet_data():
                     'destination': row[1],
                     'hierarchy': hierarchy,
                     'type': page_type_formatted[index],
-                    'visible': is_visible
+                    'visible': is_visible,
+                    "column_type": column_type_formatted[index]
                 }
                 pages.append(page_data)
                 # print(pages)
@@ -122,13 +138,14 @@ async def migrate_pages(pages):
             logger.info(f"\nProcessando página: {page['title']}")
             logger.info(f"Hierarquia: {' > '.join(page['hierarchy'])}")
             logger.info(f"Tipo de pagina: {page['type']}")
-            
+
             page_id = await creator.create_hierarchy(
                 hierarchy=page['hierarchy'],
                 final_title=page['title'],
                 final_url=page['url'].strip('/').split('/')[-1],
                 page_type=page['type'],
-                visible=page['visible']
+                visible=page['visible'],
+                column_type=page['column_type']
             )
             
             if page_id:
