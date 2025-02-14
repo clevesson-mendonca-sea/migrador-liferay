@@ -380,37 +380,61 @@ class WebContentCreator:
     async def find_page_by_title(self, title: str) -> Optional[int]:
         """
         Busca uma página pelo título e retorna seu ID.
-        
         Args:
             title (str): Título da página
-            
         Returns:
             Optional[int]: ID da página se encontrada, None caso contrário
         """
         if not self.session:
-            await self.initialize_session()
-
+            try:
+                await self.initialize_session()
+            except Exception as e:
+                logger.error(f"Falha ao inicializar sessão: {str(e)}")
+                return None
+                
         try:
             url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/sites/{self.config.site_id}/site-pages"
+            logger.debug(f"Buscando página com título: {title}")
+            logger.debug(f"URL da requisição: {url}")
             
-            async with self.session.get(url, ssl=False) as response:
+            async with self.session.get(url) as response:
+                response_text = await response.text()
+                logger.debug(f"Status da resposta: {response.status}")
+                logger.debug(f"Resposta recebida: {response_text}")
+                
                 if response.status == 200:
-                    data = await response.json()
-                    for page in data.get('items', []):
-                        if page.get('title', '').lower() == title.lower():
-                            page_id = page.get('id')
-                            logger.info(f"Found page: {title} (ID: {page_id})")
-                            return int(page_id)
+                    try:
+                        data = json.loads(response_text)
+                        total_items = data.get('totalCount', 0)
+                        logger.info(f"Total de páginas encontradas: {total_items}")
+                        
+                        items = data.get('items', [])
+                        logger.debug(f"Páginas disponíveis: {[page.get('title') for page in items]}")
+                        
+                        for page in items:
+                            page_title = page.get('title', '').lower()
+                            search_title = title.lower()
                             
-                    logger.info(f"No page found with title: {title}")
+                            logger.debug(f"Comparando: '{page_title}' com '{search_title}'")
+                            
+                            if page_title == search_title:
+                                page_id = page.get('id')
+                                logger.info(f"Página encontrada: {title} (ID: {page_id})")
+                                return int(page_id)
+                                
+                        logger.info(f"Nenhuma página encontrada com o título: {title}")
+                        return None
+                    except json.JSONDecodeError as e:
+                        logger.error(f"Erro ao decodificar JSON da resposta: {str(e)}")
+                        return None
+                else:
+                    logger.error(f"Falha ao buscar páginas. Status: {response.status}")
+                    logger.error(f"Resposta de erro: {response_text}")
                     return None
-                        
-                logger.error(f"Failed to fetch pages: {response.status}")
-                return None
-                        
+                    
         except Exception as e:
-            logger.error(f"Error searching for page: {str(e)}")
-            logger.error(traceback.format_exc())
+            logger.error(f"Erro ao buscar página: {str(e)}")
+            logger.error(f"Stacktrace:\n{traceback.format_exc()}")
             return None
     
     def _is_collapsible_content(self, html_content: str) -> bool:
@@ -444,12 +468,17 @@ class WebContentCreator:
         """
         Migra conteúdo para o Liferay, detectando se é colapsável ou não
         """
+        
         try:
+            
             # Primeiro busca o page_id pelo título
             page_id = await self.find_page_by_title(title)
+            print("O PAGE IDDDDD", page_id)
             if page_id:
+                print(f"Migrating content AQUIIIIIIIIIIII: {title}")
                 logger.info(f"Found matching page for content {title} (Page ID: {page_id})")
             else:
+                print(f"Migrating content NAO PASSOUUUUUUUUU: {title}")
                 logger.info(f"No matching page found for content {title}")
 
             folder_id = await self.folder_creator.create_folder_hierarchy(
