@@ -90,7 +90,6 @@ async def get_sheet_data():
         for item in column_type
     ]
 
-    # print("Tipos de coluna formatados:", column_type_formatted)
 
     pages = []
     for index, row in enumerate(rows):

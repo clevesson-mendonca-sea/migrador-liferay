@@ -141,10 +141,7 @@ class PageCreator:
         normalized_title = normalize_page_name(title)
         normalized_url = normalize_friendly_url(friendly_url)
         hidden = str(not visible).lower()
-
-        print(column_type)
         
-        # print(normalized_url)
         params = {
             "groupId": str(self.config.site_id),
             "privateLayout": "false",
@@ -180,8 +177,11 @@ class PageCreator:
                             "groupId": str(self.config.site_id),
                             "privateLayout": "false",
                             "layoutId": page_id,
-                            "typeSettings": f"column-1=com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_\nlayout-template-id={column_type}"
-                        }
+                            "typeSettings": (
+                                    "column-1=com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_\n"
+                                    f"layout-template-id={column_type}\n"
+                                    )
+                         }
 
                         async with self.session.post(
                             f"{self.config.liferay_url}/api/jsonws/layout/update-layout",
@@ -191,7 +191,6 @@ class PageCreator:
                             print(update_response_text)
                             if update_response.status in (200, 201):
                                 print(f"Página criada e atualizada: {normalized_title} (ID: {page_id}) | Tipo: {page_type}")
-                                print("typeSettings utilizado: ", update['typeSettings'])
                                 return int(page_id)
                 
         except Exception as e:
@@ -235,7 +234,6 @@ class PageCreator:
         for level in hierarchy_levels:
             normalized_level = normalize_page_name(level)
             current_path += f" > {normalized_level}" if current_path else normalized_level
-            
             level_id = await self.ensure_page_exists(normalized_level, current_path, parent_id, final_url , hierarchy, page_type, visible, column_type)
             
             if level_id:
