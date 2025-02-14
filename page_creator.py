@@ -166,11 +166,6 @@ class PageCreator:
                 if response.status in (200, 201):
                     result = await response.json()
                     page_id = result.get('layoutId') or result.get('plid')
-            
-                    # Escreve o column_type a ser utilizado em um arquivo txt
-
-                    column_type_file = open("column_type.txt", "w")
-                    column_type_file.write(column_type)
 
                     if page_id:
                         update = {
