@@ -4,6 +4,7 @@ import logging
 import json
 import traceback
 from typing import List, Optional
+from urllib.parse import urlparse
 import aiohttp
 from bs4 import BeautifulSoup
 from url_utils import UrlUtils
@@ -154,11 +155,7 @@ class WebContentCreator:
 
     async def process_content(self, html_content: str, base_url: str, folder_id: Optional[int] = None) -> str:
         """
-        Processa o conteúdo HTML:
-        - Migra imagens e documentos usando DocumentCreator
-        - Remove atributos srcset de imagens
-        - Mantém URLs absolutas para wp-content e wp-conteudo
-        - Converte outras URLs do mesmo domínio para relativas
+        Processa o conteúdo HTML e converte todas as URLs para relativas
         """
         if not html_content:
             return ""
@@ -189,46 +186,63 @@ class WebContentCreator:
 
                 # Se for uma imagem ou documento com wp-content/wp-conteudo
                 if tag.name == 'img' or any(wp_path in url for wp_path in ['/wp-conteudo', '/wp-content']):
-                    # Constrói a URL completa se necessário
-                    if not url.startswith('http'):
-                        url = f"{base_domain}{url}"
-                    
-                    hierarchy = base_url.replace(base_domain, '').strip('/').split('/')
-                    hierarchy_str = ' > '.join(hierarchy)
+                    # Garante URL completa para migração
+                    if not url.startswith(('http://', 'https://')):
+                        url = f"{base_domain.rstrip('/')}/{url.lstrip('/')}"
                     
                     try:
-                        # Primeira tentativa de migração
                         migrated_url = await self.document_creator.migrate_document(
                             doc_url=url,
                             folder_id=folder_id,
                             page_url=base_url,
-                            hierarchy=f"Path: {hierarchy_str} (Folder ID: {folder_id})"
+                            hierarchy=f"Path: {base_url.replace(base_domain, '').strip('/')} (Folder ID: {folder_id})"
                         )
 
-                        if not migrated_url:
-                            # Se falhou, tenta buscar URL existente
-                            existing_url = await self.find_existing_document_url(url, folder_id)
-                            if existing_url:
-                                migrated_url = existing_url
-                                logger.info(f"Found existing document: {url} -> {existing_url}")
-
                         if migrated_url:
-                            tag[attr] = migrated_url
-                            logger.info(f"Updated document/image URL: {url} -> {migrated_url}")
+                            # Converte para relativa removendo o domínio base do Liferay
+                            if isinstance(migrated_url, str):
+                                relative_url = self._convert_to_relative(migrated_url)
+                                tag[attr] = relative_url
+                                logger.info(f"Updated document/image URL: {url} -> {relative_url}")
                         else:
                             logger.error(f"Failed to process document/image: {url}")
                     except Exception as e:
                         logger.error(f"Error processing URL {url}: {str(e)}")
                     continue
 
-                # Para outras URLs do mesmo domínio, converte para relativa
-                if base_domain in url:
-                    path = url.split(base_domain)[-1]
-                    tag[attr] = path
-                    logger.info(f"Converted absolute URL to relative: {url} -> {path}")
+                # Para outras URLs, sempre converte para relativa
+                relative_url = self._convert_to_relative(url)
+                tag[attr] = relative_url
+                logger.info(f"Converted URL to relative: {url} -> {relative_url}")
 
         return str(soup)
 
+    def _convert_to_relative(self, url: str) -> str:
+        """
+        Converte uma URL para formato relativo
+        """
+        if not url:
+            return url
+
+        # Se já é relativa, retorna como está
+        if url.startswith('/'):
+            return url
+
+        try:
+            # Remove protocolo e domínio
+            parsed = urlparse(url)
+            path = parsed.path
+            if parsed.query:
+                path = f"{path}?{parsed.query}"
+            if parsed.fragment:
+                path = f"{path}#{parsed.fragment}"
+            
+            # Garante que começa com /
+            return f"/{path.lstrip('/')}"
+        except Exception as e:
+            logger.error(f"Error converting URL to relative: {url} - {str(e)}")
+            return url
+       
     async def find_existing_document_url(self, original_url: str, folder_id: Optional[int]) -> Optional[str]:
         """
         Busca por um documento existente no Liferay baseado na URL original
@@ -315,15 +329,12 @@ class WebContentCreator:
         if not self.session:
             await self.initialize_session()
 
-        # Limpa apenas a primeira div do conteúdo
-        cleaned_content = self._clean_first_div_bootstrap(html_content)
-
         content_data = {
             "contentStructureId": self.config.content_structure_id,
             "contentFields": [
                 {
                     "contentFieldValue": {
-                        "data": cleaned_content
+                        "data": html_content
                     },
                     "name": "content"
                 }
@@ -335,7 +346,7 @@ class WebContentCreator:
         url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/structured-content-folders/{folder_id}/structured-contents"
 
         try:
-            async with self.session.post(url, json=content_data, ssl=False) as response:
+            async with self.session.post(url, json=content_data) as response:
                 response_text = await response.text()
                 if response.status in (200, 201):
                     result = json.loads(response_text)
@@ -470,15 +481,10 @@ class WebContentCreator:
         """
         
         try:
-            
-            # Primeiro busca o page_id pelo título
             page_id = await self.find_page_by_title(title)
-            print("O PAGE IDDDDD", page_id)
             if page_id:
-                print(f"Migrating content AQUIIIIIIIIIIII: {title}")
                 logger.info(f"Found matching page for content {title} (Page ID: {page_id})")
             else:
-                print(f"Migrating content NAO PASSOUUUUUUUUU: {title}")
                 logger.info(f"No matching page found for content {title}")
 
             folder_id = await self.folder_creator.create_folder_hierarchy(
@@ -538,8 +544,10 @@ class WebContentCreator:
                     logger.error(error_msg)
                     self._log_content_error(source_url, error_msg, title, hierarchy)
                     return 0
+                
+                cleaned_content = self._clean_first_div_bootstrap(processed_content)
 
-                content_id = await self.create_structured_content(title, processed_content, folder_id)
+                content_id = await self.create_structured_content(title, cleaned_content, folder_id)
 
             if not content_id:
                 error_msg = "Failed to create content in Liferay"
@@ -627,7 +635,7 @@ class WebContentCreator:
                         logger.info(f"Conteúdo {content_id} adicionado à página {page_id}")
                         return True
                     else:
-                        logger.error(f"Falha ao configurar portlet: {await response.status()}")
+                        logger.error(f"Falha ao configurar portlet: {response}")
                         return False
                         
             except Exception as e:
