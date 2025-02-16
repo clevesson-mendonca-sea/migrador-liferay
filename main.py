@@ -1,5 +1,4 @@
 import asyncio
-import base64
 import logging
 import traceback
 import aiohttp
@@ -14,6 +13,7 @@ from web_content_creator import WebContentCreator
 from document_creator import DocumentCreator
 from content_validator import ContentValidator
 import argparse
+from url_utils import UrlUtils
 
 load_dotenv()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -33,6 +33,21 @@ def parse_hierarchy(hierarchy_str: str) -> list:
     if not hierarchy_str:
         return ['Raiz']
     return [x.strip() for x in hierarchy_str.split('>')]
+
+def filter_hierarchy(hierarchy_str: str) -> list:
+    """
+    Filtra a hierarquia ignorando os termos específicos.
+    Retorna apenas os itens válidos.
+    """
+    if not hierarchy_str:
+        return []
+        
+    ignored_terms = {'raiz', 'hierarquia'}
+    return [
+        item.strip() 
+        for item in hierarchy_str.split('>')
+        if item.strip().lower() not in ignored_terms
+    ]
 
 async def get_sheet_data():
     if os.path.exists('token.json'):
@@ -55,25 +70,22 @@ async def get_sheet_data():
     )
     rows = sheet.get_all_values()[1:]
 
-    # Primeiro, obtém os tipos originais
     page_type = [
         row[14] if len(row) > 14 and row[14].strip() not in ["", "-"] else "widget"
         for row in rows
     ]
 
-    # Primeiro formato básico (remover espaços, lowercase, etc)
     page_type_formatted = [
         item.lower().replace("página ", "").strip()
         for item in page_type
     ]
 
-    # Depois faz a conversão para os tipos do Liferay
     page_type_formatted = [
         "portlet" if item == "widget" else
         "node" if item == "definida" else
         "link_to_layout" if item == "vincular a uma pagina desse site" else
         "url" if item == "vincular a uma url" else
-        "portlet"  # default caso nenhuma condição seja atendida
+        "portlet"
         for item in page_type_formatted
     ]
 
@@ -83,7 +95,7 @@ async def get_sheet_data():
         for row in rows
     ]
 
-    # Faz a conversão para os tipos do Liferay (1_column - 1 coluna, 2_columns_ii - 2 colunas 30/70)
+    # Faz a conversão para os tipos do Liferay
     column_type_formatted = [
         "1_column" if item.strip().lower() == "1 coluna" else
         "2_columns_ii" if item.strip().lower() == "30/70" else
@@ -91,32 +103,40 @@ async def get_sheet_data():
         for item in column_type
     ]
 
+    url_utils = UrlUtils()
+    base_domain = url_utils.extract_domain(Config.liferay_url)
 
     pages = []
     for index, row in enumerate(rows):
         if all(row[:1]) and len(row) > 6 and row[6]:
-            hierarchy = parse_hierarchy(row[6])
-            title = hierarchy[-1] if hierarchy else "Sem Título"  # Pega o último item da hierarquia
-            visibility = row[7].strip().lower() if len(row) > 7 and row[7] else 'menu'
-            is_visible = visibility == 'menu'
-            # print(row[0].strip('/').split('/')[-1])
-            if title.strip():
-                page_data = {
-                    'title': title,
-                    'url': row[0],
-                    'destination': row[1],
-                    'hierarchy': hierarchy,
-                    'type': page_type_formatted[index],
-                    'visible': is_visible,
-                    "column_type": column_type_formatted[index]
-                }
-                pages.append(page_data)
-                # print(pages)
-                # Log detalhado para acompanhar os valores sendo processados
-                """ print(f"Página processada: {page_data}") """
+            hierarchy = filter_hierarchy(row[6])
+            
+            if hierarchy:
+                title = hierarchy[-1]
+                visibility = row[7].strip().lower() if len(row) > 7 and row[7] else 'menu'
+                is_visible = visibility == 'menu'
+                
+                # Get source and destination URLs
+                source_url = row[0].strip() if row[0] else ''
+                dest_url = row[1].strip() if len(row) > 1 and row[1] else ''
+                
+                # Build complete URLs using UrlUtils
+                complete_source_url = url_utils.build_url(source_url, base_domain)
+                complete_dest_url = url_utils.build_url(dest_url, base_domain)
+                
+                if title.strip():
+                    page_data = {
+                        'title': title,
+                        'url': complete_source_url,
+                        'destination': complete_dest_url,
+                        'hierarchy': hierarchy,
+                        'type': page_type_formatted[index],
+                        'visible': is_visible,
+                        "column_type": column_type_formatted[index]
+                    }
+                    pages.append(page_data)
 
-    # Log final mostrando todas as páginas geradas
-    print(f"Total de páginas processadas: {len(pages)}")
+    logger.info(f"Total de páginas processadas: {len(pages)}")
     return pages
 
 async def migrate_pages(pages):
@@ -271,21 +291,6 @@ async def migrate_documents(pages):
     finally:
         await doc_creator.close()
         await folder_creator.close()
-        
-async def get_folder_id_by_hierarchy(folder_creator, hierarchy):
-    """
-    Busca ou cria a pasta baseada na hierarquia e retorna seu ID
-    """
-    try:
-        folder_id = await folder_creator.create_folder_hierarchy(
-            hierarchy=hierarchy,
-            final_title=hierarchy[-1],
-            folder_type='document'  # Tipo correto para documentos
-        )
-        return folder_id
-    except Exception as e:
-        logger.error(f"Erro ao buscar/criar pasta para hierarquia {' > '.join(hierarchy)}: {str(e)}")
-        return None
 
 async def validate_content(pages):
     config = Config()
@@ -314,64 +319,67 @@ async def validate_content(pages):
         await validator.close()
 
 async def main():
-   parser = argparse.ArgumentParser(description='Migração de conteúdo Liferay')
-   parser.add_argument('--folders', action='store_true', help='Migrar apenas pastas')
-   parser.add_argument('--contents', action='store_true', help='Migrar apenas conteúdos')
-   parser.add_argument('--pages', action='store_true', help='Migrar apenas páginas')
-   parser.add_argument('--documents', action='store_true', help='Migrar apenas documentos')
-   parser.add_argument('--validate', action='store_true', help='Validar conteúdo migrado')
-   args = parser.parse_args()
+    parser = argparse.ArgumentParser(description='Migração de conteúdo Liferay')
+    parser.add_argument('--folders', action='store_true', help='Migrar apenas pastas')
+    parser.add_argument('--contents', action='store_true', help='Migrar apenas conteúdos')
+    parser.add_argument('--pages', action='store_true', help='Migrar apenas páginas')
+    parser.add_argument('--documents', action='store_true', help='Migrar apenas documentos')
+    parser.add_argument('--validate', action='store_true', help='Validar conteúdo migrado')
+    args = parser.parse_args()
 
-   try:
-       pages = await get_sheet_data()
+    try:
+        url_utils = UrlUtils()
+        
+        # Get and process sheet data
+        pages = await get_sheet_data()
 
-       if not pages:
-           logger.error("Nenhuma página válida encontrada na planilha")
-           return
+        if not pages:
+            logger.error("Nenhuma página válida encontrada na planilha")
+            return
 
-       content_mapping = {}
+        content_mapping = {}
 
-       if args.validate:
-           logger.info("Iniciando validação do conteúdo...")
-           await validate_content(pages)
-           return
-    
-       if args.documents:
+        if args.validate:
+            logger.info("Iniciando validação do conteúdo...")
+            await validate_content(pages)
+            return
+        
+        if args.documents:
             logger.info("Iniciando migração de documentos...")
             await migrate_documents(pages)
-       if args.folders:
-           logger.info("Iniciando migração de pastas...")
-           await migrate_folders(pages)
-       elif args.contents:
-           logger.info("Iniciando migração de conteúdos...")
-           content_mapping = await migrate_contents(pages)
-       elif args.pages:
-           logger.info("Iniciando migração de páginas...")
-           await migrate_pages(pages)
-       else:
-           logger.info("Iniciando migração completa...")
-           await migrate_pages(pages)
-           await migrate_folders(pages)
-           content_mapping = await migrate_contents(pages)
-           await migrate_pages(pages)
+        if args.folders:
+            logger.info("Iniciando migração de pastas...")
+            await migrate_folders(pages)
+        elif args.contents:
+            logger.info("Iniciando migração de conteúdos...")
+            content_mapping = await migrate_contents(pages)
+        elif args.pages:
+            logger.info("Iniciando migração de páginas...")
+            await migrate_pages(pages)
+        else:
+            logger.info("Iniciando migração completa...")
+            await migrate_pages(pages)
+            await migrate_folders(pages)
+            content_mapping = await migrate_contents(pages)
+            await migrate_pages(pages)
 
-       if content_mapping:
-           config = Config()
-           content_creator = WebContentCreator(config)
-           try:
-               await content_creator.initialize_session()
-               await content_creator.add_content_to_created_pages(content_mapping)
-           finally:
-               await content_creator.close()
-           
-       logger.info("Migração concluída!")
-       
-   except KeyboardInterrupt:
-       logger.info("Migração interrompida")
-   except Exception as e:
-       logger.error(f"Erro fatal: {str(e)}")
-       logger.error(traceback.format_exc())
-       raise
-   
+        if content_mapping:
+            config = Config()
+            content_creator = WebContentCreator(config)
+            try:
+                await content_creator.initialize_session()
+                await content_creator.add_content_to_created_pages(content_mapping)
+            finally:
+                await content_creator.close()
+            
+        logger.info("Migração concluída!")
+        
+    except KeyboardInterrupt:
+        logger.info("Migração interrompida")
+    except Exception as e:
+        logger.error(f"Erro fatal: {str(e)}")
+        logger.error(traceback.format_exc())
+        raise
+    
 if __name__ == "__main__":
    asyncio.run(main())

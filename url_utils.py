@@ -25,19 +25,56 @@ class UrlUtils:
 
     @staticmethod
     def build_url(url: str, base_domain: str = "") -> str:
-        """Constrói uma URL completa a partir de uma URL relativa ou absoluta"""
+        """
+        Constrói uma URL completa a partir de uma URL relativa ou absoluta.
+        
+        Args:
+            url (str): URL ou caminho a ser processado
+            base_domain (str): Domínio base para URLs relativas
+            
+        Returns:
+            str: URL completa normalizada
+        """
         if not url:
             return ""
             
-        # Remove qualquer texto 'Usar a url:' que possa ter vindo da planilha
-        url = url.replace('Usar a url:', '').strip()
+        url = url.lower().strip()
         
-        # Se já é uma URL completa, retorna como está
-        if url.startswith('http'):
+        prefixes_to_remove = [
+            'usar a url:',
+            'usar a url',
+            'url:',
+            'url'
+        ]
+        
+        # Remove os prefixos conhecidos
+        for prefix in prefixes_to_remove:
+            if url.startswith(prefix):
+                url = url[len(prefix):].strip()
+                break
+        
+        # Remove espaços extras e caracteres indesejados
+        url = url.strip('/ \t\n\r')
+        
+        if url.startswith(('http://', 'https://')):
             return url
             
-        # Se temos um domínio base e a URL é relativa
-        if base_domain:
-            return f"{base_domain.rstrip('/')}/{url.lstrip('/')}"
+        if not base_domain:
+            logger.warning(f"Base domain not provided for relative URL: {url}")
+            return url
             
-        return url
+        base_domain = base_domain.rstrip('/')
+        
+        try:
+            final_url = f"{base_domain}/{url}"
+            
+            parsed = urlparse(final_url)
+            if not all([parsed.scheme, parsed.netloc]):
+                logger.warning(f"Invalid URL constructed: {final_url}")
+                return url
+                
+            return final_url
+            
+        except Exception as e:
+            logger.error(f"Error building URL for {url} with base {base_domain}: {str(e)}")
+            return url
