@@ -165,16 +165,28 @@ class PageCreator:
                     page_id = result.get('layoutId') or result.get('plid')
 
                     if page_id:
-                        update = {
-                            "groupId": str(self.config.site_id),
-                            "privateLayout": "false",
-                            "layoutId": page_id,
-                            "typeSettings": (
-                                    "column-1=com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_\n"
-                                    f"layout-template-id={column_type}\n"
-                                    )
-                         }
-
+                        if column_type == "1_column":
+                            update = {
+                                "groupId": str(self.config.site_id),
+                                "privateLayout": "false",
+                                "layoutId": page_id,
+                                "typeSettings": (
+                                        "column-1=com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_\n"
+                                        f"layout-template-id={column_type}\n"
+                                        )
+                            }
+                        elif column_type == "2_columns_ii":
+                            update = {
+                                "groupId": str(self.config.site_id),
+                                "privateLayout": "false",
+                                "layoutId": page_id,
+                                "typeSettings": (
+                                        "column-1=com_liferay_site_navigation_menu_web_portlet_SiteNavigationMenuPortlet_INSTANCE_SiteNav\n"
+                                        "column-2=com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_JournalCont\n"
+                                        f"layout-template-id={column_type}\n"
+                                        )
+                            }
+                                                        
                         async with self.session.post(
                             f"{self.config.liferay_url}/api/jsonws/layout/update-layout",
                             params=update
