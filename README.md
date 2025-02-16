@@ -257,7 +257,7 @@ python main.py --contents
 ├── main.py                 # Ponto de entrada
 ├── page_creator.py         # Criação de páginas
 ├── web_content_creator.py  # Migração de conteúdo
-├── web_content_folder.py   # Gerenciamento de pastas
+├── folder_creator.py   # Gerenciamento de pastas
 ├── url_utils.py           # Utilitários para URLs
 ├── document_creator.py    # Migração de documentos
 ├── .env                   # Configurações

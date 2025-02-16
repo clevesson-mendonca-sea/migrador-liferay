@@ -8,7 +8,7 @@ import gspread
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from page_creator import PageCreator
-from web_content_folder import FolderCreator
+from folder_creator import FolderCreator
 from web_content_creator import WebContentCreator
 from document_creator import DocumentCreator
 from content_validator import ContentValidator

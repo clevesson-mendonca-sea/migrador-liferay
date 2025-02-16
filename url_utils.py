@@ -1,9 +1,38 @@
 import logging
+import re
 from urllib.parse import urlparse
+
+import unidecode
 
 logger = logging.getLogger(__name__)
 
 class UrlUtils:
+    @staticmethod
+    def sanitize_url_path(path: str) -> str:
+        """
+        Sanitiza o caminho da URL removendo acentos e caracteres especiais
+        
+        Args:
+            path (str): Caminho da URL a ser sanitizado
+            
+        Returns:
+            str: Caminho sanitizado
+        """
+        if not path:
+            return ""
+            
+        try:
+            path = unidecode(path.lower())
+            path = re.sub(r'[^a-z0-9\-/.]', '', path)
+            path = re.sub(r'-+', '-', path)
+            path = path.strip('-')
+            
+            return path
+            
+        except Exception as e:
+            logger.error(f"Error sanitizing path {path}: {str(e)}")
+            return path
+
     @staticmethod
     def extract_domain(url: str) -> str:
         """Extrai o domínio base de uma URL"""

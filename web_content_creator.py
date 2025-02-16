@@ -10,7 +10,7 @@ from aiohttp import ClientTimeout, BasicAuth, TCPConnector
 from dataclasses import dataclass
 from bs4 import BeautifulSoup
 from web_content_processor import ContentProcessor
-from web_content_folder import FolderCreator
+from folder_creator import FolderCreator
 from document_creator import DocumentCreator
 from collapse_content_creator import CollapseContentProcessor
 from web_content_cache import ContentCache
@@ -161,6 +161,8 @@ class WebContentCreator:
         """Cria conteúdo estruturado"""
         if not self.session:
             await self.initialize_session()
+        
+        friendly_url = self.url_utils.sanitize_content_path(title)
 
         try:
             content_data = {
@@ -174,7 +176,8 @@ class WebContentCreator:
                     }
                 ],
                 "structuredContentFolderId": folder_id,
-                "title": title
+                "title": title,
+                "friendlyUrlPath": friendly_url
             }
 
             url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/structured-content-folders/{folder_id}/structured-contents"

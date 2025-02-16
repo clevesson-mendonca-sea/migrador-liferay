@@ -192,6 +192,22 @@ class DocumentCreator:
                 return ext
         return '.html' if 'html' in content_type else '.txt'
 
+    def _clean_document_url(self, url: str) -> str:
+        """Cleans the document URL by removing unnecessary parameters"""
+        if not url:
+            return url
+            
+        extensions = list(self.SUPPORTED_MIME_TYPES.keys())
+        
+        # Find the first occurrence of any supported extension
+        for ext in extensions:
+            if ext in url.lower():
+                # Split at the extension and keep everything before it (inclusive)
+                base_url = url.split(ext.lower())[0] + ext.lower()
+                return base_url
+                
+        return url
+
     async def get_friendly_url(self, doc_id: str, folder_id: Optional[int] = None) -> Optional[str]:
         """Obtém a friendly URL do documento"""
         document_url = f"/o/headless-delivery/v1.0/documents/{doc_id}"
@@ -203,8 +219,10 @@ class DocumentCreator:
                     result = await response.json()
                     if result.get("contentUrl"):
                         friendly_url = result["contentUrl"]
-                        logger.info(f"Friendly URL obtida: {friendly_url}")
-                        return friendly_url
+                        # Clean the URL before returning
+                        cleaned_url = self._clean_document_url(friendly_url)
+                        logger.info(f"Friendly URL obtida: {cleaned_url}")
+                        return cleaned_url
                 logger.error(f"Erro ao obter detalhes do documento: {response.status}")
                 
         except Exception as e:
@@ -212,7 +230,7 @@ class DocumentCreator:
             logger.error(traceback.format_exc())
             
         return None
-
+    
     async def _find_existing_document(self, filename: str, folder_id: Optional[int] = None) -> Optional[Dict[str, Any]]:
         """Busca um documento existente pelo nome do arquivo"""
         try:
