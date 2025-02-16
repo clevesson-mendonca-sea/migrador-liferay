@@ -1,0 +1,832 @@
+2025-02-16 08:39:13,121 - INFO - No existing content found with title: Hierarquia
+2025-02-16 08:39:13,121 - INFO - Fetching content from: https://De/De
+2025-02-16 08:39:13,122 - ERROR - Error during content migration: No content found for De
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 655, in migrate_content
+    raise Exception(f"No content found for {source_url}")
+Exception: No content found for De
+
+2025-02-16 08:39:15,336 - INFO - No existing content found with title: Raiz
+2025-02-16 08:39:15,336 - INFO - Fetching content from: https://www.cultura.df.gov.br
+2025-02-16 08:39:19,191 - INFO - Content found using selector: {'type': 'class', 'value': 'col-md-8'}
+2025-02-16 08:39:19,192 - INFO - Processing regular content for Raiz
+2025-02-16 08:39:24,501 - ERROR - Error during content migration: Failed to create content in Liferay
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 696, in migrate_content
+    raise Exception("Failed to create content in Liferay")
+Exception: Failed to create content in Liferay
+
+2025-02-16 08:39:27,135 - INFO - No existing content found with title: SECEC
+2025-02-16 08:39:27,135 - INFO - Fetching content from: https://De/Usar a URL:
+/SECEC-1
+2025-02-16 08:39:27,137 - ERROR - Error during content migration: No content found for Usar a URL:
+/SECEC-1
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 655, in migrate_content
+    raise Exception(f"No content found for {source_url}")
+Exception: No content found for Usar a URL:
+/SECEC-1
+
+2025-02-16 08:39:29,553 - INFO - No existing content found with title: Quem é Quem
+2025-02-16 08:39:29,553 - INFO - Fetching content from: https://www.cultura.df.gov.br/quem-e-quem-2/
+2025-02-16 08:39:31,576 - INFO - Content found using selector: {'type': 'id', 'value': 'conteudo'}
+2025-02-16 08:39:31,651 - INFO - Processing mixed content for Quem é Quem
+2025-02-16 08:39:31,652 - ERROR - Error during content migration: 'WebContentCreator' object has no attribute 'process_mixed_content'
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 665, in migrate_content
+    content_ids = await self.process_mixed_content(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'WebContentCreator' object has no attribute 'process_mixed_content'. Did you mean: 'process_content'?
+
+2025-02-16 08:39:33,979 - INFO - No existing content found with title: Perfil do secretrário
+2025-02-16 08:39:33,979 - INFO - Fetching content from: https://www.cultura.df.gov.br/perfil-do-secretario/
+2025-02-16 08:39:35,339 - INFO - Content found using selector: {'type': 'id', 'value': 'conteudo'}
+2025-02-16 08:39:35,340 - INFO - Processing regular content for Perfil do secretrário
+2025-02-16 08:41:33,737 - INFO - No existing content found with title: Hierarquia
+2025-02-16 08:41:33,737 - INFO - Fetching content from: https://De/De
+2025-02-16 08:41:33,739 - ERROR - Error during content migration: No content found for De
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 655, in migrate_content
+    raise Exception(f"No content found for {source_url}")
+Exception: No content found for De
+
+2025-02-16 08:41:35,288 - INFO - No existing content found with title: Raiz
+2025-02-16 08:41:35,288 - INFO - Fetching content from: https://www.cultura.df.gov.br
+2025-02-16 08:41:38,355 - INFO - Content found using selector: {'type': 'class', 'value': 'col-md-8'}
+2025-02-16 08:41:38,356 - INFO - Processing regular content for Raiz
+2025-02-16 08:41:43,562 - ERROR - Error during content migration: Failed to create content in Liferay
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 696, in migrate_content
+    raise Exception("Failed to create content in Liferay")
+Exception: Failed to create content in Liferay
+
+2025-02-16 08:41:45,983 - INFO - No existing content found with title: SECEC
+2025-02-16 08:41:45,983 - INFO - Fetching content from: https://De/Usar a URL:
+/SECEC-1
+2025-02-16 08:41:45,985 - ERROR - Error during content migration: No content found for Usar a URL:
+/SECEC-1
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 655, in migrate_content
+    raise Exception(f"No content found for {source_url}")
+Exception: No content found for Usar a URL:
+/SECEC-1
+
+2025-02-16 08:41:48,247 - INFO - No existing content found with title: Quem é Quem
+2025-02-16 08:41:48,247 - INFO - Fetching content from: https://www.cultura.df.gov.br/quem-e-quem-2/
+2025-02-16 08:41:49,935 - INFO - Content found using selector: {'type': 'id', 'value': 'conteudo'}
+2025-02-16 08:41:50,008 - INFO - Processing mixed content for Quem é Quem
+2025-02-16 08:41:50,008 - ERROR - Error during content migration: MixedContentProcessor.process_mixed_content() got an unexpected keyword argument 'source_url'
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 665, in migrate_content
+    content_ids = await self.mixed_processor.process_mixed_content(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: MixedContentProcessor.process_mixed_content() got an unexpected keyword argument 'source_url'
+
+2025-02-16 08:41:52,144 - INFO - No existing content found with title: Perfil do secretrário
+2025-02-16 08:41:52,144 - INFO - Fetching content from: https://www.cultura.df.gov.br/perfil-do-secretario/
+2025-02-16 08:41:59,124 - INFO - Content found using selector: {'type': 'id', 'value': 'conteudo'}
+2025-02-16 08:41:59,125 - INFO - Processing regular content for Perfil do secretrário
+2025-02-16 08:42:48,521 - INFO - No existing content found with title: Hierarquia
+2025-02-16 08:42:48,521 - INFO - Fetching content from: https://De/De
+2025-02-16 08:42:48,522 - ERROR - Error during content migration: No content found for De
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 655, in migrate_content
+    raise Exception(f"No content found for {source_url}")
+Exception: No content found for De
+
+2025-02-16 08:42:50,974 - INFO - No existing content found with title: Raiz
+2025-02-16 08:42:50,974 - INFO - Fetching content from: https://www.cultura.df.gov.br
+2025-02-16 08:42:53,950 - INFO - Content found using selector: {'type': 'class', 'value': 'col-md-8'}
+2025-02-16 08:42:53,951 - INFO - Processing regular content for Raiz
+2025-02-16 08:42:59,065 - ERROR - Error during content migration: Failed to create content in Liferay
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 696, in migrate_content
+    raise Exception("Failed to create content in Liferay")
+Exception: Failed to create content in Liferay
+
+2025-02-16 08:43:01,425 - INFO - No existing content found with title: SECEC
+2025-02-16 08:43:01,425 - INFO - Fetching content from: https://De/Usar a URL:
+/SECEC-1
+2025-02-16 08:43:01,426 - ERROR - Error during content migration: No content found for Usar a URL:
+/SECEC-1
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 655, in migrate_content
+    raise Exception(f"No content found for {source_url}")
+Exception: No content found for Usar a URL:
+/SECEC-1
+
+2025-02-16 08:43:03,808 - INFO - No existing content found with title: Quem é Quem
+2025-02-16 08:43:03,809 - INFO - Fetching content from: https://www.cultura.df.gov.br/quem-e-quem-2/
+2025-02-16 08:43:10,647 - INFO - Content found using selector: {'type': 'id', 'value': 'conteudo'}
+2025-02-16 08:43:10,724 - INFO - Processing mixed content for Quem é Quem
+2025-02-16 08:43:10,724 - ERROR - Error during content migration: MixedContentProcessor.process_mixed_content() got an unexpected keyword argument 'source_url'
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 665, in migrate_content
+    content_ids = await self.mixed_processor.process_mixed_content(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: MixedContentProcessor.process_mixed_content() got an unexpected keyword argument 'source_url'
+
+2025-02-16 08:43:13,137 - INFO - No existing content found with title: Perfil do secretrário
+2025-02-16 08:43:13,137 - INFO - Fetching content from: https://www.cultura.df.gov.br/perfil-do-secretario/
+2025-02-16 08:43:14,816 - INFO - Content found using selector: {'type': 'id', 'value': 'conteudo'}
+2025-02-16 08:43:14,817 - INFO - Processing regular content for Perfil do secretrário
+2025-02-16 08:44:31,305 - INFO - No existing content found with title: Hierarquia
+2025-02-16 08:44:31,305 - INFO - Fetching content from: https://De/De
+2025-02-16 08:44:31,306 - ERROR - Error during content migration: No content found for De
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 655, in migrate_content
+    raise Exception(f"No content found for {source_url}")
+Exception: No content found for De
+
+2025-02-16 08:44:32,995 - INFO - No existing content found with title: Raiz
+2025-02-16 08:44:32,995 - INFO - Fetching content from: https://www.cultura.df.gov.br
+2025-02-16 08:44:36,463 - INFO - Content found using selector: {'type': 'class', 'value': 'col-md-8'}
+2025-02-16 08:44:36,464 - INFO - Processing regular content for Raiz
+2025-02-16 08:44:41,797 - ERROR - Error during content migration: Failed to create content in Liferay
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 696, in migrate_content
+    raise Exception("Failed to create content in Liferay")
+Exception: Failed to create content in Liferay
+
+2025-02-16 08:44:43,541 - INFO - No existing content found with title: SECEC
+2025-02-16 08:44:43,542 - INFO - Fetching content from: https://De/Usar a URL:
+/SECEC-1
+2025-02-16 08:44:43,544 - ERROR - Error during content migration: No content found for Usar a URL:
+/SECEC-1
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 655, in migrate_content
+    raise Exception(f"No content found for {source_url}")
+Exception: No content found for Usar a URL:
+/SECEC-1
+
+2025-02-16 08:44:45,805 - INFO - No existing content found with title: Quem é Quem
+2025-02-16 08:44:45,805 - INFO - Fetching content from: https://www.cultura.df.gov.br/quem-e-quem-2/
+2025-02-16 08:44:47,582 - INFO - Content found using selector: {'type': 'id', 'value': 'conteudo'}
+2025-02-16 08:44:47,659 - INFO - Processing mixed content for Quem é Quem
+2025-02-16 08:44:47,659 - ERROR - Error during content migration: MixedContentProcessor.process_mixed_content() missing 1 required positional argument: 'web_content_creator'
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 665, in migrate_content
+    content_ids = await self.mixed_processor.process_mixed_content(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: MixedContentProcessor.process_mixed_content() missing 1 required positional argument: 'web_content_creator'
+
+2025-02-16 08:44:49,224 - INFO - No existing content found with title: Perfil do secretrário
+2025-02-16 08:44:49,225 - INFO - Fetching content from: https://www.cultura.df.gov.br/perfil-do-secretario/
+2025-02-16 08:45:46,107 - INFO - No existing content found with title: Hierarquia
+2025-02-16 08:45:46,108 - INFO - Fetching content from: https://De/De
+2025-02-16 08:45:46,109 - ERROR - Error during content migration: No content found for De
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 655, in migrate_content
+    raise Exception(f"No content found for {source_url}")
+Exception: No content found for De
+
+2025-02-16 08:45:47,581 - INFO - No existing content found with title: Raiz
+2025-02-16 08:45:47,581 - INFO - Fetching content from: https://www.cultura.df.gov.br
+2025-02-16 08:45:50,605 - INFO - Content found using selector: {'type': 'class', 'value': 'col-md-8'}
+2025-02-16 08:45:50,606 - INFO - Processing regular content for Raiz
+2025-02-16 08:45:55,780 - ERROR - Error during content migration: Failed to create content in Liferay
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 697, in migrate_content
+    raise Exception("Failed to create content in Liferay")
+Exception: Failed to create content in Liferay
+
+2025-02-16 08:45:57,261 - INFO - No existing content found with title: SECEC
+2025-02-16 08:45:57,261 - INFO - Fetching content from: https://De/Usar a URL:
+/SECEC-1
+2025-02-16 08:45:57,262 - ERROR - Error during content migration: No content found for Usar a URL:
+/SECEC-1
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 655, in migrate_content
+    raise Exception(f"No content found for {source_url}")
+Exception: No content found for Usar a URL:
+/SECEC-1
+
+2025-02-16 08:45:58,755 - INFO - No existing content found with title: Quem é Quem
+2025-02-16 08:45:58,756 - INFO - Fetching content from: https://www.cultura.df.gov.br/quem-e-quem-2/
+2025-02-16 08:46:01,165 - INFO - Content found using selector: {'type': 'id', 'value': 'conteudo'}
+2025-02-16 08:46:01,241 - INFO - Processing mixed content for Quem é Quem
+2025-02-16 08:46:27,015 - ERROR - Error during content migration: Failed to process mixed content for https://www.cultura.df.gov.br/quem-e-quem-2/
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 675, in migrate_content
+    raise Exception(f"Failed to process mixed content for {source_url}")
+Exception: Failed to process mixed content for https://www.cultura.df.gov.br/quem-e-quem-2/
+
+2025-02-16 08:52:25,510 - INFO - No existing content found with title: Hierarquia
+2025-02-16 08:52:25,510 - INFO - Fetching content from: https://De/De
+2025-02-16 08:52:25,513 - ERROR - Error during content migration: No content found for De
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 655, in migrate_content
+    raise Exception(f"No content found for {source_url}")
+Exception: No content found for De
+
+2025-02-16 08:52:28,978 - INFO - No existing content found with title: Raiz
+2025-02-16 08:52:28,978 - INFO - Fetching content from: https://www.cultura.df.gov.br
+2025-02-16 08:52:32,486 - INFO - Content found using selector: {'type': 'class', 'value': 'col-md-8'}
+2025-02-16 08:52:32,487 - INFO - Processing regular content for Raiz
+2025-02-16 08:52:41,281 - ERROR - Error during content migration: Failed to create content in Liferay
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 697, in migrate_content
+    raise Exception("Failed to create content in Liferay")
+Exception: Failed to create content in Liferay
+
+2025-02-16 08:52:44,674 - INFO - No existing content found with title: SECEC
+2025-02-16 08:52:44,674 - INFO - Fetching content from: https://De/Usar a URL:
+/SECEC-1
+2025-02-16 08:52:44,676 - ERROR - Error during content migration: No content found for Usar a URL:
+/SECEC-1
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 655, in migrate_content
+    raise Exception(f"No content found for {source_url}")
+Exception: No content found for Usar a URL:
+/SECEC-1
+
+2025-02-16 08:52:48,063 - INFO - No existing content found with title: Quem é Quem
+2025-02-16 08:52:48,063 - INFO - Fetching content from: https://www.cultura.df.gov.br/quem-e-quem-2/
+2025-02-16 08:52:49,544 - INFO - Content found using selector: {'type': 'id', 'value': 'conteudo'}
+2025-02-16 08:52:49,720 - INFO - Processing mixed content for Quem é Quem
+2025-02-16 08:53:17,256 - ERROR - Error during content migration: Failed to process mixed content for https://www.cultura.df.gov.br/quem-e-quem-2/
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 675, in migrate_content
+    raise Exception(f"Failed to process mixed content for {source_url}")
+Exception: Failed to process mixed content for https://www.cultura.df.gov.br/quem-e-quem-2/
+
+2025-02-16 08:53:21,287 - INFO - No existing content found with title: Perfil do secretrário
+2025-02-16 08:53:21,287 - INFO - Fetching content from: https://www.cultura.df.gov.br/perfil-do-secretario/
+2025-02-16 08:53:23,219 - INFO - Content found using selector: {'type': 'id', 'value': 'conteudo'}
+2025-02-16 08:53:23,222 - INFO - Processing regular content for Perfil do secretrário
+2025-02-16 08:53:47,421 - INFO - No existing content found with title: Hierarquia
+2025-02-16 08:53:47,421 - INFO - Fetching content from: https://De/De
+2025-02-16 08:53:47,424 - ERROR - Error during content migration: No content found for De
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 655, in migrate_content
+    raise Exception(f"No content found for {source_url}")
+Exception: No content found for De
+
+2025-02-16 08:53:52,490 - INFO - No existing content found with title: Raiz
+2025-02-16 08:53:52,490 - INFO - Fetching content from: https://www.cultura.df.gov.br
+2025-02-16 08:53:56,143 - INFO - Content found using selector: {'type': 'class', 'value': 'col-md-8'}
+2025-02-16 08:53:56,145 - INFO - Processing regular content for Raiz
+2025-02-16 08:54:04,337 - ERROR - Error during content migration: Failed to create content in Liferay
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 697, in migrate_content
+    raise Exception("Failed to create content in Liferay")
+Exception: Failed to create content in Liferay
+
+2025-02-16 08:54:09,701 - INFO - No existing content found with title: SECEC
+2025-02-16 08:54:09,701 - INFO - Fetching content from: https://De/Usar a URL:
+/SECEC-1
+2025-02-16 08:54:09,703 - ERROR - Error during content migration: No content found for Usar a URL:
+/SECEC-1
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 655, in migrate_content
+    raise Exception(f"No content found for {source_url}")
+Exception: No content found for Usar a URL:
+/SECEC-1
+
+2025-02-16 08:54:15,053 - INFO - No existing content found with title: Quem é Quem
+2025-02-16 08:54:15,054 - INFO - Fetching content from: https://www.cultura.df.gov.br/quem-e-quem-2/
+2025-02-16 08:54:17,248 - INFO - Content found using selector: {'type': 'id', 'value': 'conteudo'}
+2025-02-16 08:54:17,442 - INFO - Processing mixed content for Quem é Quem
+2025-02-16 08:54:47,450 - ERROR - Error during content migration: Failed to process mixed content for https://www.cultura.df.gov.br/quem-e-quem-2/
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 675, in migrate_content
+    raise Exception(f"Failed to process mixed content for {source_url}")
+Exception: Failed to process mixed content for https://www.cultura.df.gov.br/quem-e-quem-2/
+
+2025-02-16 08:59:14,068 - INFO - No existing content found with title: Hierarquia
+2025-02-16 08:59:14,068 - INFO - Fetching content from: https://De/De
+2025-02-16 08:59:14,070 - ERROR - Error during content migration: No content found for De
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 655, in migrate_content
+    raise Exception(f"No content found for {source_url}")
+Exception: No content found for De
+
+2025-02-16 08:59:17,652 - INFO - No existing content found with title: Raiz
+2025-02-16 08:59:17,652 - INFO - Fetching content from: https://www.cultura.df.gov.br
+2025-02-16 08:59:20,748 - INFO - Content found using selector: {'type': 'class', 'value': 'col-md-8'}
+2025-02-16 08:59:20,750 - INFO - Processing regular content for Raiz
+2025-02-16 08:59:29,115 - ERROR - Error during content migration: Failed to create content in Liferay
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 698, in migrate_content
+    raise Exception("Failed to create content in Liferay")
+Exception: Failed to create content in Liferay
+
+2025-02-16 08:59:32,626 - INFO - No existing content found with title: SECEC
+2025-02-16 08:59:32,627 - INFO - Fetching content from: https://De/Usar a URL:
+/SECEC-1
+2025-02-16 08:59:32,629 - ERROR - Error during content migration: No content found for Usar a URL:
+/SECEC-1
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 655, in migrate_content
+    raise Exception(f"No content found for {source_url}")
+Exception: No content found for Usar a URL:
+/SECEC-1
+
+2025-02-16 08:59:36,319 - INFO - No existing content found with title: Quem é Quem
+2025-02-16 08:59:36,319 - INFO - Fetching content from: https://www.cultura.df.gov.br/quem-e-quem-2/
+2025-02-16 08:59:43,206 - INFO - Content found using selector: {'type': 'id', 'value': 'conteudo'}
+2025-02-16 08:59:43,401 - INFO - Processing mixed content for Quem é Quem
+2025-02-16 09:00:20,854 - ERROR - Error during content migration: Failed to process mixed content for https://www.cultura.df.gov.br/quem-e-quem-2/
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 676, in migrate_content
+    raise Exception(f"Failed to process mixed content for {source_url}")
+Exception: Failed to process mixed content for https://www.cultura.df.gov.br/quem-e-quem-2/
+
+2025-02-16 09:02:46,063 - INFO - No existing content found with title: Hierarquia
+2025-02-16 09:02:46,063 - INFO - Fetching content from: https://De/De
+2025-02-16 09:02:46,066 - ERROR - Error during content migration: No content found for De
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 662, in migrate_content
+    raise Exception(f"No content found for {source_url}")
+Exception: No content found for De
+
+2025-02-16 09:02:50,116 - INFO - No existing content found with title: Raiz
+2025-02-16 09:02:50,116 - INFO - Fetching content from: https://www.cultura.df.gov.br
+2025-02-16 09:02:53,159 - INFO - Content found using selector: {'type': 'class', 'value': 'col-md-8'}
+2025-02-16 09:02:53,161 - INFO - Processing regular content for Raiz
+2025-02-16 09:02:53,165 - ERROR - Error during content migration: 'WebContentCreator' object has no attribute 'logger'
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 421, in create_structured_content
+    self.logger.info(f"Preparing structured content data for '{title}' in folder {folder_id}")
+    ^^^^^^^^^^^
+AttributeError: 'WebContentCreator' object has no attribute 'logger'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 700, in migrate_content
+    content_id = await self.create_structured_content(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 460, in create_structured_content
+    self.logger.error(f"Error creating structured content '{title}': {str(e)}")
+    ^^^^^^^^^^^
+AttributeError: 'WebContentCreator' object has no attribute 'logger'
+
+2025-02-16 09:02:56,876 - INFO - No existing content found with title: SECEC
+2025-02-16 09:02:56,876 - INFO - Fetching content from: https://De/Usar a URL:
+/SECEC-1
+2025-02-16 09:02:56,879 - ERROR - Error during content migration: No content found for Usar a URL:
+/SECEC-1
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 662, in migrate_content
+    raise Exception(f"No content found for {source_url}")
+Exception: No content found for Usar a URL:
+/SECEC-1
+
+2025-02-16 09:03:02,224 - INFO - No existing content found with title: Quem é Quem
+2025-02-16 09:03:02,224 - INFO - Fetching content from: https://www.cultura.df.gov.br/quem-e-quem-2/
+2025-02-16 09:03:09,020 - INFO - Content found using selector: {'type': 'id', 'value': 'conteudo'}
+2025-02-16 09:03:09,203 - INFO - Processing mixed content for Quem é Quem
+2025-02-16 09:03:36,914 - ERROR - Error during content migration: name 'traceback' is not defined
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 421, in create_structured_content
+    self.logger.info(f"Preparing structured content data for '{title}' in folder {folder_id}")
+    ^^^^^^^^^^^
+AttributeError: 'WebContentCreator' object has no attribute 'logger'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_mixed.py", line 140, in process_mixed_content
+    content_id = await web_content_creator.create_structured_content(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 460, in create_structured_content
+    self.logger.error(f"Error creating structured content '{title}': {str(e)}")
+    ^^^^^^^^^^^
+AttributeError: 'WebContentCreator' object has no attribute 'logger'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_mixed.py", line 164, in process_mixed_content
+    self.logger.error(f"Full error: {traceback.format_exc()}")
+                                     ^^^^^^^^^
+NameError: name 'traceback' is not defined. Did you forget to import 'traceback'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 672, in migrate_content
+    content_ids = await self.mixed_processor.process_mixed_content(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_mixed.py", line 171, in process_mixed_content
+    self.logger.error(f"Full error: {traceback.format_exc()}")
+                                     ^^^^^^^^^
+NameError: name 'traceback' is not defined. Did you forget to import 'traceback'
+
+2025-02-16 09:03:40,940 - INFO - No existing content found with title: Perfil do secretrário
+2025-02-16 09:03:40,940 - INFO - Fetching content from: https://www.cultura.df.gov.br/perfil-do-secretario/
+2025-02-16 09:03:57,895 - INFO - No existing content found with title: Hierarquia
+2025-02-16 09:03:57,896 - INFO - Fetching content from: https://De/De
+2025-02-16 09:03:57,899 - ERROR - Error during content migration: No content found for De
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 662, in migrate_content
+    raise Exception(f"No content found for {source_url}")
+Exception: No content found for De
+
+2025-02-16 09:04:01,432 - INFO - No existing content found with title: Raiz
+2025-02-16 09:04:01,432 - INFO - Fetching content from: https://www.cultura.df.gov.br
+2025-02-16 09:04:04,578 - INFO - Content found using selector: {'type': 'class', 'value': 'col-md-8'}
+2025-02-16 09:04:04,579 - INFO - Processing regular content for Raiz
+2025-02-16 09:04:04,583 - ERROR - Error during content migration: 'WebContentCreator' object has no attribute 'logger'
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 421, in create_structured_content
+    self.logger.info(f"Preparing structured content data for '{title}' in folder {folder_id}")
+    ^^^^^^^^^^^
+AttributeError: 'WebContentCreator' object has no attribute 'logger'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 700, in migrate_content
+    content_id = await self.create_structured_content(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 460, in create_structured_content
+    self.logger.error(f"Error creating structured content '{title}': {str(e)}")
+    ^^^^^^^^^^^
+AttributeError: 'WebContentCreator' object has no attribute 'logger'
+
+2025-02-16 09:04:07,845 - INFO - No existing content found with title: SECEC
+2025-02-16 09:04:07,845 - INFO - Fetching content from: https://De/Usar a URL:
+/SECEC-1
+2025-02-16 09:04:07,847 - ERROR - Error during content migration: No content found for Usar a URL:
+/SECEC-1
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 662, in migrate_content
+    raise Exception(f"No content found for {source_url}")
+Exception: No content found for Usar a URL:
+/SECEC-1
+
+2025-02-16 09:04:12,746 - INFO - No existing content found with title: Quem é Quem
+2025-02-16 09:04:12,746 - INFO - Fetching content from: https://www.cultura.df.gov.br/quem-e-quem-2/
+2025-02-16 09:04:19,680 - INFO - Content found using selector: {'type': 'id', 'value': 'conteudo'}
+2025-02-16 09:04:19,850 - INFO - Processing mixed content for Quem é Quem
+2025-02-16 09:04:46,768 - ERROR - Error during content migration: Failed to process mixed content for https://www.cultura.df.gov.br/quem-e-quem-2/
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 683, in migrate_content
+    raise Exception(f"Failed to process mixed content for {source_url}")
+Exception: Failed to process mixed content for https://www.cultura.df.gov.br/quem-e-quem-2/
+
+2025-02-16 09:04:50,571 - INFO - No existing content found with title: Perfil do secretrário
+2025-02-16 09:04:50,571 - INFO - Fetching content from: https://www.cultura.df.gov.br/perfil-do-secretario/
+2025-02-16 09:04:51,816 - INFO - Content found using selector: {'type': 'id', 'value': 'conteudo'}
+2025-02-16 09:04:51,819 - INFO - Processing regular content for Perfil do secretrário
+2025-02-16 09:08:20,938 - INFO - Preparing structured content data for 'Raiz' in folder 168105
+2025-02-16 09:08:20,939 - INFO - Making request to create structured content at: http://localhost:8080/o/headless-delivery/v1.0/structured-content-folders/168105/structured-contents
+2025-02-16 09:08:22,615 - INFO - Response status: 400
+2025-02-16 09:08:22,615 - INFO - Response text: {
+  "status" : "BAD_REQUEST",
+  "title" : "Unable to get content field value for \"content\" for content structure 158562"
+}
+2025-02-16 09:08:25,537 - INFO - Response status: 400
+2025-02-16 09:08:25,538 - INFO - Response text: {
+  "status" : "BAD_REQUEST",
+  "title" : "Unable to get content field value for \"content\" for content structure 158562"
+}
+2025-02-16 09:08:29,229 - INFO - Response status: 400
+2025-02-16 09:08:29,229 - INFO - Response text: {
+  "status" : "BAD_REQUEST",
+  "title" : "Unable to get content field value for \"content\" for content structure 158562"
+}
+2025-02-16 09:08:29,229 - ERROR - Error creating structured content 'Raiz': Failed to create content: 400 - {
+  "status" : "BAD_REQUEST",
+  "title" : "Unable to get content field value for \"content\" for content structure 158562"
+}
+2025-02-16 09:08:29,230 - ERROR - Full error: Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 458, in create_structured_content
+    return await self._retry_operation(create_attempt)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 132, in _retry_operation
+    raise last_error
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 126, in _retry_operation
+    return await operation(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 456, in create_attempt
+    raise Exception(f"Failed to create content: {response.status} - {response_text}")
+Exception: Failed to create content: 400 - {
+  "status" : "BAD_REQUEST",
+  "title" : "Unable to get content field value for \"content\" for content structure 158562"
+}
+
+2025-02-16 09:09:18,054 - INFO - Preparing structured content data for 'Raiz' in folder 168105
+2025-02-16 09:09:18,054 - INFO - Making request to create structured content at: http://localhost:8080/o/headless-delivery/v1.0/structured-content-folders/168105/structured-contents
+2025-02-16 09:09:19,743 - INFO - Response status: 400
+2025-02-16 09:09:19,743 - INFO - Response text: {
+  "status" : "BAD_REQUEST",
+  "title" : "Unable to get content field value for \"content\" for content structure 158562"
+}
+2025-02-16 09:09:22,399 - INFO - Response status: 400
+2025-02-16 09:09:22,400 - INFO - Response text: {
+  "status" : "BAD_REQUEST",
+  "title" : "Unable to get content field value for \"content\" for content structure 158562"
+}
+2025-02-16 09:09:26,076 - INFO - Response status: 400
+2025-02-16 09:09:26,076 - INFO - Response text: {
+  "status" : "BAD_REQUEST",
+  "title" : "Unable to get content field value for \"content\" for content structure 158562"
+}
+2025-02-16 09:09:26,076 - ERROR - Error creating structured content 'Raiz': Failed to create content: 400 - {
+  "status" : "BAD_REQUEST",
+  "title" : "Unable to get content field value for \"content\" for content structure 158562"
+}
+2025-02-16 09:09:26,077 - ERROR - Full error: Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 458, in create_structured_content
+    return await self._retry_operation(create_attempt)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 132, in _retry_operation
+    raise last_error
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 126, in _retry_operation
+    return await operation(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 456, in create_attempt
+    raise Exception(f"Failed to create content: {response.status} - {response_text}")
+Exception: Failed to create content: 400 - {
+  "status" : "BAD_REQUEST",
+  "title" : "Unable to get content field value for \"content\" for content structure 158562"
+}
+
+2025-02-16 09:09:45,854 - INFO - Preparing structured content data for 'Quem é Quem' in folder 168115
+2025-02-16 09:09:45,854 - INFO - Making request to create structured content at: http://localhost:8080/o/headless-delivery/v1.0/structured-content-folders/168115/structured-contents
+2025-02-16 09:09:47,657 - INFO - Response status: 400
+2025-02-16 09:09:47,658 - INFO - Response text: {
+  "status" : "BAD_REQUEST",
+  "title" : "Unable to get content field value for \"content\" for content structure 158562"
+}
+2025-02-16 09:09:50,411 - INFO - Response status: 400
+2025-02-16 09:09:50,412 - INFO - Response text: {
+  "status" : "BAD_REQUEST",
+  "title" : "Unable to get content field value for \"content\" for content structure 158562"
+}
+2025-02-16 09:09:54,147 - INFO - Response status: 400
+2025-02-16 09:09:54,147 - INFO - Response text: {
+  "status" : "BAD_REQUEST",
+  "title" : "Unable to get content field value for \"content\" for content structure 158562"
+}
+2025-02-16 09:09:54,147 - ERROR - Error creating structured content 'Quem é Quem': Failed to create content: 400 - {
+  "status" : "BAD_REQUEST",
+  "title" : "Unable to get content field value for \"content\" for content structure 158562"
+}
+2025-02-16 09:09:54,148 - ERROR - Full error: Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 458, in create_structured_content
+    return await self._retry_operation(create_attempt)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 132, in _retry_operation
+    raise last_error
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 126, in _retry_operation
+    return await operation(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 456, in create_attempt
+    raise Exception(f"Failed to create content: {response.status} - {response_text}")
+Exception: Failed to create content: 400 - {
+  "status" : "BAD_REQUEST",
+  "title" : "Unable to get content field value for \"content\" for content structure 158562"
+}
+
+2025-02-16 09:14:46,333 - INFO - No existing content found with title: Hierarquia
+2025-02-16 09:14:46,334 - INFO - Fetching content from: https://De/De
+2025-02-16 09:14:46,337 - ERROR - Error during content migration: No content found for De
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 569, in migrate_content
+    raise Exception(f"No content found for {source_url}")
+Exception: No content found for De
+
+2025-02-16 09:14:50,167 - INFO - No existing content found with title: Raiz
+2025-02-16 09:14:50,168 - INFO - Fetching content from: https://www.cultura.df.gov.br
+2025-02-16 09:14:58,825 - INFO - Content found using selector: {'type': 'class', 'value': 'col-md-8'}
+2025-02-16 09:14:58,828 - INFO - Processing regular content for Raiz
+2025-02-16 09:15:00,706 - INFO - Created structured content: Raiz (ID: 168854)
+2025-02-16 09:15:04,302 - INFO - No existing content found with title: SECEC
+2025-02-16 09:15:04,302 - INFO - Fetching content from: https://De/Usar a URL:
+/SECEC-1
+2025-02-16 09:15:04,305 - ERROR - Error during content migration: No content found for Usar a URL:
+/SECEC-1
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 569, in migrate_content
+    raise Exception(f"No content found for {source_url}")
+Exception: No content found for Usar a URL:
+/SECEC-1
+
+2025-02-16 09:15:07,811 - INFO - No existing content found with title: Quem é Quem
+2025-02-16 09:15:07,811 - INFO - Fetching content from: https://www.cultura.df.gov.br/quem-e-quem-2/
+2025-02-16 09:15:10,095 - INFO - Content found using selector: {'type': 'id', 'value': 'conteudo'}
+2025-02-16 09:15:10,782 - INFO - Processing regular content for Quem é Quem
+2025-02-16 09:15:40,582 - INFO - Created structured content: Quem é Quem (ID: 169062)
+2025-02-16 09:18:47,150 - INFO - No existing content found with title: Hierarquia
+2025-02-16 09:18:47,151 - INFO - Fetching content from: https://De/De
+2025-02-16 09:18:47,153 - ERROR - Error during content migration: No content found for De
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 569, in migrate_content
+    raise Exception(f"No content found for {source_url}")
+Exception: No content found for De
+
+2025-02-16 09:18:51,179 - INFO - Found existing content: Raiz (ID: 168854)
+2025-02-16 09:18:54,989 - INFO - No existing content found with title: SECEC
+2025-02-16 09:18:54,990 - INFO - Fetching content from: https://De/Usar a URL:
+/SECEC-1
+2025-02-16 09:18:54,992 - ERROR - Error during content migration: No content found for Usar a URL:
+/SECEC-1
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 569, in migrate_content
+    raise Exception(f"No content found for {source_url}")
+Exception: No content found for Usar a URL:
+/SECEC-1
+
+2025-02-16 09:18:58,828 - INFO - No existing content found with title: Quem é Quem
+2025-02-16 09:18:58,829 - INFO - Fetching content from: https://www.cultura.df.gov.br/quem-e-quem-2/
+2025-02-16 09:19:02,133 - INFO - Content found using selector: {'type': 'id', 'value': 'conteudo'}
+2025-02-16 09:19:02,895 - INFO - Processing regular content for Quem é Quem
+2025-02-16 09:19:32,704 - INFO - Created structured content: Quem é Quem (ID: 169389)
+2025-02-16 09:19:37,400 - INFO - No existing content found with title: Perfil do secretrário
+2025-02-16 09:19:37,401 - INFO - Fetching content from: https://www.cultura.df.gov.br/perfil-do-secretario/
+2025-02-16 09:19:39,076 - INFO - Content found using selector: {'type': 'id', 'value': 'conteudo'}
+2025-02-16 09:19:39,085 - INFO - Processing regular content for Perfil do secretrário
+2025-02-16 09:19:48,091 - INFO - Created structured content: Perfil do secretrário (ID: 169417)
+2025-02-16 09:25:51,847 - INFO - No existing content found with title: Hierarquia
+2025-02-16 09:26:18,634 - INFO - No existing content found with title: Hierarquia
+2025-02-16 09:26:18,637 - ERROR - Error during content migration: No content found for De
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 529, in migrate_content
+    raise Exception(f"No content found for {source_url}")
+Exception: No content found for De
+
+2025-02-16 09:26:22,297 - INFO - Found existing content: Raiz (ID: 168854)
+2025-02-16 09:26:25,729 - INFO - No existing content found with title: SECEC
+2025-02-16 09:26:25,731 - ERROR - Error during content migration: No content found for Usar a URL:
+/SECEC-1
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 529, in migrate_content
+    raise Exception(f"No content found for {source_url}")
+Exception: No content found for Usar a URL:
+/SECEC-1
+
+2025-02-16 09:26:29,254 - INFO - No existing content found with title: Quem é Quem
+2025-02-16 09:26:31,456 - INFO - Processing regular content for Quem é Quem
+2025-02-16 09:26:44,775 - INFO - Created structured content: Quem é Quem (ID: 169434)
+2025-02-16 09:26:48,189 - INFO - Found existing content: Perfil do secretrário (ID: 169417)
+2025-02-16 09:26:56,996 - INFO - No existing content found with title: Galeria de ex-secretários de Cultura
+2025-02-16 09:26:58,553 - INFO - Processing regular content for Galeria de ex-secretários de Cultura
+2025-02-16 09:27:32,812 - INFO - Created structured content: Galeria de ex-secretários de Cultura (ID: 169705)
+2025-02-16 09:27:38,441 - INFO - No existing content found with title: Agenda do Secretário
+2025-02-16 09:28:05,120 - INFO - No existing content found with title: Hierarquia
+2025-02-16 09:28:05,123 - ERROR - Error during content migration: No content found for De
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 529, in migrate_content
+    raise Exception(f"No content found for {source_url}")
+Exception: No content found for De
+
+2025-02-16 09:28:09,038 - INFO - Found existing content: Raiz (ID: 168854)
+2025-02-16 09:28:12,811 - INFO - No existing content found with title: SECEC
+2025-02-16 09:28:12,814 - ERROR - Error during content migration: No content found for Usar a URL:
+/SECEC-1
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 529, in migrate_content
+    raise Exception(f"No content found for {source_url}")
+Exception: No content found for Usar a URL:
+/SECEC-1
+
+2025-02-16 09:28:16,553 - INFO - No existing content found with title: Quem é Quem
+2025-02-16 09:28:19,261 - INFO - Processing regular content for Quem é Quem
+2025-02-16 09:28:33,757 - INFO - Created structured content: Quem é Quem (ID: 169725)
+2025-02-16 09:28:37,167 - INFO - Found existing content: Perfil do secretrário (ID: 169417)
+2025-02-16 10:07:14,390 - INFO - No existing content found with title: Hierarquia
+2025-02-16 10:07:14,393 - ERROR - Error during content migration: No content found for De
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 531, in migrate_content
+    raise Exception(f"No content found for {source_url}")
+Exception: No content found for De
+
+2025-02-16 10:07:15,967 - INFO - Found existing content: Raiz (ID: 168854)
+2025-02-16 10:07:17,444 - INFO - No existing content found with title: SECEC
+2025-02-16 10:07:17,445 - ERROR - Error during content migration: No content found for Usar a URL:
+/SECEC-1
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 531, in migrate_content
+    raise Exception(f"No content found for {source_url}")
+Exception: No content found for Usar a URL:
+/SECEC-1
+
+2025-02-16 10:07:18,862 - INFO - Found existing content: Quem é Quem (ID: 169725)
+2025-02-16 10:07:20,310 - INFO - Found existing content: Perfil do secretrário (ID: 169417)
+2025-02-16 10:07:41,133 - INFO - No existing content found with title: Hierarquia
+2025-02-16 10:07:41,135 - ERROR - Error during content migration: No content found for De
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 531, in migrate_content
+    raise Exception(f"No content found for {source_url}")
+Exception: No content found for De
+
+2025-02-16 10:07:42,505 - INFO - Found existing content: Raiz (ID: 168854)
+2025-02-16 10:07:43,875 - INFO - No existing content found with title: SECEC
+2025-02-16 10:07:43,876 - ERROR - Error during content migration: No content found for Usar a URL:
+/SECEC-1
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 531, in migrate_content
+    raise Exception(f"No content found for {source_url}")
+Exception: No content found for Usar a URL:
+/SECEC-1
+
+2025-02-16 10:07:45,287 - INFO - No existing content found with title: Quem é Quem
+2025-02-16 10:07:53,027 - INFO - Creating regular content for Quem é Quem
+2025-02-16 10:07:54,337 - INFO - Created content: Quem é Quem (ID: 169808)
+2025-02-16 10:07:55,818 - INFO - Found existing content: Perfil do secretrário (ID: 169417)
+2025-02-16 10:10:00,076 - INFO - No existing content found with title: Hierarquia
+2025-02-16 10:10:00,077 - ERROR - Error during content migration: No content found for De
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 545, in migrate_content
+    raise Exception(f"No content found for {source_url}")
+Exception: No content found for De
+
+2025-02-16 10:10:01,492 - INFO - Found existing content: Raiz (ID: 168854)
+2025-02-16 10:10:02,835 - INFO - No existing content found with title: SECEC
+2025-02-16 10:10:02,836 - ERROR - Error during content migration: No content found for Usar a URL:
+/SECEC-1
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 545, in migrate_content
+    raise Exception(f"No content found for {source_url}")
+Exception: No content found for Usar a URL:
+/SECEC-1
+
+2025-02-16 10:10:04,241 - INFO - No existing content found with title: Quem é Quem
+2025-02-16 10:10:12,233 - INFO - Creating fully collapsible content for Quem é Quem
+2025-02-16 10:10:17,278 - ERROR - Error during content migration: Failed to create content in Liferay
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 589, in migrate_content
+    raise Exception("Failed to create content in Liferay")
+Exception: Failed to create content in Liferay
+
+2025-02-16 10:10:18,723 - INFO - Found existing content: Perfil do secretrário (ID: 169417)
+2025-02-16 10:13:35,515 - INFO - No existing content found with title: Hierarquia
+2025-02-16 10:13:35,518 - ERROR - Error during content migration: No content found for De
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 545, in migrate_content
+    raise Exception(f"No content found for {source_url}")
+Exception: No content found for De
+
+2025-02-16 10:13:37,645 - INFO - Found existing content: Raiz (ID: 168854)
+2025-02-16 10:13:39,709 - INFO - No existing content found with title: SECEC
+2025-02-16 10:13:39,710 - ERROR - Error during content migration: No content found for Usar a URL:
+/SECEC-1
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 545, in migrate_content
+    raise Exception(f"No content found for {source_url}")
+Exception: No content found for Usar a URL:
+/SECEC-1
+
+2025-02-16 10:13:41,620 - INFO - No existing content found with title: Quem é Quem
+2025-02-16 10:13:58,455 - INFO - Creating fully collapsible content for Quem é Quem
+2025-02-16 10:14:01,939 - INFO - Found existing content: Perfil do secretrário (ID: 169417)
+2025-02-16 10:14:04,357 - INFO - Found existing content: Galeria de ex-secretários de Cultura (ID: 169705)
+2025-02-16 10:16:11,946 - INFO - No existing content found with title: Hierarquia
+2025-02-16 10:16:11,947 - ERROR - Error during content migration: No content found for De
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 545, in migrate_content
+    raise Exception(f"No content found for {source_url}")
+Exception: No content found for De
+
+2025-02-16 10:16:13,299 - INFO - Found existing content: Raiz (ID: 168854)
+2025-02-16 10:16:14,642 - INFO - No existing content found with title: SECEC
+2025-02-16 10:16:14,645 - ERROR - Error during content migration: No content found for Usar a URL:
+/SECEC-1
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 545, in migrate_content
+    raise Exception(f"No content found for {source_url}")
+Exception: No content found for Usar a URL:
+/SECEC-1
+
+2025-02-16 10:16:15,987 - INFO - No existing content found with title: Quem é Quem
+2025-02-16 10:16:24,817 - INFO - Creating fully collapsible content for Quem é Quem
+2025-02-16 10:16:27,061 - INFO - Found existing content: Perfil do secretrário (ID: 169417)
+2025-02-16 10:16:29,149 - INFO - Found existing content: Galeria de ex-secretários de Cultura (ID: 169705)
+2025-02-16 10:16:30,530 - INFO - No existing content found with title: Agenda do Secretário
+2025-02-16 10:16:31,961 - INFO - Creating regular content for Agenda do Secretário
+2025-02-16 10:16:32,671 - INFO - Created content: Agenda do Secretário (ID: 169853)
+2025-02-16 10:16:34,942 - INFO - No existing content found with title: Assessoria Internacional
+2025-02-16 10:16:39,175 - INFO - Creating regular content for Assessoria Internacional
+2025-02-16 10:16:39,914 - INFO - Created content: Assessoria Internacional (ID: 169892)
+2025-02-16 10:16:42,157 - INFO - No existing content found with title: Legislação
+2025-02-16 10:17:27,971 - INFO - No existing content found with title: Hierarquia
+2025-02-16 10:17:27,973 - ERROR - Error during content migration: No content found for De
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 545, in migrate_content
+    raise Exception(f"No content found for {source_url}")
+Exception: No content found for De
+
+2025-02-16 10:17:29,318 - INFO - Found existing content: Raiz (ID: 168854)
+2025-02-16 10:17:30,632 - INFO - No existing content found with title: SECEC
+2025-02-16 10:17:30,633 - ERROR - Error during content migration: No content found for Usar a URL:
+/SECEC-1
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 545, in migrate_content
+    raise Exception(f"No content found for {source_url}")
+Exception: No content found for Usar a URL:
+/SECEC-1
+
+2025-02-16 10:17:31,953 - INFO - No existing content found with title: Quem é Quem
+2025-02-16 10:17:51,570 - INFO - Creating fully collapsible content for Quem é Quem
+2025-02-16 10:17:55,109 - INFO - Found existing content: Perfil do secretrário (ID: 169417)
+2025-02-16 10:17:59,243 - INFO - Found existing content: Galeria de ex-secretários de Cultura (ID: 169705)
+2025-02-16 10:18:02,133 - INFO - Found existing content: Agenda do Secretário (ID: 169853)
+2025-02-16 10:18:04,389 - INFO - Found existing content: Assessoria Internacional (ID: 169892)
+2025-02-16 10:18:06,542 - INFO - No existing content found with title: Legislação
+2025-02-16 10:18:34,265 - INFO - Creating fully collapsible content for Legislação
+2025-02-16 10:18:35,556 - INFO - Using cached content for Legislação (ID: 170452)
+2025-02-16 10:18:39,092 - INFO - No existing content found with title: Lei Paulo Gustavo

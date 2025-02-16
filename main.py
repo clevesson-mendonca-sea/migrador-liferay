@@ -27,6 +27,7 @@ class Config:
     sheet_id = os.getenv('SPREADSHEET_ID', '')
     folder_type = os.getenv('FOLDER_TYPE', 'journal')
     content_structure_id = os.getenv('LIFERAY_CONTENT_STRUCTURE_ID', '')
+    colapse_structure_id = os.getenv('LIFERAY_COLAPSE_STRUCTURE_ID', '')
 
 def parse_hierarchy(hierarchy_str: str) -> list:
     if not hierarchy_str:
@@ -219,11 +220,10 @@ async def migrate_documents(pages):
         await doc_creator.initialize_session()
         await folder_creator.initialize_session()
         
-        folder_cache = {}  # Cache para evitar buscar a mesma pasta múltiplas vezes
+        folder_cache = {}
         
         for page in pages:
-            # Pula entradas que não são URLs válidas
-            if not doc_creator._validate_url(page['url']):
+            if not page['url'] or not isinstance(page['url'], str):
                 logger.warning(f"Pulando URL inválida: {page['url']}")
                 continue
                 
