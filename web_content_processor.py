@@ -32,6 +32,14 @@ class ContentProcessor:
         r'^col-xs-'
     ]))
 
+    IMG_ATTRIBUTES_TO_REMOVE = [
+        'srcset',
+        'sizes',
+        'loading',
+        'fetchpriority',
+        'decoding'
+    ]
+
     def __init__(self, web_content_creator):
         self.creator = web_content_creator
         self.cache = web_content_creator.cache
@@ -55,14 +63,27 @@ class ContentProcessor:
         except Exception:
             return url
 
+    def _clean_img_attributes(self, soup: BeautifulSoup) -> None:
+        """Remove atributos desnecessários das tags de imagem"""
+        for img in soup.find_all('img'):
+            for attr in self.IMG_ATTRIBUTES_TO_REMOVE:
+                if attr in img.attrs:
+                    del img[attr]
+
     def _clean_content(self, html_content: str) -> str:
         """Limpa o conteúdo HTML de elementos desnecessários"""
+        if not html_content:
+            return ""
+            
         soup = BeautifulSoup(html_content, 'html.parser')
         
         # Remove date/time patterns
         if date_div := soup.find('div', style='font-size:14px;'):
             if re.search(r'\d{2}/\d{2}/\d{2}\s+às\s+\d{2}h\d{2}', date_div.text):
                 date_div.decompose()
+        
+        # Limpa atributos de imagem
+        self._clean_img_attributes(soup)
         
         # Fix email links and clean up in one pass
         for element in soup.find_all(['a', 'p', 'div']):
@@ -173,6 +194,8 @@ class ContentProcessor:
 
         soup = BeautifulSoup(html_content, 'html.parser')
         base_domain = self.url_utils.extract_domain(base_url)
+
+        self._clean_img_attributes(soup)
 
         # Process all tags in a single pass
         async def process_tags():

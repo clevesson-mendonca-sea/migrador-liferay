@@ -830,3 +830,114 @@ Exception: No content found for Usar a URL:
 2025-02-16 10:18:34,265 - INFO - Creating fully collapsible content for Legislação
 2025-02-16 10:18:35,556 - INFO - Using cached content for Legislação (ID: 170452)
 2025-02-16 10:18:39,092 - INFO - No existing content found with title: Lei Paulo Gustavo
+2025-02-16 10:29:38,612 - INFO - No existing content found with title: Sem Título
+2025-02-16 10:29:38,613 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 229, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-16 10:29:39,845 - INFO - No existing content found with title: Sem Título
+2025-02-16 10:31:49,512 - INFO - No existing content found with title: SECEC
+2025-02-16 10:31:49,513 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 229, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-16 10:39:47,191 - INFO - No existing content found with title: SECEC
+2025-02-16 10:39:47,309 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 229, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-16 10:39:49,552 - INFO - No existing content found with title: Quem é Quem
+2025-02-16 10:40:29,279 - INFO - No existing content found with title: SECEC
+2025-02-16 10:40:29,295 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 229, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-16 10:43:27,087 - INFO - No existing content found with title: SECEC
+2025-02-16 10:43:27,102 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 229, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-16 10:43:28,546 - INFO - No existing content found with title: Quem é Quem
+2025-02-16 10:43:50,225 - INFO - Creating collapsible content for Quem é Quem
+2025-02-16 10:43:53,639 - INFO - No existing content found with title: Perfil do secretrário
+2025-02-16 10:43:58,669 - INFO - Creating regular content for Perfil do secretrário
+2025-02-16 10:43:59,470 - INFO - Created content: Perfil do secretrário (ID: 170782)
+2025-02-16 10:44:04,422 - INFO - No existing content found with title: Galeria de ex-secretários de Cultura
+2025-02-16 10:44:25,501 - INFO - Creating regular content for Galeria de ex-secretários de Cultura
+2025-02-16 10:44:26,527 - INFO - Created content: Galeria de ex-secretários de Cultura (ID: 171053)
+2025-02-16 10:44:29,671 - INFO - No existing content found with title: Agenda do Secretário
+2025-02-16 10:47:09,887 - INFO - No existing content found with title: SECEC
+2025-02-16 10:47:09,908 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 229, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-16 10:47:11,338 - INFO - Found existing content: Quem é Quem (ID: 170750)
+2025-02-16 10:47:12,731 - INFO - Found existing content: Perfil do secretrário (ID: 170782)
+2025-02-16 10:47:14,941 - INFO - No existing content found with title: Galeria de ex-secretários de Cultura
+2025-02-16 10:47:36,516 - INFO - Creating regular content for Galeria de ex-secretários de Cultura
+2025-02-16 10:47:37,202 - INFO - Created content: Galeria de ex-secretários de Cultura (ID: 171078)
+2025-02-16 10:47:38,536 - INFO - No existing content found with title: Agenda do Secretário
+2025-02-16 12:00:17,616 - INFO - No existing content found with title: SECEC
+2025-02-16 12:00:17,652 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 229, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-16 12:00:20,260 - INFO - No existing content found with title: Quem é Quem
+2025-02-16 12:00:40,248 - INFO - Creating collapsible content for Quem é Quem
+2025-02-16 12:00:44,760 - INFO - No existing content found with title: Perfil do secretrário
+2025-02-16 12:00:50,690 - INFO - Creating regular content for Perfil do secretrário
+2025-02-16 12:00:51,501 - INFO - Created content: Perfil do secretrário (ID: 171466)
+2025-02-16 12:00:57,062 - INFO - No existing content found with title: Galeria de ex-secretários de Cultura
+2025-02-16 12:01:22,230 - INFO - Creating regular content for Galeria de ex-secretários de Cultura
+2025-02-16 12:01:23,351 - INFO - Created content: Galeria de ex-secretários de Cultura (ID: 171795)
+2025-02-16 12:01:26,582 - INFO - No existing content found with title: Agenda do Secretário
+2025-02-16 12:01:34,798 - INFO - Creating regular content for Agenda do Secretário
+2025-02-16 12:01:35,780 - INFO - Created content: Agenda do Secretário (ID: 171838)
+2025-02-16 12:01:38,844 - INFO - No existing content found with title: Assessoria Internacional
+2025-02-16 12:01:45,556 - INFO - Creating regular content for Assessoria Internacional
+2025-02-16 12:01:46,947 - INFO - Created content: Assessoria Internacional (ID: 171901)
+2025-02-16 12:01:50,264 - INFO - No existing content found with title: Legislação
+2025-02-16 12:02:18,379 - INFO - Creating collapsible content for Legislação
+2025-02-16 12:02:19,811 - INFO - Using cached content for Legislação
+2025-02-16 12:02:23,311 - INFO - No existing content found with title: Lei Paulo Gustavo
+2025-02-16 12:03:00,435 - INFO - Creating collapsible content for Lei Paulo Gustavo
+2025-02-16 12:03:07,015 - ERROR - Error during content migration: Failed to create content in Liferay
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 252, in migrate_content
+    raise Exception("Failed to create content in Liferay")
+Exception: Failed to create content in Liferay
+
+2025-02-16 12:03:10,668 - INFO - No existing content found with title: Lei Aldir Blanc
+2025-02-16 12:03:13,713 - INFO - Creating regular content for Lei Aldir Blanc
+2025-02-16 12:03:14,912 - INFO - Created content: Lei Aldir Blanc (ID: 172544)
+2025-02-16 12:03:18,726 - INFO - No existing content found with title: II Edital de Premiação
+2025-02-16 12:03:36,282 - INFO - Creating collapsible content for II Edital de Premiação
+2025-02-16 12:03:41,962 - INFO - No existing content found with title: Quem Faz Cultura – Lei Aldir Blanc
+2025-02-16 12:03:50,345 - INFO - Creating regular content for Quem Faz Cultura – Lei Aldir Blanc
+2025-02-16 12:03:51,439 - INFO - Created content: Quem Faz Cultura – Lei Aldir Blanc (ID: 172718)
+2025-02-16 12:03:55,297 - INFO - No existing content found with title: Cadastramento
+2025-02-16 12:03:58,749 - INFO - Creating regular content for Cadastramento
+2025-02-16 12:04:00,027 - INFO - Created content: Cadastramento (ID: 172747)
+2025-02-16 12:04:04,047 - INFO - No existing content found with title: Inciso III – Edital Gran Circular
+2025-02-16 12:04:07,576 - INFO - Creating regular content for Inciso III – Edital Gran Circular
+2025-02-16 12:04:08,647 - INFO - Created content: Inciso III – Edital Gran Circular (ID: 172781)
+2025-02-16 12:04:14,447 - INFO - No existing content found with title: Escutas Lei Aldir Blanc
+2025-02-16 12:04:19,943 - INFO - Creating regular content for Escutas Lei Aldir Blanc
+2025-02-16 12:04:20,991 - INFO - Created content: Escutas Lei Aldir Blanc (ID: 172817)
+2025-02-16 12:04:23,966 - INFO - No existing content found with title: Inciso I – Auxílio Emergencial
+2025-02-16 12:04:27,326 - INFO - Creating regular content for Inciso I – Auxílio Emergencial
+2025-02-16 12:04:28,094 - INFO - Created content: Inciso I – Auxílio Emergencial (ID: 172848)

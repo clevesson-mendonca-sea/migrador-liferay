@@ -153,8 +153,6 @@ class PageCreator:
             "hidden": hidden,
             "friendlyURL": f"/{normalized_url}",
         }
-
-
         
         try:
             async with self.session.post(
@@ -162,7 +160,6 @@ class PageCreator:
                 params=params
             ) as response:
                 response_text = await response.text()
-                print(response_text)
                 if response.status in (200, 201):
                     result = await response.json()
                     page_id = result.get('layoutId') or result.get('plid')
@@ -183,7 +180,6 @@ class PageCreator:
                             params=update
                         ) as update_response:
                             update_response_text = await update_response.text()
-                            print(update_response_text)
                             if update_response.status in (200, 201):
                                 print(f"Página criada e atualizada: {normalized_title} (ID: {page_id}) | Tipo: {page_type}")
                                 return int(page_id)
@@ -200,9 +196,6 @@ class PageCreator:
         
         return 0
     
-
-
-
     async def ensure_page_exists(self, title: str, cache_key: str, parent_id: int = 0, friendly_url: str = "", hierarchy: List[str] = None, page_type: str ="portlet", visible: bool = True, column_type: str = "1_column") -> int:
         if cache_key in self.page_cache:
             return self.page_cache[cache_key]
