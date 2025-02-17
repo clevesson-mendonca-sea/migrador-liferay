@@ -157,14 +157,6 @@ class DocumentCreator:
                 logger.error(f"Erro ao processar URL {url}: {str(e)}")
                 return None
 
-    def _sanitize_filename(self, filename: str) -> str:
-        """Sanitiza o nome do arquivo para evitar problemas no upload"""
-        filename = unquote(filename)
-        invalid_chars = '<>:"/\\|?*'
-        for char in invalid_chars:
-            filename = filename.replace(char, '_')
-        return filename[:240]  # Limita tamanho do nome
-
     def _extract_filename(self, url: str, content_type: str = '') -> str:
         """Extrai um nome de arquivo válido da URL"""
         try:
@@ -230,42 +222,7 @@ class DocumentCreator:
             logger.error(traceback.format_exc())
             
         return None
-    
-    async def _find_existing_document(self, filename: str, folder_id: Optional[int] = None) -> Optional[Dict[str, Any]]:
-        """Busca um documento existente pelo nome do arquivo"""
-        try:
-            if folder_id:
-                search_url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/document-folders/{folder_id}/documents"
-            else:
-                search_url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/sites/{self.config.site_id}/documents"
-            
-            params = {
-                'filter': f"title eq '{filename}'",
-                'fields': 'id,contentUrl',
-                'page': 1,
-                'pageSize': 1
-            }
-            
-            # Verifica primeiro no cache
-            cached_doc = self.cache.get_by_filename(filename)
-            if cached_doc:
-                return cached_doc
-            
-            async with self.session.get(search_url, params=params) as response:
-                if response.status == 200:
-                    data = await response.json()
-                    items = data.get('items', [])
-                    if items:
-                        doc = items[0]
-                        self.cache.add_filename_mapping(filename, doc)
-                        return doc
-            
-            return None
-            
-        except Exception as e:
-            logger.error(f"Erro ao buscar documento existente: {str(e)}")
-            return None
-        
+
     def _is_valid_file_url(self, url: str) -> bool:
         """Verifica se a URL do arquivo atende aos critérios"""
         if not url:
@@ -286,8 +243,92 @@ class DocumentCreator:
         
         return has_valid_pattern or is_image
 
+    def _sanitize_filename(self, filename: str) -> str:
+        """Sanitiza o nome do arquivo para evitar problemas no upload"""
+        # First decode URL-encoded characters
+        filename = unquote(filename)
+        
+        # Remove trailing spaces
+        filename = filename.strip()
+        
+        # Replace invalid characters
+        invalid_chars = '<>:"/\\|?*'
+        for char in invalid_chars:
+            filename = filename.replace(char, '_')
+        
+        # Ensure no trailing spaces in extension
+        name_parts = filename.rsplit('.', 1)
+        if len(name_parts) > 1:
+            filename = f"{name_parts[0].strip()}.{name_parts[1].strip()}"
+        
+        return filename[:240]  # Limita tamanho do nome
+
+    async def _find_existing_document(self, filename: str, folder_id: Optional[int] = None) -> Optional[Dict[str, Any]]:
+        """Busca um documento existente pelo nome do arquivo"""
+        try:
+            # Clean filename first
+            filename = filename.strip()
+            
+            if folder_id:
+                search_url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/document-folders/{folder_id}/documents"
+            else:
+                search_url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/sites/{self.config.site_id}/documents"
+            
+            # Check cache first (with clean filename)
+            cached_doc = self.cache.get_by_filename(filename)
+            if cached_doc:
+                return cached_doc
+                
+            # Try exact match first
+            params = {
+                'filter': f"title eq '{filename}'",
+                'fields': 'id,contentUrl',
+                'page': 1,
+                'pageSize': 1
+            }
+            
+            async with self.session.get(search_url, params=params) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    items = data.get('items', [])
+                    if items:
+                        doc = items[0]
+                        self.cache.add_filename_mapping(filename, doc)
+                        return doc
+                        
+            # If no exact match, try with URL-encoded space
+            encoded_filename = filename.replace(' ', '%20')
+            params['filter'] = f"title eq '{encoded_filename}'"
+            
+            async with self.session.get(search_url, params=params) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    items = data.get('items', [])
+                    if items:
+                        doc = items[0]
+                        self.cache.add_filename_mapping(filename, doc)
+                        return doc
+            
+            # If still no match, try with trailing space
+            params['filter'] = f"title eq '{filename} '"
+            
+            async with self.session.get(search_url, params=params) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    items = data.get('items', [])
+                    if items:
+                        doc = items[0]
+                        self.cache.add_filename_mapping(filename, doc)
+                        return doc
+            
+            return None
+            
+        except Exception as e:
+            logger.error(f"Erro ao buscar documento existente: {str(e)}")
+            return None
+
     async def migrate_document(self, doc_url: str, folder_id: Optional[int] = None, page_url: str = "", hierarchy: str = "") -> Optional[str]:
-        """Migra um documento com tratamento de conflitos otimizado e retry"""
+        """Migra um documento com tratamento de conflitos otimizado"""
         max_retries = 3
         retry_count = 0
 
@@ -296,31 +337,18 @@ class DocumentCreator:
                 if not self._is_valid_file_url(doc_url):
                     return None
 
-                # Verifica cache
+                # Check cache
                 cached_url = self.cache.get_by_url(doc_url)
                 if cached_url:
                     return cached_url
 
-                # Verifica se já foi processado
                 if self.cache.is_processed(doc_url):
                     return None
                 
                 self.cache.add_url_mapping(doc_url, None)
                 logger.info(f"Iniciando migração do documento: {doc_url}")
 
-                # Tenta primeira verificação com HEAD
-                try:
-                    async with self.session.head(doc_url, allow_redirects=True, timeout=30) as head_response:
-                        if head_response.status != 200:
-                            raise Exception(f"HEAD request failed with status {head_response.status}")
-                        
-                        content_length = int(head_response.headers.get('Content-Length', '0'))
-                        if content_length > 100 * 1024 * 1024:  # 100MB
-                            raise Exception("File too large")
-                except Exception as head_error:
-                    logger.warning(f"HEAD request failed, trying direct GET: {str(head_error)}")
-
-                # Download e upload
+                # Download do documento
                 async with self.session.get(doc_url, allow_redirects=True, timeout=60) as response:
                     if response.status != 200:
                         raise Exception(f"GET request failed with status {response.status}")
@@ -329,19 +357,19 @@ class DocumentCreator:
                     if not content:
                         raise Exception("Empty content")
 
-                    filename = self._extract_filename(doc_url)
+                    filename = self._sanitize_filename(self._extract_filename(doc_url))
                     logger.info(f"Nome do arquivo gerado: {filename}")
 
-                    # Verifica documento existente
+                    # Check existing document BEFORE upload
                     existing_doc = await self._find_existing_document(filename, folder_id)
                     if existing_doc:
                         content_url = existing_doc.get('contentUrl')
                         if content_url:
                             self.cache.add_url_mapping(doc_url, content_url)
-                            logger.warning(f"Documento já existe: {filename}")
+                            logger.info(f"Documento já existe, reusando URL: {content_url}")
                             return content_url
 
-                    # Upload
+                    # Prepare upload
                     data = aiohttp.FormData()
                     data.add_field('file', content, 
                                 filename=filename,
@@ -356,13 +384,13 @@ class DocumentCreator:
                                 json.dumps(document_metadata),
                                 content_type='application/json')
 
-                    # Define URL de upload
+                    # Define upload URL
                     if folder_id:
                         upload_url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/document-folders/{folder_id}/documents"
                     else:
                         upload_url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/sites/{self.config.site_id}/documents"
 
-                    # Tenta upload
+                    # Try upload
                     async with self.session.post(upload_url, data=data, timeout=120) as upload_response:
                         if upload_response.status in (200, 201):
                             result = await upload_response.json()
@@ -371,20 +399,36 @@ class DocumentCreator:
                                 friendly_url = await self.get_friendly_url(doc_id, folder_id)
                                 if friendly_url:
                                     self.cache.add_url_mapping(doc_url, friendly_url)
-                                    logger.info(f"Documento migrado com sucesso para: {friendly_url}")
+                                    logger.info(f"Documento migrado com sucesso: {friendly_url}")
                                     return friendly_url
-
+                        
                         elif upload_response.status == 409:
-                            logger.warning(f"Tentando resolver conflito para: {doc_url}")
+                            # On conflict, immediately check for existing document
+                            logger.warning(f"Conflito detectado para {filename}, buscando documento existente...")
                             existing_doc = await self._find_existing_document(filename, folder_id)
                             if existing_doc:
                                 content_url = existing_doc.get('contentUrl')
                                 if content_url:
                                     self.cache.add_url_mapping(doc_url, content_url)
+                                    logger.info(f"URL do documento existente recuperada: {content_url}")
                                     return content_url
-
-                        response_text = await upload_response.text()
-                        raise Exception(f"Upload failed: {upload_response.status} - {response_text}")
+                            
+                            # If still no match, try with other filename variations
+                            encoded_filename = filename.replace(' ', '%20')
+                            existing_doc = await self._find_existing_document(encoded_filename, folder_id)
+                            if existing_doc:
+                                content_url = existing_doc.get('contentUrl')
+                                if content_url:
+                                    self.cache.add_url_mapping(doc_url, content_url)
+                                    logger.info(f"URL do documento existente recuperada (encoded): {content_url}")
+                                    return content_url
+                            
+                            response_text = await upload_response.text()
+                            raise Exception(f"Conflito não resolvido: {response_text}")
+                        
+                        else:
+                            response_text = await upload_response.text()
+                            raise Exception(f"Upload falhou: {upload_response.status} - {response_text}")
 
                 return None
 
@@ -392,13 +436,13 @@ class DocumentCreator:
                 retry_count += 1
                 if retry_count < max_retries:
                     logger.warning(f"Tentativa {retry_count} falhou para {doc_url}: {str(e)}. Tentando novamente...")
-                    await asyncio.sleep(1)  # Espera 1 segundo antes de tentar novamente
+                    await asyncio.sleep(1)
                     continue
                 else:
                     logger.error(f"Erro ao migrar documento {doc_url} após {max_retries} tentativas: {str(e)}")
                     self.cache.mark_failed(doc_url)
                     return None
-
+                    
     async def process_page_content(self, page_url: str, folder_id: Optional[int] = None) -> List[str]:
         """Processa uma página inteira de forma otimizada"""
         migrated_urls = []
