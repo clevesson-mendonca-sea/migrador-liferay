@@ -1,0 +1,162 @@
+
+Processando conteúdo: Quem é Quem
+2025-02-16 22:05:36,511 - INFO - Hierarquia: SECEC > Quem é Quem
+2025-02-16 22:05:36,512 - INFO - Processando nível: SECEC (Parent: 0)
+2025-02-16 22:05:36,512 - INFO - Pasta encontrada no cache: Secec (ID: 205444)
+2025-02-16 22:05:36,512 - INFO - Processando nível: Quem é Quem (Parent: 205444)
+2025-02-16 22:05:36,513 - INFO - Processando nível: SECEC (Parent: 0)
+2025-02-16 22:05:36,513 - INFO - Pasta encontrada no cache: Secec (ID: 205442)
+2025-02-16 22:05:36,513 - INFO - Processando nível: Quem é Quem (Parent: 205442)
+2025-02-16 22:05:37,469 - INFO - Pasta existente encontrada: Quem E Quem (ID: 205448)
+2025-02-16 22:05:37,474 - INFO - Pasta existente encontrada: Quem E Quem (ID: 205446)
+2025-02-16 22:05:38,394 - INFO - No existing content found with title: Quem é Quem
+2025-02-16 22:05:38,394 - INFO - No existing content found with title: Quem é Quem
+2025-02-16 22:05:49,543 - INFO - Iniciando migração do documento: http://www.educacao.df.gov.br/wp-conteudo/uploads/2021/03/icon-pessoa-verde-solido.png 
+2025-02-16 22:05:49,543 - INFO - Iniciando migração do documento: http://www.educacao.df.gov.br/wp-conteudo/uploads/2021/03/icon-pessoa-verde-solido.png 
+2025-02-16 22:05:49,544 - INFO - Iniciando migração do documento: http://www.educacao.df.gov.br/wp-conteudo/uploads/2021/03/icon-fone-verde-solido.png 
+2025-02-16 22:05:49,544 - INFO - Iniciando migração do documento: http://www.educacao.df.gov.br/wp-conteudo/uploads/2021/03/icon-fone-verde-solido.png 
+2025-02-16 22:05:49,544 - INFO - Iniciando migração do documento: http://www.educacao.df.gov.br/wp-conteudo/uploads/2021/03/icon-email-verde-solido.png
+2025-02-16 22:05:49,544 - INFO - Iniciando migração do documento: http://www.educacao.df.gov.br/wp-conteudo/uploads/2021/03/icon-email-verde-solido.png
+2025-02-16 22:05:49,544 - INFO - Iniciando migração do documento: http://www.cultura.df.gov.br/wp-conteudo/uploads/2018/01/PDF_file_icon.svg_-244x300.png
+2025-02-16 22:05:49,544 - INFO - Iniciando migração do documento: http://www.cultura.df.gov.br/wp-conteudo/uploads/2018/01/PDF_file_icon.svg_-244x300.png
+2025-02-16 22:05:49,544 - INFO - Iniciando migração do documento: http://www.cultura.df.gov.br/wp-conteudo/uploads/2018/01/PATRICIA-PARAGUASSU-Minibio.pdf
+2025-02-16 22:05:49,544 - INFO - Iniciando migração do documento: http://www.cultura.df.gov.br/wp-conteudo/uploads/2018/01/PATRICIA-PARAGUASSU-Minibio.pdf
+2025-02-16 22:05:49,659 - INFO - Nome do arquivo gerado: icon-email-verde-solido.png
+2025-02-16 22:05:49,659 - INFO - Nome do arquivo gerado: icon-email-verde-solido.png
+2025-02-16 22:05:49,684 - INFO - Nome do arquivo gerado: PDF_file_icon.svg_-244x300.png
+2025-02-16 22:05:49,684 - INFO - Nome do arquivo gerado: PDF_file_icon.svg_-244x300.png
+2025-02-16 22:05:49,742 - INFO - Nome do arquivo gerado: PATRICIA-PARAGUASSU-Minibio.pdf
+2025-02-16 22:05:49,742 - INFO - Nome do arquivo gerado: PATRICIA-PARAGUASSU-Minibio.pdf
+2025-02-16 22:05:50,060 - INFO - Nome do arquivo gerado: icon-pessoa-verde-solido.png 
+2025-02-16 22:05:50,060 - INFO - Nome do arquivo gerado: icon-pessoa-verde-solido.png 
+2025-02-16 22:05:50,064 - INFO - Nome do arquivo gerado: icon-fone-verde-solido.png 
+2025-02-16 22:05:50,064 - INFO - Nome do arquivo gerado: icon-fone-verde-solido.png 
+2025-02-16 22:05:50,608 - INFO - Documento já existe, reusando URL: /documents/161901/205446/PDF_file_icon.svg_-244x300.png/941b4415-9c4b-716a-54d2-56676059c873?version=1.0&t=1739753672460&download=true
+2025-02-16 22:05:50,608 - INFO - Documento já existe, reusando URL: /documents/161901/205446/PDF_file_icon.svg_-244x300.png/941b4415-9c4b-716a-54d2-56676059c873?version=1.0&t=1739753672460&download=true
+2025-02-16 22:05:50,608 - INFO - Iniciando migração do documento: http://www.cultura.df.gov.br/wp-conteudo/uploads/2023/06/Mini-Bio-Rayane.pdf
+2025-02-16 22:05:50,608 - INFO - Iniciando migração do documento: http://www.cultura.df.gov.br/wp-conteudo/uploads/2023/06/Mini-Bio-Rayane.pdf
+2025-02-16 22:05:50,621 - INFO - Documento já existe, reusando URL: /documents/161901/205446/icon-email-verde-solido.png/7cc2bb2f-e9fb-5437-4203-ad18034e3dff?version=1.0&t=1739753672266&download=true
+2025-02-16 22:05:50,621 - INFO - Documento já existe, reusando URL: /documents/161901/205446/icon-email-verde-solido.png/7cc2bb2f-e9fb-5437-4203-ad18034e3dff?version=1.0&t=1739753672266&download=true
+2025-02-16 22:05:50,622 - INFO - Iniciando migração do documento: http://www.cultura.df.gov.br/wp-conteudo/uploads/2018/01/Minio-Bio.pdf
+2025-02-16 22:05:50,622 - INFO - Iniciando migração do documento: http://www.cultura.df.gov.br/wp-conteudo/uploads/2018/01/Minio-Bio.pdf
+2025-02-16 22:05:50,757 - INFO - Nome do arquivo gerado: Mini-Bio-Rayane.pdf
+2025-02-16 22:05:50,757 - INFO - Nome do arquivo gerado: Mini-Bio-Rayane.pdf
+2025-02-16 22:05:50,862 - INFO - Documento já existe, reusando URL: /documents/161901/205446/PATRICIA-PARAGUASSU-Minibio.pdf/f49178ae-9561-0213-4cc6-64e9129cc249?version=1.0&t=1739753672311&download=true
+2025-02-16 22:05:50,862 - INFO - Documento já existe, reusando URL: /documents/161901/205446/PATRICIA-PARAGUASSU-Minibio.pdf/f49178ae-9561-0213-4cc6-64e9129cc249?version=1.0&t=1739753672311&download=true
+2025-02-16 22:05:50,862 - INFO - Iniciando migração do documento: http://www.cultura.df.gov.br/wp-conteudo/uploads/2018/01/Minio-Bio-Luciana-Paiva-AJL.pdf
+2025-02-16 22:05:50,862 - INFO - Iniciando migração do documento: http://www.cultura.df.gov.br/wp-conteudo/uploads/2018/01/Minio-Bio-Luciana-Paiva-AJL.pdf
+2025-02-16 22:05:50,885 - INFO - Nome do arquivo gerado: Minio-Bio.pdf
+2025-02-16 22:05:50,885 - INFO - Nome do arquivo gerado: Minio-Bio.pdf
+2025-02-16 22:05:50,900 - INFO - Nome do arquivo gerado: Minio-Bio-Luciana-Paiva-AJL.pdf
+2025-02-16 22:05:50,900 - INFO - Nome do arquivo gerado: Minio-Bio-Luciana-Paiva-AJL.pdf
+2025-02-16 22:05:51,807 - INFO - Documento já existe, reusando URL: /documents/161901/205446/Minio-Bio-Luciana-Paiva-AJL.pdf/7e288e4b-b656-82f7-8fe1-5c5aaae2ee78?version=1.0&t=1739753678147&download=true
+2025-02-16 22:05:51,807 - INFO - Documento já existe, reusando URL: /documents/161901/205446/Minio-Bio-Luciana-Paiva-AJL.pdf/7e288e4b-b656-82f7-8fe1-5c5aaae2ee78?version=1.0&t=1739753678147&download=true
+2025-02-16 22:05:51,807 - INFO - Iniciando migração do documento: http://www.cultura.df.gov.br/wp-conteudo/uploads/2023/06/TUCA-PINHEIRO.pdf
+2025-02-16 22:05:51,807 - INFO - Iniciando migração do documento: http://www.cultura.df.gov.br/wp-conteudo/uploads/2023/06/TUCA-PINHEIRO.pdf
+2025-02-16 22:05:51,835 - INFO - Nome do arquivo gerado: TUCA-PINHEIRO.pdf
+2025-02-16 22:05:51,835 - INFO - Nome do arquivo gerado: TUCA-PINHEIRO.pdf
+2025-02-16 22:05:51,915 - WARNING - Conflito detectado para icon-fone-verde-solido.png , buscando documento existente...
+2025-02-16 22:05:51,915 - WARNING - Conflito detectado para icon-fone-verde-solido.png , buscando documento existente...
+2025-02-16 22:05:52,048 - INFO - Documento já existe, reusando URL: /documents/161901/205446/Mini-Bio-Rayane.pdf/899b8ac5-d7b0-b784-1c67-fb4f796fc960?version=1.0&t=1739753675817&download=true
+2025-02-16 22:05:52,048 - INFO - Documento já existe, reusando URL: /documents/161901/205446/Mini-Bio-Rayane.pdf/899b8ac5-d7b0-b784-1c67-fb4f796fc960?version=1.0&t=1739753675817&download=true
+2025-02-16 22:05:52,049 - INFO - Iniciando migração do documento: http://www.educacao.df.gov.br/wp-conteudo/uploads/2019/02/icon-.png
+2025-02-16 22:05:52,049 - INFO - Iniciando migração do documento: http://www.educacao.df.gov.br/wp-conteudo/uploads/2019/02/icon-.png
+2025-02-16 22:05:52,068 - INFO - Nome do arquivo gerado: icon-.png
+2025-02-16 22:05:52,068 - INFO - Nome do arquivo gerado: icon-.png
+2025-02-16 22:05:52,104 - WARNING - Conflito detectado para icon-pessoa-verde-solido.png , buscando documento existente...
+2025-02-16 22:05:52,104 - WARNING - Conflito detectado para icon-pessoa-verde-solido.png , buscando documento existente...
+2025-02-16 22:05:52,184 - INFO - Documento já existe, reusando URL: /documents/161901/205446/Minio-Bio.pdf/f811f43e-a076-5ef1-110f-bae17758a2ee?version=1.0&t=1739753675986&download=true
+2025-02-16 22:05:52,184 - INFO - Documento já existe, reusando URL: /documents/161901/205446/Minio-Bio.pdf/f811f43e-a076-5ef1-110f-bae17758a2ee?version=1.0&t=1739753675986&download=true
+2025-02-16 22:05:52,184 - INFO - Iniciando migração do documento: http://www.cultura.df.gov.br/wp-conteudo/uploads/2018/01/Mini-Curriculo-resumido_-ALEXANDRE-HENRIQUE-PEREIRA-PEDROSO.-Subsecretario-desta-Subsecretaria-de-Administracao-Geral.pdf
+2025-02-16 22:05:52,184 - INFO - Iniciando migração do documento: http://www.cultura.df.gov.br/wp-conteudo/uploads/2018/01/Mini-Curriculo-resumido_-ALEXANDRE-HENRIQUE-PEREIRA-PEDROSO.-Subsecretario-desta-Subsecretaria-de-Administracao-Geral.pdf
+2025-02-16 22:05:52,349 - INFO - Nome do arquivo gerado: Mini-Curriculo-resumido_-ALEXANDRE-HENRIQUE-PEREIRA-PEDROSO.-Subsecretario-desta-Subsecretaria-de-Administracao-Geral.pdf
+2025-02-16 22:05:52,349 - INFO - Nome do arquivo gerado: Mini-Curriculo-resumido_-ALEXANDRE-HENRIQUE-PEREIRA-PEDROSO.-Subsecretario-desta-Subsecretaria-de-Administracao-Geral.pdf
+2025-02-16 22:05:52,852 - WARNING - Tentativa 1 falhou para http://www.educacao.df.gov.br/wp-conteudo/uploads/2021/03/icon-fone-verde-solido.png : Conflito não resolvido: {
+  "status" : "CONFLICT",
+  "title" : "A document already exists with title icon-fone-verde-solido.png%20"
+}. Tentando novamente...
+2025-02-16 22:05:52,852 - WARNING - Tentativa 1 falhou para http://www.educacao.df.gov.br/wp-conteudo/uploads/2021/03/icon-fone-verde-solido.png : Conflito não resolvido: {
+  "status" : "CONFLICT",
+  "title" : "A document already exists with title icon-fone-verde-solido.png%20"
+}. Tentando novamente...
+2025-02-16 22:05:53,016 - WARNING - Tentativa 1 falhou para http://www.educacao.df.gov.br/wp-conteudo/uploads/2021/03/icon-pessoa-verde-solido.png : Conflito não resolvido: {
+  "status" : "CONFLICT",
+  "title" : "A document already exists with title icon-pessoa-verde-solido.png%20"
+}. Tentando novamente...
+2025-02-16 22:05:53,016 - WARNING - Tentativa 1 falhou para http://www.educacao.df.gov.br/wp-conteudo/uploads/2021/03/icon-pessoa-verde-solido.png : Conflito não resolvido: {
+  "status" : "CONFLICT",
+  "title" : "A document already exists with title icon-pessoa-verde-solido.png%20"
+}. Tentando novamente...
+2025-02-16 22:05:53,021 - INFO - Documento já existe, reusando URL: /documents/161901/205446/TUCA-PINHEIRO.pdf/1eafabec-4ade-1443-9672-ffb3a5bb2c3b?version=1.0&t=1739753675930&download=true
+2025-02-16 22:05:53,021 - INFO - Documento já existe, reusando URL: /documents/161901/205446/TUCA-PINHEIRO.pdf/1eafabec-4ade-1443-9672-ffb3a5bb2c3b?version=1.0&t=1739753675930&download=true
+2025-02-16 22:05:53,022 - INFO - Iniciando migração do documento: http://www.cultura.df.gov.br/wp-conteudo/uploads/2018/01/Mini-Bio-Joao-Filho-de-Sousa-Candido.pdf
+2025-02-16 22:05:53,022 - INFO - Iniciando migração do documento: http://www.cultura.df.gov.br/wp-conteudo/uploads/2018/01/Mini-Bio-Joao-Filho-de-Sousa-Candido.pdf
+2025-02-16 22:05:53,043 - INFO - Documento já existe, reusando URL: /documents/161901/205446/icon-.png/9dbf4931-fbf9-adf6-b812-30147e3c44d8?version=1.0&t=1739753675885&download=true
+2025-02-16 22:05:53,043 - INFO - Documento já existe, reusando URL: /documents/161901/205446/icon-.png/9dbf4931-fbf9-adf6-b812-30147e3c44d8?version=1.0&t=1739753675885&download=true
+2025-02-16 22:05:53,044 - INFO - Iniciando migração do documento: http://www.cultura.df.gov.br/wp-conteudo/uploads/2018/01/minibio-Felipe-Ramon-Moro-Rodriguez.pdf
+2025-02-16 22:05:53,044 - INFO - Iniciando migração do documento: http://www.cultura.df.gov.br/wp-conteudo/uploads/2018/01/minibio-Felipe-Ramon-Moro-Rodriguez.pdf
+2025-02-16 22:05:53,182 - INFO - Nome do arquivo gerado: Mini-Bio-Joao-Filho-de-Sousa-Candido.pdf
+2025-02-16 22:05:53,182 - INFO - Nome do arquivo gerado: Mini-Bio-Joao-Filho-de-Sousa-Candido.pdf
+2025-02-16 22:05:53,313 - INFO - Nome do arquivo gerado: minibio-Felipe-Ramon-Moro-Rodriguez.pdf
+2025-02-16 22:05:53,313 - INFO - Nome do arquivo gerado: minibio-Felipe-Ramon-Moro-Rodriguez.pdf
+2025-02-16 22:05:53,472 - INFO - Documento já existe, reusando URL: /documents/161901/205446/Mini-Curriculo-resumido_-ALEXANDRE-HENRIQUE-PEREIRA-PEDROSO.-Subsecretario-desta-Subsecretaria-de-Administracao-Geral.pdf/e27f19bd-2c3b-db0a-951d-fb8a915079d0?version=1.0&t=1739753679906&download=true
+2025-02-16 22:05:53,472 - INFO - Documento já existe, reusando URL: /documents/161901/205446/Mini-Curriculo-resumido_-ALEXANDRE-HENRIQUE-PEREIRA-PEDROSO.-Subsecretario-desta-Subsecretaria-de-Administracao-Geral.pdf/e27f19bd-2c3b-db0a-951d-fb8a915079d0?version=1.0&t=1739753679906&download=true
+2025-02-16 22:05:53,473 - INFO - Iniciando migração do documento: http://www.cultura.df.gov.br/wp-conteudo/uploads/2018/01/Curriculo.pdf
+2025-02-16 22:05:53,473 - INFO - Iniciando migração do documento: http://www.cultura.df.gov.br/wp-conteudo/uploads/2018/01/Curriculo.pdf
+2025-02-16 22:05:53,610 - INFO - Nome do arquivo gerado: Curriculo.pdf
+2025-02-16 22:05:53,610 - INFO - Nome do arquivo gerado: Curriculo.pdf
+2025-02-16 22:05:53,854 - INFO - Iniciando migração do documento: http://www.cultura.df.gov.br/wp-conteudo/uploads/2018/01/Minicurriculo-Marmenha.pdf
+2025-02-16 22:05:53,854 - INFO - Iniciando migração do documento: http://www.cultura.df.gov.br/wp-conteudo/uploads/2018/01/Minicurriculo-Marmenha.pdf
+2025-02-16 22:05:53,991 - INFO - Nome do arquivo gerado: Minicurriculo-Marmenha.pdf
+2025-02-16 22:05:53,991 - INFO - Nome do arquivo gerado: Minicurriculo-Marmenha.pdf
+2025-02-16 22:05:54,017 - INFO - Iniciando migração do documento: http://www.cultura.df.gov.br/wp-conteudo/uploads/2018/01/Rafael-Rangel-C3PO.pdf
+2025-02-16 22:05:54,017 - INFO - Iniciando migração do documento: http://www.cultura.df.gov.br/wp-conteudo/uploads/2018/01/Rafael-Rangel-C3PO.pdf
+2025-02-16 22:05:54,052 - INFO - Nome do arquivo gerado: Rafael-Rangel-C3PO.pdf
+2025-02-16 22:05:54,052 - INFO - Nome do arquivo gerado: Rafael-Rangel-C3PO.pdf
+2025-02-16 22:05:54,177 - INFO - Documento já existe, reusando URL: /documents/161901/205446/Mini-Bio-Joao-Filho-de-Sousa-Candido.pdf/67079f23-9143-0b95-4df5-1ca11b67e7f5?version=1.0&t=1739753679967&download=true
+2025-02-16 22:05:54,177 - INFO - Documento já existe, reusando URL: /documents/161901/205446/Mini-Bio-Joao-Filho-de-Sousa-Candido.pdf/67079f23-9143-0b95-4df5-1ca11b67e7f5?version=1.0&t=1739753679967&download=true
+2025-02-16 22:05:54,178 - INFO - Iniciando migração do documento: http://www.cultura.df.gov.br/wp-conteudo/uploads/2018/01/Minio-Bio-Alessandra-_-MAB.pdf
+2025-02-16 22:05:54,178 - INFO - Iniciando migração do documento: http://www.cultura.df.gov.br/wp-conteudo/uploads/2018/01/Minio-Bio-Alessandra-_-MAB.pdf
+2025-02-16 22:05:54,376 - INFO - Documento já existe, reusando URL: /documents/161901/205446/minibio-Felipe-Ramon-Moro-Rodriguez.pdf/fd68e857-03f1-d199-aa86-28471863586b?version=1.0&t=1739753679722&download=true
+2025-02-16 22:05:54,376 - INFO - Documento já existe, reusando URL: /documents/161901/205446/minibio-Felipe-Ramon-Moro-Rodriguez.pdf/fd68e857-03f1-d199-aa86-28471863586b?version=1.0&t=1739753679722&download=true
+2025-02-16 22:05:54,377 - INFO - Iniciando migração do documento: http://www.cultura.df.gov.br/wp-conteudo/uploads/2018/01/OSTNCS-Fernando.pdf
+2025-02-16 22:05:54,377 - INFO - Iniciando migração do documento: http://www.cultura.df.gov.br/wp-conteudo/uploads/2018/01/OSTNCS-Fernando.pdf
+2025-02-16 22:05:54,386 - INFO - Nome do arquivo gerado: Minio-Bio-Alessandra-_-MAB.pdf
+2025-02-16 22:05:54,386 - INFO - Nome do arquivo gerado: Minio-Bio-Alessandra-_-MAB.pdf
+2025-02-16 22:05:54,418 - INFO - Nome do arquivo gerado: OSTNCS-Fernando.pdf
+2025-02-16 22:05:54,418 - INFO - Nome do arquivo gerado: OSTNCS-Fernando.pdf
+2025-02-16 22:05:54,590 - INFO - Documento já existe, reusando URL: /documents/161901/205446/Curriculo.pdf/81baf4b7-6d08-3cba-3f38-de6241e0cfcc?version=1.0&t=1739753680148&download=true
+2025-02-16 22:05:54,590 - INFO - Documento já existe, reusando URL: /documents/161901/205446/Curriculo.pdf/81baf4b7-6d08-3cba-3f38-de6241e0cfcc?version=1.0&t=1739753680148&download=true
+2025-02-16 22:05:54,924 - INFO - Documento já existe, reusando URL: /documents/161901/205446/Minicurriculo-Marmenha.pdf/9a5204e0-f258-394c-0a5d-cf8be11f6197?version=1.0&t=1739753682008&download=true
+2025-02-16 22:05:54,924 - INFO - Documento já existe, reusando URL: /documents/161901/205446/Minicurriculo-Marmenha.pdf/9a5204e0-f258-394c-0a5d-cf8be11f6197?version=1.0&t=1739753682008&download=true
+2025-02-16 22:05:55,151 - INFO - Documento já existe, reusando URL: /documents/161901/205446/Rafael-Rangel-C3PO.pdf/c9610ba8-578f-ca55-31d1-826cd6569739?version=1.0&t=1739753683444&download=true
+2025-02-16 22:05:55,151 - INFO - Documento já existe, reusando URL: /documents/161901/205446/Rafael-Rangel-C3PO.pdf/c9610ba8-578f-ca55-31d1-826cd6569739?version=1.0&t=1739753683444&download=true
+2025-02-16 22:05:55,346 - INFO - Documento já existe, reusando URL: /documents/161901/205446/Minio-Bio-Alessandra-_-MAB.pdf/6f498a9d-e740-6867-b732-26d186be839c?version=1.0&t=1739753685899&download=true
+2025-02-16 22:05:55,346 - INFO - Documento já existe, reusando URL: /documents/161901/205446/Minio-Bio-Alessandra-_-MAB.pdf/6f498a9d-e740-6867-b732-26d186be839c?version=1.0&t=1739753685899&download=true
+2025-02-16 22:05:55,409 - INFO - Documento já existe, reusando URL: /documents/161901/205446/OSTNCS-Fernando.pdf/241941f6-e95b-6826-92ba-785fd43c04f7?version=1.0&t=1739753683789&download=true
+2025-02-16 22:05:55,409 - INFO - Documento já existe, reusando URL: /documents/161901/205446/OSTNCS-Fernando.pdf/241941f6-e95b-6826-92ba-785fd43c04f7?version=1.0&t=1739753683789&download=true
+2025-02-16 22:05:55,586 - INFO - Creating collapsible content for Quem é Quem
+2025-02-16 22:05:55,586 - INFO - Creating collapsible content for Quem é Quem
+2025-02-16 22:05:55,620 - INFO - Found 10 panels to process
+2025-02-16 22:05:55,632 - INFO - Successfully processed 10 panels
+2025-02-16 22:05:56,669 - INFO - Successfully created collapse content: Quem é Quem (ID: 205678)
+2025-02-16 22:05:56,670 - INFO - Conteúdo migrado: Quem é Quem (ID: 205678)
+2025-02-16 22:05:56,670 - INFO - 2025-02-16 22:08:11,243 - INFO - No existing content found with title: SECEC
+2025-02-16 22:08:11,263 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 232, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-16 22:08:13,188 - INFO - No existing content found with title: Quem é Quem
+2025-02-16 22:08:26,271 - INFO - Creating collapsible content for Quem é Quem
+2025-02-16 22:29:41,601 - INFO - No existing content found with title: SECEC
+2025-02-16 22:29:41,652 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea-clevesson/www/gdf/bot/migrator-liferay/web_content_creator.py", line 232, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-16 22:29:43,759 - INFO - No existing content found with title: Quem é Quem
+2025-02-16 22:30:14,867 - INFO - Creating collapsible content for Quem é Quem
+2025-02-16 22:30:18,485 - INFO - No existing content found with title: Perfil do secretrário

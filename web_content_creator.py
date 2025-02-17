@@ -345,12 +345,92 @@ class WebContentCreator:
             self._log_error("Page Search", title, str(e))
             return None
 
+    async def associate_content_to_portlet(self, page_title: str, content_id: int) -> bool:
+        """
+        Associates a content item to a specific page's portlet using the new association route
+        
+        :param page_title: Title of the page to find
+        :param content_id: ID of the content to associate
+        :return: Boolean indicating successful association
+        """
+        if not page_title or not content_id:
+            logger.warning(f"Invalid parameters for association. Page: {page_title}, Content ID: {content_id}")
+            return False
+
+        try:
+            # Find the page
+            page_id = await self.find_page_by_title(page_title)
+            if not page_id:
+                logger.error(f"Page not found: {page_title}")
+                return False
+
+            # Generate a unique portlet ID
+            portlet_id = f"com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_{content_id}"
+
+            # Use the new association route
+            association_url = f"{self.config.liferay_url}/v1.0/associate-article-to-portlet"
+            
+            params = {
+                'plid': str(page_id),
+                'portletId': portlet_id,
+                'articleId': str(content_id)
+            }
+
+            async def associate_content():
+                async with self.session.post(association_url, params=params, ssl=False) as response:
+                    response_text = await response.text()
+                    
+                    # Check for successful response
+                    if response.status in (200, 201):
+                        try:
+                            result = await response.json()
+                            if result.get('status') == 'SUCCESS':
+                                logger.info(f"Successfully associated content {content_id} to page {page_title}")
+                                return True
+                            else:
+                                logger.error(f"Association failed: {result.get('message', 'Unknown error')}")
+                        except Exception as json_error:
+                            logger.error(f"Error parsing response JSON: {json_error}")
+                    
+                    logger.error(f"Association request failed: {response.status} - {response_text}")
+                    return False
+
+            return await self._retry_operation(associate_content)
+            
+        except Exception as e:
+            self._log_error("Content Association", "", str(e), title=page_title)
+            return False
+
     async def add_content_to_page(self, page_id: int, content_id: int) -> bool:
-        """Adiciona conteúdo à página"""
+        """
+        Updated method to prefer the new association route
+        
+        :param page_id: ID of the page
+        :param content_id: ID of the content
+        :return: Boolean indicating successful addition
+        """
         if not self.session:
             await self.initialize_session()
-                
+
         try:
+            # Find the page title for logging and association
+            page_url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/sites/{self.config.site_id}/site-pages/{page_id}"
+            async with self.session.get(page_url) as page_response:
+                if page_response.status == 200:
+                    page_details = await page_response.json()
+                    page_title = page_details.get('title', f'Page ID {page_id}')
+                else:
+                    page_title = f'Page ID {page_id}'
+
+            # Try using the new association route first
+            association_result = await self.associate_content_to_portlet(page_title, content_id)
+            if association_result:
+                return True
+
+            # Fallback to the original method if new route fails
+            logger.warning(f"Falling back to original portlet addition method for content {content_id}")
+            
+            # Original portlet addition logic (kept for backward compatibility)
             portlet_id = f"com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_{content_id}"
             
             # Verifica se o portlet já existe
@@ -392,51 +472,6 @@ class WebContentCreator:
             logger.error(f"Error adding content to page: {str(e)}")
             logger.error(traceback.format_exc())
             return False
-
-    async def add_content_to_created_pages(self, content_mapping: Dict[str, int]):
-        """Adiciona conteúdo a múltiplas páginas"""
-        if not self.session:
-            await self.initialize_session()
-
-        try:
-            async def fetch_pages_batch(page=1, size=100):
-                url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/sites/{self.config.site_id}/site-pages"
-                params = {'page': page, 'pageSize': size}
-                
-                async with self.session.get(url, params=params, ssl=False) as response:
-                    if response.status == 200:
-                        return await response.json()
-                    return None
-
-            async def process_pages():
-                page = 1
-                while True:
-                    data = await fetch_pages_batch(page)
-                    if not data or not data.get('items'):
-                        break
-
-                    tasks = []
-                    for page_info in data['items']:
-                        page_title = page_info.get('title', '')
-                        page_id = page_info.get('id')
-                        
-                        if page_title in content_mapping:
-                            content_id = content_mapping[page_title]
-                            tasks.append(self.add_content_to_page(page_id, content_id))
-                    
-                    if tasks:
-                        results = await asyncio.gather(*tasks, return_exceptions=True)
-                        for result in results:
-                            if isinstance(result, Exception):
-                                logger.error(f"Error adding content to page: {str(result)}")
-                    
-                    page += 1
-
-            await process_pages()
-                
-        except Exception as e:
-            logger.error(f"Error adding content to pages: {str(e)}")
-            logger.error(traceback.format_exc())
 
     async def close(self):
         """Fecha recursos"""

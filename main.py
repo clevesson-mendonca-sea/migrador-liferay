@@ -174,7 +174,7 @@ async def migrate_pages(pages):
             else:
                 logger.error(f"Falha ao criar página: {page['title']} {page['type']}")
 
-        await creator.retry_failed_pages()
+        # await creator.retry_failed_pages()
         
 async def migrate_folders(pages):
     config = Config()
@@ -198,7 +198,7 @@ async def migrate_folders(pages):
             else:
                 logger.error(f"Falha ao criar pasta: {page['title']}")
 
-        await folder_creator.retry_failed_folders()
+        # await folder_creator.retry_failed_folders()
     finally:
         await folder_creator.close()
 

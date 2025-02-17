@@ -159,7 +159,8 @@ class CollapseContentProcessor:
                 "contentStructureId": self.structure_id,
                 "contentFields": content_fields,
                 "structuredContentFolderId": folder_id,
-                "title": title
+                "title": title,
+                "friendlyUrlPath": web_content_creator.url_utils.sanitize_content_path(title)
             }
 
             logger.debug(f"Sending content data: {json.dumps(content_data, indent=2)}")
@@ -171,11 +172,15 @@ class CollapseContentProcessor:
                     response_text = await response.text()
                     
                     if response.status in (200, 201):
-                        result = json.loads(response_text)
-                        content_id = result.get('id')
-                        if content_id:
-                            logger.info(f"Successfully created collapse content: {title} (ID: {content_id})")
-                            return int(content_id)
+                        try:
+                            result = json.loads(response_text)
+                            content_id = result.get('id')
+                            if content_id:
+                                logger.info(f"Successfully created collapse content: {title} (ID: {content_id})")
+                                return int(content_id)
+                        except json.JSONDecodeError as je:
+                            logger.error(f"Failed to parse response JSON: {str(je)}")
+                            raise Exception(f"Invalid JSON response: {response_text}")
                     
                     logger.error(f"Failed to create collapse content. Status: {response.status}")
                     logger.error(f"Response: {response_text}")
@@ -187,4 +192,5 @@ class CollapseContentProcessor:
         except Exception as e:
             logger.error(f"Error creating collapse content '{title}': {str(e)}")
             logger.error(traceback.format_exc())
+            web_content_creator._log_error("Collapse Content Creation", title, str(e))
             return 0

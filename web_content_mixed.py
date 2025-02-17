@@ -165,4 +165,4 @@ class MixedContentProcessor:
         except Exception as e:
             self.logger.error(f"Error processing mixed content: {str(e)}")
             self.logger.error(f"Full error: {traceback.format_exc()}")
-            return []                                                                                                                       
+            return []

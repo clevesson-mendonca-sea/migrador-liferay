@@ -7,6 +7,36 @@ import unidecode
 logger = logging.getLogger(__name__)
 
 class UrlUtils:
+    def sanitize_content_path(self, title: str) -> str:
+        """
+        Sanitize a title to create a URL-friendly path
+        
+        Args:
+            title (str): Original title to be sanitized
+        
+        Returns:
+            str: Sanitized URL-friendly path
+        """
+        try:
+            # Normalize the string by removing accents
+            normalized = unidecode.unidecode(title)
+            
+            # Convert to lowercase
+            normalized = normalized.lower()
+            
+            # Replace non-alphanumeric characters with hyphens
+            normalized = re.sub(r'[^a-z0-9]+', '-', normalized)
+            
+            # Remove leading/trailing hyphens
+            normalized = normalized.strip('-')
+            
+            return normalized
+        
+        except Exception as e:
+            # Fallback to a basic sanitization if unidecode fails
+            print(f"Error sanitizing path {title}: {str(e)}")
+            return re.sub(r'[^a-z0-9]+', '-', title.lower()).strip('-')
+        
     @staticmethod
     def sanitize_url_path(path: str) -> str:
         """
