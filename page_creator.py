@@ -81,7 +81,7 @@ class PageCreator:
     def _get_type_settings(self, column_type: str) -> str:
         settings = {
             "1_column": (
-                "column-1=com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_\n"
+                "column-1=com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_JournalCont\n"
                 f"layout-template-id={column_type}\n"
             ),
             "2_columns_ii": (
