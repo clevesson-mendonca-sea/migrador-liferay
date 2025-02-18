@@ -50,6 +50,47 @@ def filter_hierarchy(hierarchy_str: str) -> list:
         if item.strip().lower() not in ignored_terms
     ]
 
+async def get_sheet_update_data(workbook):
+    try:
+        sheet = next(
+            sheet for sheet in workbook.worksheets() 
+            if "noticias" in sheet.title.lower()
+        )
+        rows = sheet.get_all_values()
+
+        pages = []
+        current_line = ""
+        
+        for row in rows:
+            text = " ".join(row).strip()
+            if not text:
+                continue
+                
+            text = text.replace("Article ID:", "ArticleID:")  # Normaliza o separador
+            
+            if "Title:" in text and "ArticleID:" in text:
+                parts = text.split("ArticleID:")
+                if len(parts) == 2:
+                    title = parts[0].replace("Title:", "").strip()
+                    article_id = parts[1].split()[0].strip()
+                            
+                    if title and article_id:
+                        pages.append({
+                            'title': title,
+                            'article_id': article_id,
+                            'destination': article_id
+                        })
+                        
+        # for page in pages:
+        #     logger.info(f"Artigo: {page['title']} (ID: {page['article_id']})")
+            
+        return pages
+            
+    except Exception as e:
+        logger.error(f"Erro ao processar planilha de notícias: {str(e)}")
+        logger.error(traceback.format_exc())
+        return []
+
 async def get_sheet_data(is_update=False):
     if os.path.exists('token.json'):
         creds = Credentials.from_authorized_user_file('token.json', ['https://www.googleapis.com/auth/spreadsheets.readonly'])
@@ -65,50 +106,9 @@ async def get_sheet_data(is_update=False):
     gc = gspread.authorize(creds)
     workbook = gc.open_by_key(Config.sheet_id)
     
-    # Se for update, procura a aba de atualização
     if is_update:
-            try:
-                sheet = next(
-                    sheet for sheet in workbook.worksheets() 
-                    if "noticias" in sheet.title.lower()
-                )
-                rows = sheet.get_all_values()
-
-                pages = []
-                current_line = ""
-                
-                for row in rows:
-                    text = " ".join(row).strip()
-                    if not text:
-                        continue
-                        
-                    text = text.replace("Article ID:", "ArticleID:")  # Normaliza o separador
-                    
-                    if "Title:" in text and "ArticleID:" in text:
-                        parts = text.split("ArticleID:")
-                        if len(parts) == 2:
-                            title = parts[0].replace("Title:", "").strip()
-                            article_id = parts[1].strip()
-                            
-                            if title and article_id:
-                                pages.append({
-                                    'title': title,
-                                    'article_id': article_id,
-                                    'destination': article_id  # Mantido para compatibilidade
-                                })
-                                
-                logger.info(f"Total de artigos para atualização: {len(pages)}")
-                for page in pages:
-                    logger.info(f"Artigo: {page['title']} (ID: {page['article_id']})")
-                    
-                return pages
-                    
-            except Exception as e:
-                logger.error(f"Erro ao processar planilha de notícias: {str(e)}")
-                logger.error(traceback.format_exc())
-                return []
+        return await get_sheet_update_data(workbook)
     
-    # Processamento normal da planilha original
     sheet = next(
         sheet for sheet in workbook.worksheets() 
         if "mapeamento" in sheet.title.lower()
@@ -369,13 +369,12 @@ async def update_contents(pages):
     
     try:
         await content_updater.initialize_session()
-        
-        # Filtra apenas páginas com article_id
+
         pages_to_update = [
-            page for page in pages 
+            page for page in pages
             if page.get('article_id', '').strip().isdigit()
         ]
-        
+
         if not pages_to_update:
             logger.warning("Nenhum artigo encontrado para atualização")
             return

@@ -14,6 +14,7 @@ class ContentUpdater:
         self.config = config
         self.session = None
         self.doc_creator = DocumentCreator(config)
+        self.folder_creator = FolderCreator(config)  # Adicionando o FolderCreator
         self.root_folder_id = "5346800"
         
     async def initialize_session(self):
@@ -32,102 +33,172 @@ class ContentUpdater:
         )
         
         await self.doc_creator.initialize_session()
+        await self.folder_creator.initialize_session()
 
     async def get_content_by_id(self, article_id: str) -> Optional[Dict]:
         try:
-            url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/structured-contents/{article_id}"
-            async with self.session.get(url) as response:
+            url = f"{self.config.liferay_url}/api/jsonws/journal.journalarticle/get-article"
+            
+            params = {
+                'groupId': self.config.site_id,
+                'articleId': article_id,
+            }
+            
+            logger.info(f"Buscando artigo por articleId: {article_id}")
+            
+            async with self.session.get(url, params=params) as response:
                 if response.status == 200:
-                    return await response.json()
-                logger.error(f"Erro ao buscar conteúdo {article_id}: {response.status}")
+                    content = await response.json()
+                    print(content)
+                    if content and len(content) > 0:
+                        logger.info(f"Artigo {article_id} encontrado com sucesso")
+                        return content
+                    else:
+                        logger.info(f"Nenhum artigo encontrado com articleId: {article_id}")
+                        return None
+                        
+                logger.error(f"Erro ao buscar artigo {article_id}: {response.status}")
+                try:
+                    error_data = await response.json()
+                    logger.error(f"Detalhes do erro: {error_data}")
+                except:
+                    pass
                 return None
+                        
         except Exception as e:
             logger.error(f"Erro ao buscar conteúdo {article_id}: {str(e)}")
             return None
-
-    async def process_content_images(self, content: str, folder_id: int, base_url: str) -> str:
-        soup = BeautifulSoup(content, 'html.parser')
-        
-        for img in soup.find_all('img'):
-            src = img.get('src')
-            if src and ('wp-content' in src or 'wp-conteudo' in src):
-                try:
-                    new_url = await self.doc_creator.migrate_document(
-                        doc_url=src,
-                        folder_id=folder_id,
-                        page_url=base_url
-                    )
-                    if new_url:
-                        img['src'] = new_url
-                        logger.info(f"Imagem atualizada: {src} -> {new_url}")
-                except Exception as e:
-                    logger.error(f"Erro ao processar imagem {src}: {str(e)}")
-                    
-        return str(soup)
-
+    
+    async def create_article_folder(self, article_title: str) -> Optional[str]:
+        try:
+            # self, title: str, parent_id: int = 0, folder_type: str = 'journal', hierarchy: List[str] = None
+            folder_id = await self.folder_creator.create_folder(
+                title=article_title,
+                parent_id=self.root_folder_id,
+                folder_type='documents'
+            )
+            
+            if folder_id:
+                logger.info(f"Pasta criada para o artigo: {article_title} (ID: {folder_id})")
+                return folder_id
+            
+            logger.error(f"Falha ao criar pasta para o artigo: {article_title}")
+            return None
+            
+        except Exception as e:
+            logger.error(f"Erro ao criar pasta para o artigo {article_title}: {str(e)}")
+            return None
+    
     async def update_article_content(self, article_id: str, old_url: str) -> bool:
         try:
-            # Busca o conteúdo atual
-            content = await self.get_content_by_id(article_id)
-            if not content:
+            article = await self.get_content_by_id(article_id)
+            if not article:
                 return False
 
-            # Processa campos de conteúdo
-            content_fields = content.get('contentFields', [])
-            updated = False
-
-            for field in content_fields:
-                if field.get('name') == 'content':
-                    field_value = field.get('contentFieldValue', {})
-                    html_content = field_value.get('data', '')
-                    
-                    if html_content:
-                        # Processa imagens no conteúdo usando a pasta raiz
-                        updated_content = await self.process_content_images(
-                            content=html_content,
-                            folder_id=int(self.root_folder_id),
-                            base_url=old_url
-                        )
-                        
-                        if updated_content != html_content:
-                            field_value['data'] = updated_content
-                            updated = True
-
-            if updated:
-                # Atualiza o conteúdo
-                update_url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/structured-contents/{article_id}"
-                async with self.session.put(update_url, json=content) as response:
+            content = article[0] if isinstance(article, list) else article
+            
+            # Parse o XML para extrair o conteúdo HTML
+            soup = BeautifulSoup(content.get('content', ''), 'xml')
+            
+            # Encontra o elemento com o título do artigo
+            title_element = soup.find('dynamic-element', attrs={'field-reference': 'call'})
+            if title_element:
+                article_title = title_element.find('dynamic-content').text
+                
+            logger.info(f"Criando pasta para o artigo: {article_title}")
+            
+            article_folder_id = await self.create_article_folder(article_title)
+            if not article_folder_id:
+                logger.error(f"Não foi possível criar pasta para o artigo {article_id}")
+                return False
+            
+            content_element = soup.find('dynamic-element', attrs={'field-reference': 'content'})
+            if not content_element:
+                logger.error(f"Artigo {article_id} não possui elemento de conteúdo")
+                return False
+                
+            dynamic_content = content_element.find('dynamic-content', attrs={'language-id': 'pt_BR'})
+            if not dynamic_content:
+                logger.error(f"Artigo {article_id} não possui dynamic-content")
+                return False
+                
+            html_content = dynamic_content.text
+            
+            updated_html = await self.process_content_images(
+                content=html_content,
+                folder_id=int(article_folder_id),
+                base_url=old_url
+            )
+            
+            if updated_html != html_content:
+                dynamic_content.string = f"<![CDATA[{updated_html}]]>"
+                print(f"DDMTemplateKey {article.get('DDMTemplateKey')}")
+                # URL da API headless
+                update_url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/structured-contents/{article.get('DDMTemplateKey')}"
+                
+                # Payload para a API headless
+                payload = {
+                    "contentStructureId": self.config.content_structure_id,
+                    "title": article_title,
+                    "contentFields": [
+                        {
+                            "name": "content",
+                            "contentFieldValue": {
+                                "data": updated_html
+                            }
+                        }
+                    ]
+                }
+                
+                logger.info(f"Atualizando conteúdo do artigo {article_id}")
+                
+                async with self.session.put(update_url, json=payload) as response:
                     if response.status in (200, 201):
-                        logger.info(f"Conteúdo {article_id} atualizado com sucesso")
+                        logger.info(f"✓ Artigo {article_id} atualizado com sucesso")
                         return True
-                    logger.error(f"Erro ao atualizar conteúdo {article_id}: {response.status}")
+                        
+                    logger.error(f"Erro ao atualizar artigo {article_id}: {response.status}")
+                    try:
+                        error_data = await response.json()
+                        logger.error(f"Detalhes do erro: {error_data}")
+                    except:
+                        pass
                     return False
-
-            return True
+                    
+            else:
+                logger.info(f"Nenhuma alteração necessária no artigo {article_id}")
+                return True
 
         except Exception as e:
             logger.error(f"Erro ao atualizar artigo {article_id}: {str(e)}")
             return False
+    
+    async def process_content_images(self, content: str, folder_id: int, base_url: str) -> str:
+        soup = BeautifulSoup(content, 'html.parser')
 
-    async def update_from_spreadsheet_data(self, pages: List[Dict]) -> Dict[str, bool]:
-        results = {}
-        
-        for page in pages:
-            article_id = page.get('destination', '').strip()
-            if article_id and article_id.isdigit():
-                logger.info(f"\nAtualizando artigo: {article_id}")
-                logger.info(f"URL original: {page.get('url', '')}")
-                logger.info(f"Título: {page.get('title', '')}")
-                
-                success = await self.update_article_content(
-                    article_id=article_id,
-                    old_url=page.get('url', '')
-                )
-                results[article_id] = success
+        for img in soup.find_all('img'):
+            src = img.get('src')
+            if src:
+                src = src.replace("sedest", "sedes")
+                img['src'] = src
 
-        return results
+                if 'wp-content' in src or 'wp-conteudo' in src:
+                    try:
+                        new_url = await self.doc_creator.migrate_document(
+                            doc_url=src,
+                            folder_id=folder_id,
+                            page_url=base_url
+                        )
+                        if new_url:
+                            img['src'] = new_url
+                            logger.info(f"Imagem atualizada: {src} -> {new_url}")
+                    except Exception as e:
+                        logger.error(f"Erro ao processar imagem {src}: {str(e)}")
+
+        return str(soup)
 
     async def close(self):
         if self.session:
             await self.session.close()
         await self.doc_creator.close()
+        await self.folder_creator.close()
