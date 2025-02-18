@@ -68,6 +68,65 @@ class ContentUpdater:
         except Exception as e:
             logger.error(f"Erro ao buscar conteúdo {article_id}: {str(e)}")
             return None
+
+    async def get_structured_content_by_key(self, site_id: str, article_id: str, 
+                                        fields: str = None, 
+                                        nested_fields: str = None,
+                                        restrict_fields: str = None) -> Optional[Dict]:
+        """
+        Recupera um conteúdo estruturado do Liferay usando sua chave.
+        
+        Argumentos:
+            site_id (str): ID do site no Liferay
+            article_id (str): Chave do artigo a ser buscado
+            fields (str, opcional): Campos específicos a serem incluídos na resposta
+            nested_fields (str, opcional): Campos aninhados a serem incluídos
+            restrict_fields (str, opcional): Campos a serem restringidos da resposta
+            
+        Retorna:
+            Optional[Dict]: O conteúdo estruturado se encontrado, None caso contrário
+        """
+        try:
+            # Constrói a URL do endpoint usando os parâmetros fornecidos
+            url = f"{self.config.liferay_url}/v1.0/sites/{site_id}/structured-contents/by-key/{article_id}"
+            
+            # Prepara os parâmetros de consulta opcionais
+            params = {}
+            if fields:
+                params['fields'] = fields  # Campos específicos a serem retornados
+            if nested_fields:
+                params['nestedFields'] = nested_fields  # Campos aninhados a serem incluídos
+            if restrict_fields:
+                params['restrictFields'] = restrict_fields  # Campos a serem excluídos
+                
+            logger.info(f"Buscando conteúdo estruturado com key: {article_id}")
+            
+            # Realiza a requisição HTTP assíncrona
+            async with self.session.get(url, params=params) as response:
+                if response.status == 200:  # Se a requisição for bem sucedida
+                    content = await response.json()
+                    
+                    if content:  # Se encontrou conteúdo
+                        logger.info(f"Conteúdo estruturado com article_id {article_id} encontrado com sucesso")
+                        return content
+                    else:  # Se não encontrou conteúdo
+                        logger.info(f"Nenhum conteúdo estruturado encontrado com article_id: {article_id}")
+                        return None
+                        
+                # Em caso de erro na requisição
+                logger.error(f"Erro ao buscar conteúdo estruturado {article_id}: {response.status}")
+                try:
+                    error_data = await response.json()
+                    logger.error(f"Detalhes do erro: {error_data}")
+                except:
+                    pass  # Ignora erros ao tentar ler detalhes do erro
+                return None
+                
+        except Exception as e:
+            # Captura qualquer exceção não prevista
+            logger.error(f"Erro ao buscar conteúdo estruturado {article_id}: {str(e)}")
+            return None
+
     
     async def create_article_folder(self, article_title: str) -> Optional[str]:
         try:
@@ -94,6 +153,9 @@ class ContentUpdater:
             article = await self.get_content_by_id(article_id)
             if not article:
                 return False
+
+            articleKey = await self.get_structured_content_by_key(self.config.site_id, article_id)
+            print(articleKey)
 
             content = article[0] if isinstance(article, list) else article
             
@@ -135,7 +197,8 @@ class ContentUpdater:
                 print(f"DDMTemplateKey {article.get('DDMTemplateKey')}")
                 # URL da API headless
                 update_url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/structured-contents/{article.get('DDMTemplateKey')}"
-                
+                PUT
+# /v1.0/sites/{siteId}/structured-contents/by-external-reference-code/{externalReferenceCode}
                 # Payload para a API headless
                 payload = {
                     "contentStructureId": self.config.content_structure_id,
