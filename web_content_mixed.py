@@ -117,7 +117,6 @@ class MixedContentProcessor:
                 'content': html_content
             }]
 
-
     async def process_mixed_content(self, web_content_creator, title: str, html_content: str, 
                                   folder_id: int, folder_id_dl: int, source_url: str = "") -> List[int]:
         """Processa conteúdo misto após o processamento inicial"""

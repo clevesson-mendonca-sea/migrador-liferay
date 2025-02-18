@@ -12,6 +12,7 @@ from folder_creator import FolderCreator
 from web_content_creator import WebContentCreator
 from document_creator import DocumentCreator
 from content_validator import ContentValidator
+from content_update import ContentUpdater
 import argparse
 from url_utils import UrlUtils
 
@@ -49,7 +50,7 @@ def filter_hierarchy(hierarchy_str: str) -> list:
         if item.strip().lower() not in ignored_terms
     ]
 
-async def get_sheet_data():
+async def get_sheet_data(is_update=False):
     if os.path.exists('token.json'):
         creds = Credentials.from_authorized_user_file('token.json', ['https://www.googleapis.com/auth/spreadsheets.readonly'])
     else:
@@ -64,9 +65,53 @@ async def get_sheet_data():
     gc = gspread.authorize(creds)
     workbook = gc.open_by_key(Config.sheet_id)
     
+    # Se for update, procura a aba de atualização
+    if is_update:
+            try:
+                sheet = next(
+                    sheet for sheet in workbook.worksheets() 
+                    if "noticias" in sheet.title.lower()
+                )
+                rows = sheet.get_all_values()
+
+                pages = []
+                current_line = ""
+                
+                for row in rows:
+                    text = " ".join(row).strip()
+                    if not text:
+                        continue
+                        
+                    text = text.replace("Article ID:", "ArticleID:")  # Normaliza o separador
+                    
+                    if "Title:" in text and "ArticleID:" in text:
+                        parts = text.split("ArticleID:")
+                        if len(parts) == 2:
+                            title = parts[0].replace("Title:", "").strip()
+                            article_id = parts[1].strip()
+                            
+                            if title and article_id:
+                                pages.append({
+                                    'title': title,
+                                    'article_id': article_id,
+                                    'destination': article_id  # Mantido para compatibilidade
+                                })
+                                
+                logger.info(f"Total de artigos para atualização: {len(pages)}")
+                for page in pages:
+                    logger.info(f"Artigo: {page['title']} (ID: {page['article_id']})")
+                    
+                return pages
+                    
+            except Exception as e:
+                logger.error(f"Erro ao processar planilha de notícias: {str(e)}")
+                logger.error(traceback.format_exc())
+                return []
+    
+    # Processamento normal da planilha original
     sheet = next(
-      sheet for sheet in workbook.worksheets() 
-      if "mapeamento" in sheet.title.lower()
+        sheet for sheet in workbook.worksheets() 
+        if "mapeamento" in sheet.title.lower()
     )
     rows = sheet.get_all_values()[1:]
 
@@ -318,6 +363,72 @@ async def validate_content(pages):
     finally:
         await validator.close()
 
+async def update_contents(pages):
+    config = Config()
+    content_updater = ContentUpdater(config)
+    
+    try:
+        await content_updater.initialize_session()
+        
+        # Filtra apenas páginas com article_id
+        pages_to_update = [
+            page for page in pages 
+            if page.get('article_id', '').strip().isdigit()
+        ]
+        
+        if not pages_to_update:
+            logger.warning("Nenhum artigo encontrado para atualização")
+            return
+            
+        logger.info(f"Encontrados {len(pages_to_update)} artigos para atualizar")
+        
+        results = {}
+        for page in pages_to_update:
+            article_id = page['article_id']
+            title = page['title']
+            
+            logger.info(f"\nProcessando artigo: {title}")
+            logger.info(f"ID: {article_id}")
+            
+            try:
+                success = await content_updater.update_article_content(
+                    article_id=article_id,
+                    old_url=""  # URL não é necessária para atualização
+                )
+                results[article_id] = success
+                
+                if success:
+                    logger.info(f"✓ Artigo atualizado com sucesso: {title}")
+                else:
+                    logger.error(f"✗ Falha ao atualizar artigo: {title}")
+                    
+            except Exception as e:
+                logger.error(f"Erro processando artigo {article_id}: {str(e)}")
+                results[article_id] = False
+                continue
+
+        # Log dos resultados
+        success = sum(1 for v in results.values() if v)
+        failed = sum(1 for v in results.values() if not v)
+        
+        logger.info(f"\nResultados da atualização:")
+        logger.info(f"Total processado: {len(results)}")
+        logger.info(f"Sucesso: {success}")
+        logger.info(f"Falhas: {failed}")
+        
+        if failed > 0:
+            logger.info("\nArtigos com falha:")
+            for article_id, success in results.items():
+                if not success:
+                    failed_page = next((p for p in pages_to_update if p['article_id'] == article_id), None)
+                    if failed_page:
+                        logger.error(f"- {failed_page['title']} (ID: {article_id})")
+                    else:
+                        logger.error(f"- Article ID: {article_id}")
+                    
+    finally:
+        await content_updater.close()
+
 async def main():
     parser = argparse.ArgumentParser(description='Migração de conteúdo Liferay')
     parser.add_argument('--folders', action='store_true', help='Migrar apenas pastas')
@@ -325,13 +436,14 @@ async def main():
     parser.add_argument('--pages', action='store_true', help='Migrar apenas páginas')
     parser.add_argument('--documents', action='store_true', help='Migrar apenas documentos')
     parser.add_argument('--validate', action='store_true', help='Validar conteúdo migrado')
+    parser.add_argument('--update', action='store_true', help='Atualizar conteúdos existentes')
     args = parser.parse_args()
 
     try:
         url_utils = UrlUtils()
         
         # Get and process sheet data
-        pages = await get_sheet_data()
+        pages = await get_sheet_data(is_update=args.update)
 
         if not pages:
             logger.error("Nenhuma página válida encontrada na planilha")
@@ -356,6 +468,9 @@ async def main():
         elif args.pages:
             logger.info("Iniciando migração de páginas...")
             await migrate_pages(pages)
+        elif args.update:
+            logger.info("Iniciando correção de conteudos com falhas...")
+            await update_contents(pages)
         else:
             logger.info("Iniciando migração completa...")
             await migrate_pages(pages)

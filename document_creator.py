@@ -158,25 +158,41 @@ class DocumentCreator:
                 return None
 
     def _extract_filename(self, url: str, content_type: str = '') -> str:
-        """Extrai um nome de arquivo válido da URL"""
+        """Extrai e normaliza o nome do arquivo"""
         try:
             parsed_url = urlparse(url)
             path = unquote(parsed_url.path)
             filename = path.rstrip('/').split('/')[-1]
             
+            # Se não tem extensão, usa o content-type
             if not filename or '.' not in filename:
                 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
                 hostname = parsed_url.hostname.split('.')[0] if parsed_url.hostname else 'download'
                 ext = self._get_extension_from_content_type(content_type)
                 filename = f"{hostname}_{timestamp}{ext}"
+                return self._sanitize_filename(filename)
+
+            # Normaliza a extensão para minúscula
+            name, ext = filename.rsplit('.', 1)
+            ext = ext.lower()
+            
+            # Mapeia extensões para garantir consistência
+            ext_mapping = {
+                'docx': 'doc',
+                'xlsx': 'xls',
+                'pptx': 'ppt'
+            }
+            
+            ext = ext_mapping.get(ext, ext)
+            filename = f"{name}.{ext}"
                 
             return self._sanitize_filename(filename)
-            
+                
         except Exception as e:
             logger.error(f"Erro ao extrair nome do arquivo: {str(e)}")
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             return f"document_{timestamp}.html"
-
+        
     def _get_extension_from_content_type(self, content_type: str) -> str:
         """Determina extensão baseada no content-type"""
         for ext, mime in self.SUPPORTED_MIME_TYPES.items():
@@ -264,69 +280,54 @@ class DocumentCreator:
         return filename[:240]  # Limita tamanho do nome
 
     async def _find_existing_document(self, filename: str, folder_id: Optional[int] = None) -> Optional[Dict[str, Any]]:
-        """Busca um documento existente pelo nome do arquivo"""
+        """Busca documento existente com melhor cache"""
         try:
-            # Clean filename first
-            filename = filename.strip()
+            # Limpa e normaliza o nome do arquivo
+            filename = self._sanitize_filename(filename)
+            name, ext = filename.rsplit('.', 1)
             
-            if folder_id:
-                search_url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/document-folders/{folder_id}/documents"
-            else:
-                search_url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/sites/{self.config.site_id}/documents"
+            # Verifica todas as variações possíveis do nome
+            possible_names = [
+                filename,  # original
+                f"{name}.docx" if ext == 'doc' else filename,  # tenta .docx se for .doc
+                f"{name}.xlsx" if ext == 'xls' else filename,  # tenta .xlsx se for .xls
+                f"{name}.pptx" if ext == 'ppt' else filename,  # tenta .pptx se for .ppt
+            ]
             
-            # Check cache first (with clean filename)
-            cached_doc = self.cache.get_by_filename(filename)
-            if cached_doc:
-                return cached_doc
+            # Verifica cache primeiro para todas as variações
+            for name_variant in possible_names:
+                cached_doc = self.cache.get_by_filename(name_variant)
+                if cached_doc:
+                    return cached_doc
+            
+            # Se não encontrou no cache, busca no Liferay
+            search_url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/document-folders/{folder_id}/documents" if folder_id else f"{self.config.liferay_url}/o/headless-delivery/v1.0/sites/{self.config.site_id}/documents"
+
+            for name_variant in possible_names:
+                params = {
+                    'filter': f"title eq '{name_variant}'",
+                    'fields': 'id,contentUrl',
+                    'page': 1,
+                    'pageSize': 1
+                }
                 
-            # Try exact match first
-            params = {
-                'filter': f"title eq '{filename}'",
-                'fields': 'id,contentUrl',
-                'page': 1,
-                'pageSize': 1
-            }
-            
-            async with self.session.get(search_url, params=params) as response:
-                if response.status == 200:
-                    data = await response.json()
-                    items = data.get('items', [])
-                    if items:
-                        doc = items[0]
-                        self.cache.add_filename_mapping(filename, doc)
-                        return doc
-                        
-            # If no exact match, try with URL-encoded space
-            encoded_filename = filename.replace(' ', '%20')
-            params['filter'] = f"title eq '{encoded_filename}'"
-            
-            async with self.session.get(search_url, params=params) as response:
-                if response.status == 200:
-                    data = await response.json()
-                    items = data.get('items', [])
-                    if items:
-                        doc = items[0]
-                        self.cache.add_filename_mapping(filename, doc)
-                        return doc
-            
-            # If still no match, try with trailing space
-            params['filter'] = f"title eq '{filename} '"
-            
-            async with self.session.get(search_url, params=params) as response:
-                if response.status == 200:
-                    data = await response.json()
-                    items = data.get('items', [])
-                    if items:
-                        doc = items[0]
-                        self.cache.add_filename_mapping(filename, doc)
-                        return doc
+                async with self.session.get(search_url, params=params) as response:
+                    if response.status == 200:
+                        data = await response.json()
+                        items = data.get('items', [])
+                        if items:
+                            doc = items[0]
+                            # Adiciona no cache todas as variações do nome
+                            for variant in possible_names:
+                                self.cache.add_filename_mapping(variant, doc)
+                            return doc
             
             return None
             
         except Exception as e:
             logger.error(f"Erro ao buscar documento existente: {str(e)}")
             return None
-
+    
     async def migrate_document(self, doc_url: str, folder_id: Optional[int] = None, page_url: str = "", hierarchy: str = "") -> Optional[str]:
         """Migra um documento com tratamento de conflitos otimizado"""
         max_retries = 3

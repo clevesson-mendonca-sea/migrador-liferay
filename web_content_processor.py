@@ -48,19 +48,42 @@ class ContentProcessor:
         self.semaphore = asyncio.Semaphore(5)
 
     @lru_cache(maxsize=1000)
-    def _clean_url(self, url: str) -> str:
-        """Limpa e normaliza URLs com cache"""
-        if not url or url.startswith('/'):
+    def _clean_url(self, url: str, base_domain: str) -> str:
+        """
+        Limpa e normaliza URLs com cache.
+        Apenas URLs do mesmo domínio são processadas, outras permanecem inalteradas.
+        """
+        if not url:
             return url
+            
+        if url.startswith('/'):
+            return url
+            
         try:
             parsed = urlparse(url)
+            
+            # Se não tem netloc (domínio), provavelmente é relativo
+            if not parsed.netloc:
+                return url
+                
+            url_domain = parsed.netloc.lower()
+            base_domain_parsed = urlparse(base_domain)
+            base_netloc = base_domain_parsed.netloc.lower() if base_domain_parsed.netloc else base_domain.lower()
+            
+            # Se não for do mesmo domínio, retorna a URL original sem modificações
+            if url_domain != base_netloc:
+                return url
+                
+            # Se for do mesmo domínio, converte para relativo
             path = parsed.path
             if parsed.query:
                 path = f"{path}?{parsed.query}"
             if parsed.fragment:
                 path = f"{path}#{parsed.fragment}"
             return f"/{path.lstrip('/')}"
-        except Exception:
+            
+        except Exception as e:
+            logger.error(f"Error cleaning URL {url}: {str(e)}")
             return url
 
     def _clean_img_attributes(self, soup: BeautifulSoup) -> None:
@@ -108,28 +131,54 @@ class ContentProcessor:
                     return
 
                 if any(wp_path in url for wp_path in ['/wp-conteudo', '/wp-content']):
+                    full_url = url
                     if not url.startswith(('http://', 'https://')):
-                        url = f"{base_domain.rstrip('/')}/{url.lstrip('/')}"
+                        full_url = f"{base_domain.rstrip('/')}/{url.lstrip('/')}"
                     
                     migrated_url = await self.creator._retry_operation(
                         self.document_creator.migrate_document,
-                        doc_url=url,
+                        doc_url=full_url,
                         folder_id=folder_id,
                         page_url=base_url
                     )
 
                     if migrated_url:
-                        relative_url = self._clean_url(migrated_url)
+                        relative_url = self._clean_url(migrated_url, base_domain)
                         self.cache.add_url(url, relative_url)
                         tag[attr] = relative_url
                     else:
                         self.cache.mark_failed(url)
                 else:
-                    tag[attr] = self._clean_url(url)
+                    # Processa outras URLs mantendo externas como absolutas
+                    cleaned_url = self._clean_url(url, base_domain)
+                    tag[attr] = cleaned_url
 
             except Exception as e:
                 logger.error(f"Error processing URL {url}: {str(e)}")
                 self.cache.mark_failed(url)
+
+    async def process_content(self, html_content: str, base_url: str, folder_id: Optional[int] = None) -> str:
+        """Processa conteúdo HTML completo"""
+        if not html_content:
+            return ""
+
+        soup = BeautifulSoup(html_content, 'html.parser')
+        base_domain = self.url_utils.extract_domain(base_url)
+
+        self._clean_img_attributes(soup)
+
+        # Process all tags in a single pass
+        async def process_tags():
+            tasks = []
+            for tag in soup.find_all(['a', 'img', 'link', 'script']):
+                attr = next((a for a in ['href', 'src', 'data-src'] if tag.get(a)), None)
+                if attr and (url := tag.get(attr)):
+                    tasks.append(self._process_url(tag, attr, url, base_domain, folder_id, base_url))
+            
+            return await asyncio.gather(*tasks) if tasks else []
+
+        await process_tags()
+        return str(soup)
 
     def _clean_first_div_bootstrap(self, html_content: str) -> str:
         """Remove classes Bootstrap da primeira div"""
@@ -186,29 +235,6 @@ class ContentProcessor:
         except Exception as e:
             logger.error(f"Error checking collapsible content: {str(e)}")
             return False
-
-    async def process_content(self, html_content: str, base_url: str, folder_id: Optional[int] = None) -> str:
-        """Processa conteúdo HTML completo"""
-        if not html_content:
-            return ""
-
-        soup = BeautifulSoup(html_content, 'html.parser')
-        base_domain = self.url_utils.extract_domain(base_url)
-
-        self._clean_img_attributes(soup)
-
-        # Process all tags in a single pass
-        async def process_tags():
-            tasks = []
-            for tag in soup.find_all(['a', 'img', 'link', 'script']):
-                attr = next((a for a in ['href', 'src', 'data-src'] if tag.get(a)), None)
-                if attr and (url := tag.get(attr)):
-                    tasks.append(self._process_url(tag, attr, url, base_domain, folder_id, base_url))
-            
-            return await asyncio.gather(*tasks) if tasks else []
-
-        await process_tags()
-        return str(soup)
 
     async def fetch_and_process_content(self, url: str, folder_id: Optional[int] = None) -> Dict[str, any]:
         """Busca e processa conteúdo completo"""

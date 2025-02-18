@@ -175,16 +175,18 @@ class CollapseContentProcessor:
                         try:
                             result = json.loads(response_text)
                             content_id = result.get('id')
+                            content_key = result.get('key')
+                            
                             if content_id:
                                 logger.info(f"Successfully created collapse content: {title} (ID: {content_id})")
-                                return int(content_id)
+                                return int(content_key)
                         except json.JSONDecodeError as je:
                             logger.error(f"Failed to parse response JSON: {str(je)}")
                             raise Exception(f"Invalid JSON response: {response_text}")
                     
                     logger.error(f"Failed to create collapse content. Status: {response.status}")
-                    logger.error(f"Response: {response_text}")
-                    logger.error(f"Request data: {json.dumps(content_data, indent=2)}")
+                    # logger.error(f"Response: {response_text}")
+                    # logger.error(f"Request data: {json.dumps(content_data, indent=2)}")
                     raise Exception(f"Content creation failed with status {response.status}: {response_text}")
 
             return await web_content_creator._retry_operation(create_attempt)

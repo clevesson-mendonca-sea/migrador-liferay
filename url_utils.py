@@ -1,5 +1,6 @@
 import logging
 import re
+import unicodedata
 from urllib.parse import urlparse
 
 import unidecode
@@ -7,6 +8,28 @@ import unidecode
 logger = logging.getLogger(__name__)
 
 class UrlUtils:
+    def _normalize_title(self, title: str) -> str:
+        """
+        Normaliza o título para busca
+        """
+        if not title:
+            return ""
+            
+        # Remove acentos
+        normalized = unicodedata.normalize('NFKD', title)
+        normalized = ''.join(c for c in normalized if not unicodedata.combining(c))
+        
+        # Remove caracteres especiais mantendo espaços
+        normalized = ''.join(c for c in normalized if c.isalnum() or c.isspace())
+        
+        # Normaliza espaços
+        normalized = ' '.join(normalized.split())
+        
+        # Converte para minúsculas
+        normalized = normalized.lower()
+        
+        return normalized
+
     def sanitize_content_path(self, title: str) -> str:
         """
         Sanitize a title to create a URL-friendly path

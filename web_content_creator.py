@@ -4,7 +4,7 @@ from datetime import datetime
 import logging
 from logging.handlers import RotatingFileHandler
 import traceback
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict, Union
 import aiohttp
 from aiohttp import ClientTimeout, BasicAuth, TCPConnector
 from dataclasses import dataclass
@@ -157,8 +157,8 @@ class WebContentCreator:
             self._log_error("Content Fetch", url, str(e))
             return ''
 
-    async def create_structured_content(self, title: str, html_content: str, folder_id: int) -> int:
-        """Cria conteúdo estruturado"""
+    async def create_structured_content(self, title: str, html_content: str, folder_id: int) -> Dict[str, Union[int, str]]:
+        """Cria conteúdo estruturado e retorna tanto o ID quanto a key"""
         if not self.session:
             await self.initialize_session()
         
@@ -187,10 +187,11 @@ class WebContentCreator:
                     if response.status in (200, 201):
                         result = await response.json()
                         content_id = result.get('id')
+                        content_key = result.get('key')
                         if content_id:
-                            logger.info(f"Created content: {title} (ID: {content_id})")
+                            logger.info(f"Created content: {title} (ID: {content_id}, Key: {content_key})")
                             self.cache.add_content(title, content_id)
-                            return int(content_id)
+                            return {"id": int(content_id), "key": content_key}
                     
                     response_text = await response.text()
                     raise Exception(f"Failed to create content: {response.status} - {response_text}")
@@ -199,19 +200,28 @@ class WebContentCreator:
             
         except Exception as e:
             self._log_error("Content Creation", title, str(e))
-            return 0
-
-    async def migrate_content(self, source_url: str, title: str, hierarchy: List[str]) -> int:
-        """Migra conteúdo"""
+            return {"id": 0, "key": ""}
+    
+    async def migrate_content(self, source_url: str, title: str, hierarchy: List[str]) -> Dict[str, Union[int, str]]:
+        """Migra conteúdo e retorna tanto o ID quanto a key do conteúdo"""
         try:
             cached_content_id = self.cache.get_content(title)
             if cached_content_id:
                 logger.info(f"Using cached content for {title}")
-                return cached_content_id
+                # Buscar a key se estiver usando cache
+                url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/structured-contents/{cached_content_id}"
+                async with self.session.get(url, ssl=False) as response:
+                    if response.status == 200:
+                        data = await response.json()
+                        return {"id": cached_content_id, "key": data.get('key')}
+                    return {"id": cached_content_id, "key": str(cached_content_id)}
+
+            # Primeiro busca os dados da página
+            page_data = await self.find_page_by_title_or_id(title)
+            logger.info(f"Found page data: {page_data}")
 
             # Cria recursos necessários em paralelo
-            page_id, folder_id, folder_id_dl = await asyncio.gather(
-                self.find_page_by_title(title),
+            folder_id, folder_id_dl = await asyncio.gather(
                 self.folder_creator.create_folder_hierarchy(hierarchy, title, 'journal'),
                 self.folder_creator.create_folder_hierarchy(hierarchy, title, 'documents')
             )
@@ -220,57 +230,57 @@ class WebContentCreator:
                 raise Exception(f"Could not create/find folder for: {title}")
 
             # Verifica conteúdo existente
-            existing_content_id = await self.find_existing_content(title, folder_id)
-            if existing_content_id:
-                if page_id:
-                    await self.add_content_to_page(page_id, existing_content_id)
-                return existing_content_id
+            existing_content = await self.find_existing_content(title, folder_id)
+            if existing_content:
+                if page_data:
+                    await self.associate_content_with_page_portlet(existing_content, page_data)
+                return existing_content
 
             # Processa o conteúdo
             process_result = await self.content_processor.fetch_and_process_content(source_url, folder_id_dl)
             if not process_result["success"]:
                 raise Exception(process_result["error"])
 
-            content_id = None
-            content_ids = []
+            content_result = None
+            content_results = []
 
             if process_result["is_collapsible"]:
                 logger.info(f"Creating collapsible content for {title}")
-                content_id = await self.collapse_processor.create_collapse_content(
+                content_result = await self.collapse_processor.create_collapse_content(
                     self, title, process_result["content"], folder_id
                 )
             elif process_result["has_mixed_content"]:
                 logger.info(f"Creating mixed content for {title}")
-                content_ids = await self.mixed_processor.process_mixed_content(
+                content_results = await self.mixed_processor.process_mixed_content(
                     self, title, process_result["content"], folder_id, folder_id_dl, source_url
                 )
-                content_id = content_ids[0] if content_ids else None
+                content_result = content_results[0] if content_results else None
             else:
                 logger.info(f"Creating regular content for {title}")
-                content_id = await self.create_structured_content(
+                content_result = await self.create_structured_content(
                     title, process_result["content"], folder_id
                 )
 
-            if not content_id:
+            if not content_result:
                 raise Exception("Failed to create content in Liferay")
 
             # Associa conteúdos à página
-            if page_id:
-                if content_ids:
-                    for cid in content_ids:
-                        await self.add_content_to_page(page_id, cid)
+            if page_data:
+                if content_results:
+                    for result in content_results:
+                        await self.associate_content_with_page_portlet(result['key'], page_data)
                 else:
-                    await self.add_content_to_page(page_id, content_id)
+                    await self.associate_content_with_page_portlet(content_result, page_data)
 
-            self.cache.add_content(title, content_id)
-            return content_id
+            self.cache.add_content(title, content_result)
+            return content_result
 
         except Exception as e:
             error_msg = f"Error during content migration: {str(e)}\n{traceback.format_exc()}"
             logger.error(error_msg)
             self._log_error("Content Migration", source_url, error_msg, title, hierarchy)
-            return 0
-
+            return {"id": 0, "key": ""}
+    
     async def find_existing_content(self, title: str, folder_id: int) -> Optional[int]:
         """Busca conteúdo existente"""
         cached_id = self.cache.get_content(title)
@@ -284,7 +294,7 @@ class WebContentCreator:
             url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/structured-content-folders/{folder_id}/structured-contents"
             params = {
                 'filter': f"title eq '{title}'",
-                'fields': 'id,title',
+                'fields': 'id,title,key',
                 'page': 1,
                 'pageSize': 1
             }
@@ -294,10 +304,11 @@ class WebContentCreator:
                     data = await response.json()
                     for content in data.get('items', []):
                         if content['title'].lower() == title.lower():
-                            content_id = int(content['id'])
-                            self.cache.add_content(title, content_id)
-                            logger.info(f"Found existing content: {title} (ID: {content_id})")
-                            return content_id
+                            print(content)
+                            content_key = int(content['key'])
+                            self.cache.add_content(title, content_key)
+                            logger.info(f"Found existing content: {title} (ID: {content_key})")
+                            return content_key
                             
             logger.info(f"No existing content found with title: {title}")
             return None
@@ -306,173 +317,209 @@ class WebContentCreator:
             self._log_error("Content Search", title, str(e))
             return None
 
-    async def find_page_by_title(self, title: str) -> Optional[int]:
-        """Busca página por título"""
-        cached_id = self.cache.get_page(title)
-        if cached_id:
-            return cached_id
-
-        if not self.session:
-            await self.initialize_session()
-                
+    async def find_page_by_title_or_id(self, identifier: Union[str, int]) -> Optional[Dict]:
+        """
+        Busca uma página pelo título ou ID e obtém os detalhes através do rendered-page
+        """
         try:
+            if not self.session:
+                await self.initialize_session()
+
             url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/sites/{self.config.site_id}/site-pages"
+            params = {
+                'page': 1,
+                'pageSize': 100,
+                'search': identifier,
+                'fields': 'id,title,friendlyUrlPath'
+            }
             
-            async def fetch_pages(page=1, per_page=100):
-                params = {
-                    'page': page,
-                    'pageSize': per_page,
-                    'filter': f"title eq '{title}'"
+            async with self.session.get(url, params=params) as response:
+                if response.status != 200:
+                    logger.error(f"Failed to search pages. Status: {response.status}")
+                    return None
+                    
+                data = await response.json()
+                items = data.get('items', [])
+                
+                # Procura correspondência exata primeiro
+                page_data = None
+                for item in items:
+                    if item.get('title', '').lower() == str(identifier).lower():
+                        page_data = item
+                        break
+                
+                # Se não encontrou exata, tenta parcial
+                if not page_data:
+                    for item in items:
+                        if str(identifier).lower() in item.get('title', '').lower():
+                            page_data = item
+                            break
+                
+                if not page_data:
+                    return None
+
+                # Busca rendered page
+                friendly_url = page_data.get('friendlyUrlPath', '').strip('/')
+                if not friendly_url:
+                    return None
+
+                rendered_url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/sites/{self.config.site_id}/site-pages/{friendly_url}/rendered-page"
+                
+                headers = {
+                    'Accept': 'text/html'
                 }
                 
-                async with self.session.get(url, params=params) as response:
-                    if response.status == 200:
-                        data = await response.json()
-                        for page in data.get('items', []):
-                            if page.get('title', '').lower() == title.lower():
-                                page_id = int(page['id'])
-                                self.cache.add_page(title, page_id)
-                                return page_id
-                        
-                        total_count = data.get('totalCount', 0)
-                        if total_count > page * per_page:
-                            return await fetch_pages(page + 1, per_page)
-                return None
+                async with self.session.get(rendered_url, headers=headers) as rendered_response:
+                    if rendered_response.status == 200:
+                        rendered_html = await rendered_response.text()
+                        from bs4 import BeautifulSoup
+                        soup = BeautifulSoup(rendered_html, 'html.parser')
 
-            return await self._retry_operation(fetch_pages)
+                        portlets = []
+                        journal_portlets = soup.find_all(
+                            lambda tag: tag.get('id', '').startswith('p_p_id_com_liferay_journal_content_web_portlet_JournalContentPortlet')
+                        )
+                        
+                        for portlet in journal_portlets:
+                            portlet_id = portlet.get('id', '').replace('p_p_id_', '')
+                            if portlet_id:
+                                portlets.append({
+                                    'portletId': portlet_id,
+                                    'articleId': ''
+                                })
+                        
+                        # Se não encontrou nenhum portlet, cria um padrão
+                        if not portlets:
+                            portlets.append({
+                                'portletId': 'com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_JournalCont_',
+                                'articleId': ''
+                            })
+
+                        page_data['portlets'] = portlets
+                        return page_data
+                        
+                    return None
                     
         except Exception as e:
-            self._log_error("Page Search", title, str(e))
+            logger.error(f"Error finding page: {str(e)}")
             return None
 
-    async def associate_content_to_portlet(self, page_title: str, content_id: int) -> bool:
+    async def get_journal_portlet_instance(self, page_data: Dict) -> Optional[str]:
         """
-        Associates a content item to a specific page's portlet using the new association route
-        
-        :param page_title: Title of the page to find
-        :param content_id: ID of the content to associate
-        :return: Boolean indicating successful association
+        Obtém o ID do portlet Journal Content disponível na página
         """
-        if not page_title or not content_id:
-            logger.warning(f"Invalid parameters for association. Page: {page_title}, Content ID: {content_id}")
-            return False
-
         try:
-            # Find the page
-            page_id = await self.find_page_by_title(page_title)
-            if not page_id:
-                logger.error(f"Page not found: {page_title}")
+            portlets = page_data.get('portlets', [])
+            
+            # Primeiro tenta encontrar um portlet sem conteúdo associado
+            for portlet in portlets:
+                portlet_id = portlet.get('portletId', '')
+                if portlet_id and not portlet.get('articleId'):
+                    return portlet_id
+            
+            # Se não encontrou vazio, usa o primeiro disponível
+            if portlets:
+                portlet_id = portlets[0].get('portletId')
+                if portlet_id:
+                    return portlet_id
+                    
+            # Se não encontrou nenhum, usa o padrão
+            return 'com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_JournalCont_'
+            
+        except Exception as e:
+            logger.error(f"Error getting portlet instance: {str(e)}")
+            return None
+
+    async def associate_content_with_page_portlet(self, content: Union[Dict[str, Union[int, str]], str, int], page_data: Union[Dict, int, str]) -> bool:
+        """
+        Associa um conteúdo ao portlet Journal Content de uma página
+        
+        :param content: Pode ser um dicionário com 'id' e 'key', ou diretamente a key como string/int
+        :param page_data: Dados da página ou identificador
+        :return: Boolean indicando sucesso da operação
+        """
+        try:
+            if not isinstance(page_data, dict):
+                page_info = await self.find_page_by_title_or_id(page_data)
+                if not page_info:
+                    return False
+            else:
+                page_info = page_data
+                
+            portlet_id = await self.get_journal_portlet_instance(page_info)
+            if not portlet_id:
                 return False
 
-            # Generate a unique portlet ID
-            portlet_id = f"com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_{content_id}"
+            if not portlet_id.startswith('p_p_id_'):
+                portlet_id = f'p_p_id_{portlet_id}'
 
-            # Use the new association route
-            association_url = f"{self.config.liferay_url}/v1.0/associate-article-to-portlet"
+            portlet_id = portlet_id.replace('p_p_id_', '')
+
+            if portlet_id.endswith('_'):
+                portlet_id = portlet_id[:-1]
             
+            content_key = content.get('key') if isinstance(content, dict) else str(content)
+            
+            association_url = f"{self.config.liferay_url}/o/api-association-migrador/v1.0/associate-article-to-portlet"
+
             params = {
-                'plid': str(page_id),
+                'plid': str(page_info['id']),
                 'portletId': portlet_id,
-                'articleId': str(content_id)
+                'articleId': content_key
             }
 
             async def associate_content():
                 async with self.session.post(association_url, params=params, ssl=False) as response:
-                    response_text = await response.text()
-                    
-                    # Check for successful response
                     if response.status in (200, 201):
-                        try:
-                            result = await response.json()
-                            if result.get('status') == 'SUCCESS':
-                                logger.info(f"Successfully associated content {content_id} to page {page_title}")
-                                return True
-                            else:
-                                logger.error(f"Association failed: {result.get('message', 'Unknown error')}")
-                        except Exception as json_error:
-                            logger.error(f"Error parsing response JSON: {json_error}")
-                    
-                    logger.error(f"Association request failed: {response.status} - {response_text}")
+                        result = await response.json()
+                        logger.info(f"Association result: {result}")
+                        return result.get('status') == 'SUCCESS'
                     return False
 
             return await self._retry_operation(associate_content)
             
         except Exception as e:
-            self._log_error("Content Association", "", str(e), title=page_title)
+            logger.error(f"Error associating content: {str(e)}")
             return False
-
-    async def add_content_to_page(self, page_id: int, content_id: int) -> bool:
+    
+    async def create_and_associate_content(self, source_url: str, title: str, hierarchy: List[str], 
+                                        page_identifier: Union[str, int], page_friendly_url: str = None) -> ContentResponse:
         """
-        Updated method to prefer the new association route
+        Cria conteúdo e associa a um portlet específico da página
         
-        :param page_id: ID of the page
-        :param content_id: ID of the content
-        :return: Boolean indicating successful addition
+        :param source_url: URL do conteúdo fonte
+        :param title: Título do conteúdo
+        :param hierarchy: Hierarquia do conteúdo
+        :param page_identifier: ID ou título da página
+        :param page_friendly_url: URL amigável da página (opcional)
+        :return: ContentResponse com status e detalhes
         """
-        if not self.session:
-            await self.initialize_session()
-
         try:
-            # Find the page title for logging and association
-            page_url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/sites/{self.config.site_id}/site-pages/{page_id}"
-            async with self.session.get(page_url) as page_response:
-                if page_response.status == 200:
-                    page_details = await page_response.json()
-                    page_title = page_details.get('title', f'Page ID {page_id}')
-                else:
-                    page_title = f'Page ID {page_id}'
+            # Primeiro cria o conteúdo
+            content_result = await self.migrate_content(source_url, title, hierarchy)
+            if not content_result or not content_result['id']:
+                raise Exception("Failed to create content")
 
-            # Try using the new association route first
-            association_result = await self.associate_content_to_portlet(page_title, content_id)
-            if association_result:
-                return True
+            # Tenta associar ao portlet da página
+            association_success = await self.associate_content_with_page_portlet(
+                content_result, page_identifier
+            )
 
-            # Fallback to the original method if new route fails
-            logger.warning(f"Falling back to original portlet addition method for content {content_id}")
-            
-            # Original portlet addition logic (kept for backward compatibility)
-            portlet_id = f"com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_{content_id}"
-            
-            # Verifica se o portlet já existe
-            async def check_existing_portlet():
-                check_url = f"{self.config.liferay_url}/api/jsonws/journalcontentportlet/get-portlet-preferences"
-                check_params = {
-                    "plid": str(page_id),
-                    "portletId": portlet_id
-                }
-                
-                async with self.session.get(check_url, params=check_params, ssl=False) as response:
-                    return response.status == 200
+            if not association_success:
+                logger.warning(f"Content created but association failed: {title}")
+                return ContentResponse(
+                    content_id=content_result['id'],
+                    is_new=True,
+                    error="Content created but page association failed"
+                )
 
-            if await self._retry_operation(check_existing_portlet):
-                logger.info(f"Portlet already exists for content {content_id} on page {page_id}")
-                return True
+            return ContentResponse(content_id=content_result['id'], is_new=True)
 
-            # Configura novo portlet
-            prefs_url = f"{self.config.liferay_url}/api/jsonws/journalcontentportlet/add-portlet-preferences"
-            prefs_params = {
-                "plid": str(page_id),
-                "portletId": portlet_id,
-                "articleId": str(content_id),
-                "groupId": str(self.config.site_id)
-            }
-            
-            async def add_portlet():
-                async with self.session.post(prefs_url, params=prefs_params, ssl=False) as response:
-                    if response.status == 200:
-                        logger.info(f"Added content {content_id} to page {page_id}")
-                        return True
-                    else:
-                        response_text = await response.text()
-                        raise Exception(f"Failed to configure portlet: {response.status} - {response_text}")
-
-            return await self._retry_operation(add_portlet)
-                        
         except Exception as e:
-            logger.error(f"Error adding content to page: {str(e)}")
-            logger.error(traceback.format_exc())
-            return False
-
+            error_msg = f"Error in content creation and association: {str(e)}"
+            logger.error(error_msg)
+            return ContentResponse(content_id=0, is_new=False, error=error_msg)
+    
     async def close(self):
         """Fecha recursos"""
         if not self.session:

@@ -1,3 +1,4 @@
+import random
 from typing import List
 from page_error import ErrorTracker, PageError
 from page_processor import PageProcessor
@@ -79,14 +80,15 @@ class PageCreator:
             return update_response.status in (200, 201)
 
     def _get_type_settings(self, column_type: str) -> str:
+        random_id = random.randint(10000, 99999)  # Gera um número aleatório de 5 dígitos
         settings = {
             "1_column": (
-                "column-1=com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_JournalCont\n"
+                f"column-1=com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_{random_id}\n"
                 f"layout-template-id={column_type}\n"
             ),
             "2_columns_ii": (
                 "column-1=com_liferay_site_navigation_menu_web_portlet_SiteNavigationMenuPortlet_INSTANCE_SiteNav\n"
-                "column-2=com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_JournalCont\n"
+                f"column-2=com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_{random_id}\n"
                 f"layout-template-id={column_type}\n"
             )
         }
