@@ -92,9 +92,6 @@ class ContentUpdater:
             return None
     
     async def update_article_content(self, article_id: str, old_url: str) -> bool:
-
-        
-        
         try:
             article = await self.get_content_by_id(article_id)
             if not article:
@@ -139,8 +136,10 @@ class ContentUpdater:
                 dynamic_content.string = f"<![CDATA[{updated_html}]]>"
                 print(f"DDMTemplateKey {article.get('externalReferenceCode')}")
                 externalRefference = article.get('externalReferenceCode')
+                
                 # URL da API headless
                 update_url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/sites/{self.config.site_id}/structured-contents/by-external-reference-code/{externalRefference}"
+                
                 # Payload para a API headless
                 payload = {
                     "contentStructureId": self.config.content_structure_id,
@@ -182,6 +181,9 @@ class ContentUpdater:
         soup = BeautifulSoup(content, 'html.parser')
 
         for img in soup.find_all('img'):
+            if img.has_attr('srcset'):
+                del img['srcset']
+                
             src = img.get('src')
             if src:
                 src = src.replace("sedest", "sedes")

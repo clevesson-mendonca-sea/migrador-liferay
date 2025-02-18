@@ -87,7 +87,7 @@ class PageCreator:
                 f"layout-template-id={column_type}\n"
             ),
             "2_columns_ii": (
-                "column-1=com_liferay_site_navigation_menu_web_portlet_SiteNavigationMenuPortlet_INSTANCE_SiteNav\n"
+                f"column-1=com_liferay_site_navigation_menu_web_portlet_SiteNavigationMenuPortlet_INSTANCE_{random_id}\n"
                 f"column-2=com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_{random_id}\n"
                 f"layout-template-id={column_type}\n"
             )
