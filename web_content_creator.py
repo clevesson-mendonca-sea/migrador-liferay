@@ -58,11 +58,11 @@ class WebContentCreator:
         logger.setLevel(logging.INFO)
 
     async def initialize_session(self):
-        """Inicializa sessão HTTP"""
+        """Inicializa sessão HTTP com limites ampliados"""
         if self.session:
             await self.session.close()
         
-        timeout = ClientTimeout(total=300, connect=60, sock_read=60)
+        timeout = ClientTimeout(total=180, connect=30, sock_read=30)  # Reduzido para ser mais responsivo
         auth = BasicAuth(login=self.config.liferay_user, password=self.config.liferay_pass)
         
         self.session = aiohttp.ClientSession(
@@ -75,8 +75,8 @@ class WebContentCreator:
             timeout=timeout,
             connector=TCPConnector(
                 ssl=False,
-                limit=10,
-                ttl_dns_cache=300,
+                limit=50,  # Aumentado de 10 para 50
+                ttl_dns_cache=600,  # Aumentado de 300 para 600
                 force_close=True
             )
         )
@@ -85,6 +85,7 @@ class WebContentCreator:
             self.folder_creator.initialize_session(),
             self.document_creator.initialize_session()
         )
+
 
     def _log_error(self, error_type: str, url: str, error_msg: str, title: str = "", hierarchy: List[str] = None):
         """Log centralizado de erros"""
@@ -107,7 +108,7 @@ class WebContentCreator:
             logger.error(f"Error writing to error log: {str(e)}")
 
     async def _retry_operation(self, operation, *args, max_retries=3, **kwargs):
-        """Wrapper para operações com retry"""
+        """Wrapper para operações com retry otimizado"""
         last_error = None
         
         for attempt in range(max_retries):
@@ -116,12 +117,12 @@ class WebContentCreator:
             except Exception as e:
                 last_error = e
                 if attempt < max_retries - 1:
-                    await asyncio.sleep(2 ** attempt)
+                    await asyncio.sleep(1 * (attempt + 1))  # Reduzido de 2**attempt
                     continue
                 raise last_error
 
     async def fetch_content(self, url: str) -> str:
-        """Busca conteúdo da URL"""
+        """Busca conteúdo da URL otimizada"""
         cached_content = self.cache.get_url(url)
         if cached_content:
             return cached_content
@@ -142,8 +143,11 @@ class WebContentCreator:
                     raise Exception(f"Failed to fetch content: {response.status}")
                 
                 html = await response.text()
+                # Parse HTML apenas uma vez
+                soup = BeautifulSoup(html, 'html.parser')
+                
                 for selector in self.content_processor.CONTENT_SELECTORS:
-                    content = BeautifulSoup(html, 'html.parser').find(**{
+                    content = soup.find(**{
                         'id' if selector['type'] == 'id' else 'class_': selector['value']
                     })
                     if content:
@@ -156,7 +160,7 @@ class WebContentCreator:
         except Exception as e:
             self._log_error("Content Fetch", url, str(e))
             return ''
-
+    
     async def create_structured_content(self, title: str, html_content: str, folder_id: int) -> Dict[str, Union[int, str]]:
         """Cria conteúdo estruturado e retorna tanto o ID quanto a key"""
         if not self.session:
@@ -304,7 +308,6 @@ class WebContentCreator:
                     data = await response.json()
                     for content in data.get('items', []):
                         if content['title'].lower() == title.lower():
-                            print(content)
                             content_key = int(content['key'])
                             self.cache.add_content(title, content_key)
                             logger.info(f"Found existing content: {title} (ID: {content_key})")
@@ -460,7 +463,7 @@ class WebContentCreator:
             
             content_key = content.get('key') if isinstance(content, dict) else str(content)
             
-            association_url = f"{self.config.liferay_url}/o/api-association-migrador/v1.0/associate-article-to-portlet"
+            association_url = f"{self.config.liferay_url}/o/api-association-migrador/v1.0/journal-content/associate-article"
 
             params = {
                 'plid': str(page_info['id']),
