@@ -58,10 +58,10 @@ async def get_sheet_update_data(workbook):
             if "noticias" in sheet.title.lower()
         )
         rows = sheet.get_all_values()
+        
 
         pages = []
         current_line = ""
-        
         for row in rows:
             text = " ".join(row).strip()
             if not text:
@@ -115,7 +115,6 @@ async def get_sheet_data(is_update=False):
         if "mapeamento" in sheet.title.lower()
     )
     rows = sheet.get_all_values()[1:]
-
     page_type = [
         row[14] if len(row) > 14 and row[14].strip() not in ["", "-"] else "widget"
         for row in rows
@@ -137,7 +136,7 @@ async def get_sheet_data(is_update=False):
 
     # Obtém os tipos de coluna (1 Coluna, 30/70)
     column_type = [
-        row[16] if len(row) > 16 and row[16].strip() not in ["", "-"] else "1_column"
+        row[17] if len(row) > 17 and row[17].strip() not in ["", "-"] else "1_column"
         for row in rows
     ]
 
@@ -165,11 +164,18 @@ async def get_sheet_data(is_update=False):
                 # Get source and destination URLs
                 source_url = row[0].strip() if row[0] else ''
                 dest_url = row[1].strip() if len(row) > 1 and row[1] else ''
+                link_vincular = row[16].strip() if len(row) > 16 and row[16] else None
                 
                 # Build complete URLs using UrlUtils
                 complete_source_url = url_utils.build_url(source_url, base_domain)
                 complete_dest_url = url_utils.build_url(dest_url, base_domain)
                 
+
+                print(f"LINKKKKKK!!!!: {link_vincular}")
+                print(f"LINKKKKKK completeeeeeee!!!!: {complete_source_url}")
+
+
+
                 if title.strip():
                     page_data = {
                         'title': title,
@@ -178,7 +184,8 @@ async def get_sheet_data(is_update=False):
                         'hierarchy': hierarchy,
                         'type': page_type_formatted[index],
                         'visible': is_visible,
-                        "column_type": column_type_formatted[index]
+                        "column_type": column_type_formatted[index],
+                        "url_vincular": link_vincular
                     }
                     pages.append(page_data)
 
@@ -212,7 +219,8 @@ async def migrate_pages(pages):
                 final_url=page['url'].strip('/').split('/')[-1],
                 page_type=page['type'],
                 visible=page['visible'],
-                column_type=page['column_type']
+                column_type=page['column_type'],
+                url_vinculada=page['url_vincular']
             )
             
             if page_id:

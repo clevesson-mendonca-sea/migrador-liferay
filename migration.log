@@ -1,0 +1,1086 @@
+2025-02-19 11:19:41,250 - INFO - Inicializando sessões dos criadores em paralelo
+2025-02-19 11:19:41,250 - INFO - Sessões inicializadas com sucesso
+2025-02-19 11:19:43,105 - INFO - Found page data: True
+2025-02-19 11:19:45,084 - INFO - No existing content found with title: Home
+2025-02-19 11:19:49,884 - INFO - Creating regular content for Home
+2025-02-19 11:19:50,358 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 1/3. Aguardando 1s...
+2025-02-19 11:19:51,719 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 2/3. Aguardando 2s...
+2025-02-19 11:19:54,458 - INFO - Association result: {'message': 'Artigo  associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_34583', 'status': 'SUCCESS'}
+2025-02-19 11:19:54,721 - INFO - Found page data: False
+2025-02-19 11:19:55,479 - INFO - No existing content found with title: Escolas
+2025-02-19 11:19:56,307 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea/migrador-liferay/migrador-liferay/web_content_creator.py", line 311, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-19 11:19:56,609 - INFO - Found page data: False
+2025-02-19 11:19:56,925 - INFO - No existing content found with title: Escolas
+2025-02-19 11:20:02,807 - INFO - Creating regular content for Escolas
+2025-02-19 11:20:03,466 - INFO - Created content: Escolas (ID: 5637603, Key: 5637601)
+2025-02-19 11:20:04,113 - INFO - Found page data: False
+2025-02-19 11:20:05,412 - INFO - No existing content found with title: ESCS - Escola Superior de Ciências da Saúde
+2025-02-19 11:20:05,727 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea/migrador-liferay/migrador-liferay/web_content_creator.py", line 311, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-19 11:20:06,443 - INFO - Found page data: False
+2025-02-19 11:20:07,154 - INFO - No existing content found with title: ESPDF - Escola de Saúde Pública do Distrito Federal
+2025-02-19 11:20:07,474 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea/migrador-liferay/migrador-liferay/web_content_creator.py", line 311, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-19 11:20:07,767 - INFO - Found page data: False
+2025-02-19 11:20:08,689 - INFO - No existing content found with title: Quem Somos
+2025-02-19 11:20:09,445 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea/migrador-liferay/migrador-liferay/web_content_creator.py", line 311, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-19 11:20:09,722 - INFO - Found page data: False
+2025-02-19 11:20:10,022 - INFO - No existing content found with title: Quem Somos
+2025-02-19 11:20:16,956 - INFO - Creating regular content for Quem Somos
+2025-02-19 11:20:17,598 - INFO - Created content: Quem Somos (ID: 5637679, Key: 5637677)
+2025-02-19 11:20:18,348 - INFO - Found page data: True
+2025-02-19 11:20:19,340 - INFO - No existing content found with title: Estrutura
+2025-02-19 11:20:30,207 - INFO - Creating regular content for Estrutura
+2025-02-19 11:20:30,714 - INFO - Created content: Estrutura (ID: 5638469, Key: 5638467)
+2025-02-19 11:20:31,020 - INFO - Association result: {'message': 'Artigo 5638467 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_24477', 'status': 'SUCCESS'}
+2025-02-19 11:20:31,021 - INFO - Using cached content for Estrutura
+2025-02-19 11:20:32,565 - INFO - Found page data: True
+2025-02-19 11:20:33,263 - INFO - No existing content found with title: Competências
+2025-02-19 11:20:41,931 - INFO - Creating regular content for Competências
+2025-02-19 11:20:42,480 - INFO - Created content: Competências (ID: 5639134, Key: 5639132)
+2025-02-19 11:20:42,755 - INFO - Association result: {'message': 'Artigo 5639132 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_36007', 'status': 'SUCCESS'}
+2025-02-19 11:20:43,920 - INFO - Found page data: True
+2025-02-19 11:20:45,041 - INFO - No existing content found with title: Competências da ESCS
+2025-02-19 11:20:48,462 - INFO - Creating regular content for Competências da ESCS
+2025-02-19 11:20:49,557 - INFO - Created content: Competências da ESCS (ID: 5639175, Key: 5639173)
+2025-02-19 11:20:49,861 - INFO - Association result: {'message': 'Artigo 5639173 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_17930', 'status': 'SUCCESS'}
+2025-02-19 11:20:51,047 - INFO - Found page data: True
+2025-02-19 11:20:51,906 - INFO - No existing content found with title: Competências da EAPSUS
+2025-02-19 11:20:55,318 - INFO - Creating regular content for Competências da EAPSUS
+2025-02-19 11:20:55,998 - INFO - Created content: Competências da EAPSUS (ID: 5639931, Key: 5639929)
+2025-02-19 11:20:56,305 - INFO - Association result: {'message': 'Artigo 5639929 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_84725', 'status': 'SUCCESS'}
+2025-02-19 11:20:57,440 - INFO - Found page data: True
+2025-02-19 11:20:58,181 - INFO - No existing content found with title: Competências da ETESB
+2025-02-19 11:21:02,084 - INFO - Creating regular content for Competências da ETESB
+2025-02-19 11:21:02,965 - INFO - Created content: Competências da ETESB (ID: 5639983, Key: 5639981)
+2025-02-19 11:21:03,270 - INFO - Association result: {'message': 'Artigo 5639981 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_67942', 'status': 'SUCCESS'}
+2025-02-19 11:21:04,302 - INFO - Found page data: True
+2025-02-19 11:21:05,112 - INFO - No existing content found with title: Contatos
+2025-02-19 11:21:09,569 - INFO - Creating regular content for Contatos
+2025-02-19 11:21:10,436 - INFO - Created content: Contatos (ID: 5640331, Key: 5640329)
+2025-02-19 11:21:10,743 - INFO - Association result: {'message': 'Artigo 5640329 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_42610', 'status': 'SUCCESS'}
+2025-02-19 11:21:11,858 - INFO - Found page data: True
+2025-02-19 11:21:12,587 - INFO - No existing content found with title: Quem é Quem
+2025-02-19 11:21:36,952 - INFO - Creating regular content for Quem é Quem
+2025-02-19 11:21:37,681 - INFO - Created content: Quem é Quem (ID: 5641705, Key: 5641703)
+2025-02-19 11:21:37,984 - INFO - Association result: {'message': 'Artigo 5641703 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_25478', 'status': 'SUCCESS'}
+2025-02-19 11:21:39,832 - INFO - Found page data: True
+2025-02-19 11:21:41,261 - INFO - No existing content found with title: Agenda da Secretária
+2025-02-19 11:21:44,766 - INFO - Creating regular content for Agenda da Secretária
+2025-02-19 11:21:45,002 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 1/3. Aguardando 1s...
+2025-02-19 11:21:46,379 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 2/3. Aguardando 2s...
+2025-02-19 11:21:49,039 - INFO - Association result: {'message': 'Artigo  associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_95753', 'status': 'SUCCESS'}
+2025-02-19 11:21:50,276 - INFO - Found page data: True
+2025-02-19 11:21:51,091 - INFO - No existing content found with title: Agenda Teste
+2025-02-19 11:21:54,913 - INFO - Creating regular content for Agenda Teste
+2025-02-19 11:21:55,504 - INFO - Created content: Agenda Teste (ID: 5641750, Key: 5641748)
+2025-02-19 11:21:55,904 - INFO - Association result: {'message': 'Artigo 5641748 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_10106', 'status': 'SUCCESS'}
+2025-02-19 11:21:57,161 - INFO - Found page data: True
+2025-02-19 11:21:57,922 - INFO - No existing content found with title: Base Jurídica
+2025-02-19 11:22:13,442 - INFO - Creating regular content for Base Jurídica
+2025-02-19 11:22:14,025 - INFO - Created content: Base Jurídica (ID: 5643219, Key: 5643217)
+2025-02-19 11:22:14,332 - INFO - Association result: {'message': 'Artigo 5643217 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_40578', 'status': 'SUCCESS'}
+2025-02-19 11:22:15,079 - INFO - Found page data: True
+2025-02-19 11:22:15,950 - INFO - No existing content found with title: Governança
+2025-02-19 11:22:16,216 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea/migrador-liferay/migrador-liferay/web_content_creator.py", line 311, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-19 11:22:17,322 - INFO - Found page data: True
+2025-02-19 11:22:18,335 - INFO - No existing content found with title: Comitê Interno de Governança (CIG)
+2025-02-19 11:22:21,844 - INFO - Creating regular content for Comitê Interno de Governança (CIG)
+2025-02-19 11:22:22,320 - INFO - Created content: Comitê Interno de Governança (CIG) (ID: 5643245, Key: 5643243)
+2025-02-19 11:22:22,633 - INFO - Association result: {'message': 'Artigo 5643243 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_61111', 'status': 'SUCCESS'}
+2025-02-19 11:22:23,768 - INFO - Found page data: True
+2025-02-19 11:22:24,577 - INFO - No existing content found with title: Comissão de Ética
+2025-02-19 11:22:32,951 - INFO - Creating regular content for Comissão de Ética
+2025-02-19 11:22:33,595 - INFO - Created content: Comissão de Ética (ID: 5643295, Key: 5643293)
+2025-02-19 11:22:34,007 - INFO - Association result: {'message': 'Artigo 5643293 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_49637', 'status': 'SUCCESS'}
+2025-02-19 11:22:35,141 - INFO - Found page data: True
+2025-02-19 11:22:35,942 - INFO - No existing content found with title: Legislação
+2025-02-19 11:22:47,736 - INFO - Creating regular content for Legislação
+2025-02-19 11:22:48,229 - INFO - Created content: Legislação (ID: 5644028, Key: 5644026)
+2025-02-19 11:22:48,538 - INFO - Association result: {'message': 'Artigo 5644026 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_76588', 'status': 'SUCCESS'}
+2025-02-19 11:22:49,582 - INFO - Found page data: True
+2025-02-19 11:22:50,378 - INFO - No existing content found with title: Biblioteca
+2025-02-19 11:23:05,128 - INFO - Creating regular content for Biblioteca
+2025-02-19 11:23:05,945 - INFO - Created content: Biblioteca (ID: 5645203, Key: 5645201)
+2025-02-19 11:23:06,249 - INFO - Association result: {'message': 'Artigo 5645201 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_47043', 'status': 'SUCCESS'}
+2025-02-19 11:23:06,249 - INFO - Using cached content for Comitê Interno de Governança (CIG)
+2025-02-19 11:23:07,172 - INFO - Found page data: False
+2025-02-19 11:23:07,996 - INFO - No existing content found with title: Transparência
+2025-02-19 11:23:08,314 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea/migrador-liferay/migrador-liferay/web_content_creator.py", line 311, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-19 11:23:09,014 - INFO - Found page data: False
+2025-02-19 11:23:09,839 - INFO - No existing content found with title: Gestão de Riscos
+2025-02-19 11:23:10,153 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea/migrador-liferay/migrador-liferay/web_content_creator.py", line 311, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-19 11:23:10,764 - INFO - Found page data: False
+2025-02-19 11:23:11,779 - INFO - No existing content found with title: Política de Gestão de Riscos
+2025-02-19 11:23:12,004 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea/migrador-liferay/migrador-liferay/web_content_creator.py", line 311, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-19 11:23:12,604 - INFO - Found page data: False
+2025-02-19 11:23:13,316 - INFO - No existing content found with title: Programa de Integridade
+2025-02-19 11:23:13,684 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea/migrador-liferay/migrador-liferay/web_content_creator.py", line 311, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-19 11:23:14,178 - INFO - Found page data: False
+2025-02-19 11:23:15,158 - INFO - No existing content found with title: Política de Integridade
+2025-02-19 11:23:15,375 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea/migrador-liferay/migrador-liferay/web_content_creator.py", line 311, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-19 11:23:15,980 - INFO - Found page data: False
+2025-02-19 11:23:16,800 - INFO - No existing content found with title: Programa de Integridade Privada
+2025-02-19 11:23:17,110 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea/migrador-liferay/migrador-liferay/web_content_creator.py", line 311, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-19 11:23:17,718 - INFO - Found page data: False
+2025-02-19 11:23:18,956 - INFO - No existing content found with title: Transparência
+2025-02-19 11:23:29,028 - INFO - Creating regular content for Transparência
+2025-02-19 11:23:29,607 - INFO - Created content: Transparência (ID: 5645256, Key: 5645254)
+2025-02-19 11:23:30,749 - INFO - Found page data: True
+2025-02-19 11:23:31,746 - INFO - No existing content found with title: Conheça a Lei de Acesso à Informação na FEPECS
+2025-02-19 11:23:35,672 - INFO - Creating regular content for Conheça a Lei de Acesso à Informação na FEPECS
+2025-02-19 11:23:36,264 - INFO - Created content: Conheça a Lei de Acesso à Informação na FEPECS (ID: 5645275, Key: 5645273)
+2025-02-19 11:23:36,567 - INFO - Association result: {'message': 'Artigo 5645273 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_52922', 'status': 'SUCCESS'}
+2025-02-19 11:23:37,916 - INFO - Found page data: True
+2025-02-19 11:23:39,023 - INFO - No existing content found with title: Institucional
+2025-02-19 11:23:43,132 - INFO - Creating regular content for Institucional
+2025-02-19 11:23:43,628 - INFO - Created content: Institucional (ID: 5645295, Key: 5645293)
+2025-02-19 11:23:43,954 - INFO - Association result: {'message': 'Artigo 5645293 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_96810', 'status': 'SUCCESS'}
+2025-02-19 11:23:45,211 - INFO - Found page data: True
+2025-02-19 11:23:45,979 - INFO - No existing content found with title: Ações e Programas
+2025-02-19 11:23:50,106 - INFO - Creating regular content for Ações e Programas
+2025-02-19 11:23:50,587 - INFO - Created content: Ações e Programas (ID: 5646515, Key: 5646513)
+2025-02-19 11:23:50,895 - INFO - Association result: {'message': 'Artigo 5646513 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_88924', 'status': 'SUCCESS'}
+2025-02-19 11:23:51,938 - INFO - Found page data: True
+2025-02-19 11:23:52,739 - INFO - No existing content found with title: Auditorias
+2025-02-19 11:23:56,865 - INFO - Creating regular content for Auditorias
+2025-02-19 11:23:57,348 - INFO - Created content: Auditorias (ID: 5646535, Key: 5646533)
+2025-02-19 11:23:57,654 - INFO - Association result: {'message': 'Artigo 5646533 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_18974', 'status': 'SUCCESS'}
+2025-02-19 11:23:58,696 - INFO - Found page data: True
+2025-02-19 11:23:59,501 - INFO - No existing content found with title: Convênios
+2025-02-19 11:24:27,888 - INFO - Creating regular content for Convênios
+2025-02-19 11:24:28,801 - INFO - Created content: Convênios (ID: 5648012, Key: 5648010)
+2025-02-19 11:24:29,192 - INFO - Association result: {'message': 'Artigo 5648010 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_68052', 'status': 'SUCCESS'}
+2025-02-19 11:24:30,667 - INFO - Found page data: True
+2025-02-19 11:24:32,063 - INFO - No existing content found with title: Despesas
+2025-02-19 11:24:48,863 - INFO - Creating regular content for Despesas
+2025-02-19 11:24:49,263 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 1/3. Aguardando 1s...
+2025-02-19 11:24:50,598 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 2/3. Aguardando 2s...
+2025-02-19 11:24:53,372 - INFO - Association result: {'message': 'Artigo  associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_68173', 'status': 'SUCCESS'}
+2025-02-19 11:24:54,385 - INFO - Found page data: True
+2025-02-19 11:24:55,387 - INFO - No existing content found with title: Diárias e Passagens 2022
+2025-02-19 11:24:59,525 - INFO - Creating regular content for Diárias e Passagens 2022
+2025-02-19 11:25:00,015 - INFO - Created content: Diárias e Passagens 2022 (ID: 5649123, Key: 5649121)
+2025-02-19 11:25:00,323 - INFO - Association result: {'message': 'Artigo 5649121 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_96805', 'status': 'SUCCESS'}
+2025-02-19 11:25:01,362 - INFO - Found page data: True
+2025-02-19 11:25:02,064 - INFO - No existing content found with title: Diárias e Passagens 2019
+2025-02-19 11:25:06,615 - INFO - Creating regular content for Diárias e Passagens 2019
+2025-02-19 11:25:07,286 - INFO - Created content: Diárias e Passagens 2019 (ID: 5649145, Key: 5649143)
+2025-02-19 11:25:07,899 - INFO - Association result: {'message': 'Artigo 5649143 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_55881', 'status': 'SUCCESS'}
+2025-02-19 11:25:09,035 - INFO - Found page data: True
+2025-02-19 11:25:09,846 - INFO - No existing content found with title: Diárias e Passagens
+2025-02-19 11:25:17,339 - INFO - Creating regular content for Diárias e Passagens
+2025-02-19 11:25:17,828 - INFO - Created content: Diárias e Passagens (ID: 5649738, Key: 5649736)
+2025-02-19 11:25:18,096 - INFO - Association result: {'message': 'Artigo 5649736 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_61823', 'status': 'SUCCESS'}
+2025-02-19 11:25:18,096 - INFO - Using cached content for Despesas
+2025-02-19 11:25:19,494 - INFO - Found page data: True
+2025-02-19 11:25:20,297 - INFO - No existing content found with title: Licitações e Contratos
+2025-02-19 11:25:24,106 - INFO - Creating regular content for Licitações e Contratos
+2025-02-19 11:25:24,391 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 1/3. Aguardando 1s...
+2025-02-19 11:25:25,718 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 2/3. Aguardando 2s...
+2025-02-19 11:25:28,481 - INFO - Association result: {'message': 'Artigo  associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_49530', 'status': 'SUCCESS'}
+2025-02-19 11:25:28,482 - INFO - Using cached content for Licitações e Contratos
+2025-02-19 11:25:30,203 - INFO - Found page data: True
+2025-02-19 11:25:30,939 - INFO - No existing content found with title: Servidores
+2025-02-19 11:25:45,694 - INFO - Creating regular content for Servidores
+2025-02-19 11:25:46,511 - INFO - Created content: Servidores (ID: 5650720, Key: 5650718)
+2025-02-19 11:25:47,120 - INFO - Association result: {'message': 'Artigo 5650718 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_57999', 'status': 'SUCCESS'}
+2025-02-19 11:25:48,675 - INFO - Found page data: True
+2025-02-19 11:25:49,579 - INFO - No existing content found with title: Informações Classificadas
+2025-02-19 11:25:53,596 - INFO - Creating regular content for Informações Classificadas
+2025-02-19 11:25:54,496 - INFO - Created content: Informações Classificadas (ID: 5650749, Key: 5650747)
+2025-02-19 11:25:54,901 - INFO - Association result: {'message': 'Artigo 5650747 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_83553', 'status': 'SUCCESS'}
+2025-02-19 11:25:56,352 - INFO - Found page data: True
+2025-02-19 11:25:57,464 - INFO - No existing content found with title: Perguntas Frequentes da LAI
+2025-02-19 11:26:01,179 - INFO - Creating regular content for Perguntas Frequentes da LAI
+2025-02-19 11:26:01,732 - INFO - Created content: Perguntas Frequentes da LAI (ID: 5650771, Key: 5650769)
+2025-02-19 11:26:02,072 - INFO - Association result: {'message': 'Artigo 5650769 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_98560', 'status': 'SUCCESS'}
+2025-02-19 11:26:03,420 - INFO - Found page data: True
+2025-02-19 11:26:04,219 - INFO - No existing content found with title: Perguntas Frequentes da FEPECS
+2025-02-19 11:26:07,732 - INFO - Creating regular content for Perguntas Frequentes da FEPECS
+2025-02-19 11:26:08,320 - INFO - Created content: Perguntas Frequentes da FEPECS (ID: 5650792, Key: 5650790)
+2025-02-19 11:26:08,724 - INFO - Association result: {'message': 'Artigo 5650790 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_35060', 'status': 'SUCCESS'}
+2025-02-19 11:26:10,174 - INFO - Found page data: True
+2025-02-19 11:26:10,978 - INFO - No existing content found with title: Serviço de Informação ao Cidadão (SIC)
+2025-02-19 11:26:16,628 - INFO - Creating regular content for Serviço de Informação ao Cidadão (SIC)
+2025-02-19 11:26:17,352 - INFO - Created content: Serviço de Informação ao Cidadão (SIC) (ID: 5651522, Key: 5651520)
+2025-02-19 11:26:17,682 - INFO - Association result: {'message': 'Artigo 5651520 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_54324', 'status': 'SUCCESS'}
+2025-02-19 11:26:19,184 - INFO - Found page data: True
+2025-02-19 11:26:20,300 - INFO - No existing content found with title: Ouvidoria
+2025-02-19 11:26:24,020 - INFO - Creating regular content for Ouvidoria
+2025-02-19 11:26:24,496 - INFO - Created content: Ouvidoria (ID: 5651543, Key: 5651541)
+2025-02-19 11:26:24,910 - INFO - Association result: {'message': 'Artigo 5651541 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_88001', 'status': 'SUCCESS'}
+2025-02-19 11:26:26,174 - INFO - Found page data: True
+2025-02-19 11:26:27,464 - INFO - No existing content found with title: A Ouvidoria da Fepecs
+2025-02-19 11:26:31,700 - INFO - Creating regular content for A Ouvidoria da Fepecs
+2025-02-19 11:26:32,157 - INFO - Created content: A Ouvidoria da Fepecs (ID: 5651563, Key: 5651561)
+2025-02-19 11:26:32,590 - INFO - Association result: {'message': 'Artigo 5651561 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_24200', 'status': 'SUCCESS'}
+2025-02-19 11:26:33,524 - INFO - Found page data: True
+2025-02-19 11:26:34,324 - INFO - No existing content found with title: Perfil do Ouvidor
+2025-02-19 11:26:46,736 - INFO - Creating regular content for Perfil do Ouvidor
+2025-02-19 11:26:47,228 - INFO - Created content: Perfil do Ouvidor (ID: 5652604, Key: 5652602)
+2025-02-19 11:26:47,534 - INFO - Association result: {'message': 'Artigo 5652602 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_18329', 'status': 'SUCCESS'}
+2025-02-19 11:26:48,577 - INFO - Found page data: True
+2025-02-19 11:26:49,275 - INFO - No existing content found with title: Tipos de Manifestações
+2025-02-19 11:26:52,685 - INFO - Creating regular content for Tipos de Manifestações
+2025-02-19 11:26:53,478 - INFO - Created content: Tipos de Manifestações (ID: 5652626, Key: 5652624)
+2025-02-19 11:26:53,786 - INFO - Association result: {'message': 'Artigo 5652624 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_55930', 'status': 'SUCCESS'}
+2025-02-19 11:26:55,030 - INFO - Found page data: True
+2025-02-19 11:26:55,829 - INFO - No existing content found with title: Painel de Ouvidoria
+2025-02-19 11:26:59,122 - INFO - Creating regular content for Painel de Ouvidoria
+2025-02-19 11:26:59,634 - INFO - Created content: Painel de Ouvidoria (ID: 5652646, Key: 5652644)
+2025-02-19 11:27:00,030 - INFO - Association result: {'message': 'Artigo 5652644 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_21257', 'status': 'SUCCESS'}
+2025-02-19 11:27:01,063 - INFO - Found page data: True
+2025-02-19 11:27:01,772 - INFO - No existing content found with title: Canais de Atendimento
+2025-02-19 11:27:04,939 - INFO - Creating regular content for Canais de Atendimento
+2025-02-19 11:27:05,460 - INFO - Created content: Canais de Atendimento (ID: 5652666, Key: 5652664)
+2025-02-19 11:27:05,764 - INFO - Association result: {'message': 'Artigo 5652664 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_66816', 'status': 'SUCCESS'}
+2025-02-19 11:27:07,019 - INFO - Found page data: True
+2025-02-19 11:27:07,706 - INFO - No existing content found with title: Requisitos e Documentos
+2025-02-19 11:27:11,326 - INFO - Creating regular content for Requisitos e Documentos
+2025-02-19 11:27:11,802 - INFO - Created content: Requisitos e Documentos (ID: 5652686, Key: 5652684)
+2025-02-19 11:27:12,218 - INFO - Association result: {'message': 'Artigo 5652684 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_79482', 'status': 'SUCCESS'}
+2025-02-19 11:27:13,472 - INFO - Found page data: True
+2025-02-19 11:27:14,369 - INFO - No existing content found with title: Passo a Passo
+2025-02-19 11:27:18,399 - INFO - Creating regular content for Passo a Passo
+2025-02-19 11:27:18,869 - INFO - Created content: Passo a Passo (ID: 5653606, Key: 5653604)
+2025-02-19 11:27:19,175 - INFO - Association result: {'message': 'Artigo 5653604 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_25521', 'status': 'SUCCESS'}
+2025-02-19 11:27:20,219 - INFO - Found page data: True
+2025-02-19 11:27:20,916 - INFO - No existing content found with title: Perguntas Frequentes
+2025-02-19 11:27:24,552 - INFO - Creating regular content for Perguntas Frequentes
+2025-02-19 11:27:25,013 - INFO - Created content: Perguntas Frequentes (ID: 5653626, Key: 5653624)
+2025-02-19 11:27:25,319 - INFO - Association result: {'message': 'Artigo 5653624 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_59359', 'status': 'SUCCESS'}
+2025-02-19 11:27:26,366 - INFO - Found page data: True
+2025-02-19 11:27:27,269 - INFO - No existing content found with title: Normas e Regulamentação
+2025-02-19 11:27:31,908 - INFO - Creating regular content for Normas e Regulamentação
+2025-02-19 11:27:32,500 - INFO - Created content: Normas e Regulamentação (ID: 5653646, Key: 5653644)
+2025-02-19 11:27:33,001 - INFO - Association result: {'message': 'Artigo 5653644 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_78231', 'status': 'SUCCESS'}
+2025-02-19 11:27:34,041 - INFO - Found page data: True
+2025-02-19 11:27:34,741 - INFO - No existing content found with title: Plano de Ação Anual
+2025-02-19 11:27:47,243 - INFO - Creating regular content for Plano de Ação Anual
+2025-02-19 11:27:48,168 - INFO - Created content: Plano de Ação Anual (ID: 5654806, Key: 5654804)
+2025-02-19 11:27:48,564 - INFO - Association result: {'message': 'Artigo 5654804 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_23212', 'status': 'SUCCESS'}
+2025-02-19 11:27:49,714 - INFO - Found page data: True
+2025-02-19 11:27:50,661 - INFO - No existing content found with title: Relatórios de Ouvidoria
+2025-02-19 11:28:15,046 - INFO - Creating regular content for Relatórios de Ouvidoria
+2025-02-19 11:28:15,809 - INFO - Created content: Relatórios de Ouvidoria (ID: 5655832, Key: 5655830)
+2025-02-19 11:28:16,213 - INFO - Association result: {'message': 'Artigo 5655830 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_12948', 'status': 'SUCCESS'}
+2025-02-19 11:28:17,871 - INFO - Found page data: True
+2025-02-19 11:28:18,643 - INFO - No existing content found with title: Serviço de Informações ao Cidadão – SIC
+2025-02-19 11:28:24,943 - INFO - Creating regular content for Serviço de Informações ao Cidadão – SIC
+2025-02-19 11:28:25,952 - INFO - Created content: Serviço de Informações ao Cidadão – SIC (ID: 5655881, Key: 5655879)
+2025-02-19 11:28:26,353 - INFO - Association result: {'message': 'Artigo 5655879 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_48382', 'status': 'SUCCESS'}
+2025-02-19 11:28:26,354 - INFO - Using cached content for Biblioteca
+2025-02-19 11:28:26,966 - INFO - Found page data: False
+2025-02-19 11:28:27,889 - INFO - No existing content found with title: Processo Seletivo
+2025-02-19 11:28:28,758 - INFO - Creating regular content for Processo Seletivo
+2025-02-19 11:28:29,432 - INFO - Created content: Processo Seletivo (ID: 5656603, Key: 5656601)
+2025-02-19 11:28:29,432 - INFO - Using cached content for Processo Seletivo
+2025-02-19 11:28:30,461 - INFO - Found page data: True
+2025-02-19 11:28:31,574 - INFO - No existing content found with title: Em Andamento
+2025-02-19 11:28:37,940 - INFO - Creating regular content for Em Andamento
+2025-02-19 11:28:38,543 - INFO - Created content: Em Andamento (ID: 5656631, Key: 5656629)
+2025-02-19 11:28:38,946 - INFO - Association result: {'message': 'Artigo 5656629 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_91567', 'status': 'SUCCESS'}
+2025-02-19 11:28:40,410 - INFO - Found page data: True
+2025-02-19 11:28:41,619 - INFO - No existing content found with title: ESP/DF em Andamento
+2025-02-19 11:28:50,852 - INFO - Creating regular content for ESP/DF em Andamento
+2025-02-19 11:28:51,133 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 1/3. Aguardando 1s...
+2025-02-19 11:28:52,568 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 2/3. Aguardando 2s...
+2025-02-19 11:28:55,435 - INFO - Association result: {'message': 'Artigo  associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_21656', 'status': 'SUCCESS'}
+2025-02-19 11:28:56,996 - INFO - Found page data: True
+2025-02-19 11:28:57,923 - INFO - No existing content found with title: Fepecs em Andamento
+2025-02-19 11:29:05,986 - INFO - Creating regular content for Fepecs em Andamento
+2025-02-19 11:29:06,286 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 1/3. Aguardando 1s...
+2025-02-19 11:29:07,617 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 2/3. Aguardando 2s...
+2025-02-19 11:29:10,382 - INFO - Association result: {'message': 'Artigo  associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_72669', 'status': 'SUCCESS'}
+2025-02-19 11:29:11,730 - INFO - Found page data: True
+2025-02-19 11:29:12,532 - INFO - No existing content found with title: Escs em Andamento
+2025-02-19 11:29:16,992 - INFO - Creating regular content for Escs em Andamento
+2025-02-19 11:29:17,448 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 1/3. Aguardando 1s...
+2025-02-19 11:29:18,782 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 2/3. Aguardando 2s...
+2025-02-19 11:29:21,550 - INFO - Association result: {'message': 'Artigo  associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_97969', 'status': 'SUCCESS'}
+2025-02-19 11:29:22,879 - INFO - Found page data: True
+2025-02-19 11:29:23,699 - INFO - No existing content found with title: Eapsus em Andamento
+2025-02-19 11:29:27,398 - INFO - Creating regular content for Eapsus em Andamento
+2025-02-19 11:29:27,790 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 1/3. Aguardando 1s...
+2025-02-19 11:29:29,126 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 2/3. Aguardando 2s...
+2025-02-19 11:29:31,997 - INFO - Association result: {'message': 'Artigo  associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_57833', 'status': 'SUCCESS'}
+2025-02-19 11:29:33,558 - INFO - Found page data: True
+2025-02-19 11:29:34,758 - INFO - No existing content found with title: Comitê Permanente de Processos Seletivos (CPPS)
+2025-02-19 11:29:39,085 - INFO - Creating regular content for Comitê Permanente de Processos Seletivos (CPPS)
+2025-02-19 11:29:39,981 - INFO - Created content: Comitê Permanente de Processos Seletivos (CPPS) (ID: 5658719, Key: 5658717)
+2025-02-19 11:29:40,489 - INFO - Association result: {'message': 'Artigo 5658717 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_20962', 'status': 'SUCCESS'}
+2025-02-19 11:29:41,621 - INFO - Found page data: True
+2025-02-19 11:29:42,441 - INFO - No existing content found with title: Encerrados
+2025-02-19 11:29:51,633 - INFO - Creating regular content for Encerrados
+2025-02-19 11:29:51,968 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 1/3. Aguardando 1s...
+2025-02-19 11:29:55,652 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 2/3. Aguardando 2s...
+2025-02-19 11:29:59,227 - INFO - Association result: {'message': 'Artigo  associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_97392', 'status': 'SUCCESS'}
+2025-02-19 11:30:00,750 - INFO - Found page data: True
+2025-02-19 11:30:02,244 - INFO - No existing content found with title: Serviços
+2025-02-19 11:30:02,654 - INFO - Creating regular content for Serviços
+2025-02-19 11:30:03,324 - INFO - Created content: Serviços (ID: 5658751, Key: 5658749)
+2025-02-19 11:30:03,597 - INFO - Association result: {'message': 'Artigo 5658749 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_39891', 'status': 'SUCCESS'}
+2025-02-19 11:30:03,598 - INFO - Using cached content for Serviços
+2025-02-19 11:30:03,939 - INFO - Using cached content for Serviços
+2025-02-19 11:30:05,506 - INFO - Found page data: True
+2025-02-19 11:30:06,708 - INFO - No existing content found with title: Carta de Serviços
+2025-02-19 11:30:12,865 - INFO - Creating regular content for Carta de Serviços
+2025-02-19 11:30:13,358 - INFO - Created content: Carta de Serviços (ID: 5658771, Key: 5658769)
+2025-02-19 11:30:13,671 - INFO - Association result: {'message': 'Artigo 5658769 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_35436', 'status': 'SUCCESS'}
+2025-02-19 11:30:14,882 - INFO - Found page data: True
+2025-02-19 11:30:16,022 - INFO - No existing content found with title: Apresentação da Carta
+2025-02-19 11:30:20,237 - INFO - Creating regular content for Apresentação da Carta
+2025-02-19 11:30:20,842 - INFO - Created content: Apresentação da Carta (ID: 5658791, Key: 5658789)
+2025-02-19 11:30:21,242 - INFO - Association result: {'message': 'Artigo 5658789 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_91138', 'status': 'SUCCESS'}
+2025-02-19 11:30:22,696 - INFO - Found page data: True
+2025-02-19 11:30:23,803 - INFO - No existing content found with title: Serviços para o Cidadão
+2025-02-19 11:30:28,544 - INFO - Creating regular content for Serviços para o Cidadão
+2025-02-19 11:30:28,922 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 1/3. Aguardando 1s...
+2025-02-19 11:30:30,255 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 2/3. Aguardando 2s...
+2025-02-19 11:30:32,917 - INFO - Association result: {'message': 'Artigo  associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_62890', 'status': 'SUCCESS'}
+2025-02-19 11:30:34,063 - INFO - Found page data: True
+2025-02-19 11:30:34,706 - INFO - No existing content found with title: Serviços para o Estudante
+2025-02-19 11:30:39,593 - INFO - Creating regular content for Serviços para o Estudante
+2025-02-19 11:30:39,882 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 1/3. Aguardando 1s...
+2025-02-19 11:30:41,313 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 2/3. Aguardando 2s...
+2025-02-19 11:30:44,078 - INFO - Association result: {'message': 'Artigo  associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_88118', 'status': 'SUCCESS'}
+2025-02-19 11:30:45,123 - INFO - Found page data: True
+2025-02-19 11:30:46,027 - INFO - No existing content found with title: Serviços para o Servidor
+2025-02-19 11:30:54,961 - INFO - Creating regular content for Serviços para o Servidor
+2025-02-19 11:30:55,243 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 1/3. Aguardando 1s...
+2025-02-19 11:30:56,569 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 2/3. Aguardando 2s...
+2025-02-19 11:30:59,438 - INFO - Association result: {'message': 'Artigo  associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_62195', 'status': 'SUCCESS'}
+2025-02-19 11:30:59,439 - INFO - Using cached content for Ouvidoria
+2025-02-19 11:31:00,791 - INFO - Found page data: True
+2025-02-19 11:31:01,593 - INFO - No existing content found with title: Serviço de Informação ao Cidadão – SIC
+2025-02-19 11:31:09,176 - INFO - Creating regular content for Serviço de Informação ao Cidadão – SIC
+2025-02-19 11:31:09,682 - INFO - Created content: Serviço de Informação ao Cidadão – SIC (ID: 5660883, Key: 5660881)
+2025-02-19 11:31:09,990 - INFO - Association result: {'message': 'Artigo 5660881 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_42484', 'status': 'SUCCESS'}
+2025-02-19 11:31:11,030 - INFO - Found page data: True
+2025-02-19 11:31:11,726 - INFO - No existing content found with title: Imprima aqui a sua carta de serviços
+2025-02-19 11:31:21,462 - INFO - Creating regular content for Imprima aqui a sua carta de serviços
+2025-02-19 11:31:22,070 - INFO - Created content: Imprima aqui a sua carta de serviços (ID: 5662823, Key: 5662821)
+2025-02-19 11:31:22,377 - INFO - Association result: {'message': 'Artigo 5662821 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_85961', 'status': 'SUCCESS'}
+2025-02-19 11:31:23,558 - INFO - Found page data: True
+2025-02-19 11:31:24,742 - INFO - No existing content found with title: Avalie a Carta de Serviços ao cidadão
+2025-02-19 11:31:28,760 - INFO - Creating regular content for Avalie a Carta de Serviços ao cidadão
+2025-02-19 11:31:29,237 - INFO - Created content: Avalie a Carta de Serviços ao cidadão (ID: 5662845, Key: 5662843)
+2025-02-19 11:31:29,560 - INFO - Association result: {'message': 'Artigo 5662843 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_12781', 'status': 'SUCCESS'}
+2025-02-19 11:31:30,483 - INFO - Found page data: True
+2025-02-19 11:31:31,172 - INFO - No existing content found with title: Informações
+2025-02-19 11:31:36,126 - INFO - Creating regular content for Informações
+2025-02-19 11:31:36,718 - INFO - Created content: Informações (ID: 5662865, Key: 5662863)
+2025-02-19 11:31:37,026 - INFO - Association result: {'message': 'Artigo 5662863 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_94368', 'status': 'SUCCESS'}
+2025-02-19 11:31:38,162 - INFO - Found page data: True
+2025-02-19 11:31:39,273 - INFO - No existing content found with title: Comissão de Ética da FEPECS
+2025-02-19 11:31:43,689 - INFO - Creating regular content for Comissão de Ética da FEPECS
+2025-02-19 11:31:44,062 - INFO - Created content: Comissão de Ética da FEPECS (ID: 5662885, Key: 5662883)
+2025-02-19 11:31:44,495 - INFO - Association result: {'message': 'Artigo 5662883 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_89050', 'status': 'SUCCESS'}
+2025-02-19 11:31:45,642 - INFO - Found page data: True
+2025-02-19 11:31:46,337 - INFO - No existing content found with title: Conselho Fiscal
+2025-02-19 11:31:59,282 - INFO - Creating regular content for Conselho Fiscal
+2025-02-19 11:31:59,965 - INFO - Created content: Conselho Fiscal (ID: 5663935, Key: 5663933)
+2025-02-19 11:32:00,370 - INFO - Association result: {'message': 'Artigo 5663933 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_65040', 'status': 'SUCCESS'}
+2025-02-19 11:32:01,626 - INFO - Found page data: True
+2025-02-19 11:32:02,619 - INFO - No existing content found with title: Conselho Deliberativo
+2025-02-19 11:32:22,306 - INFO - Creating regular content for Conselho Deliberativo
+2025-02-19 11:32:23,104 - INFO - Created content: Conselho Deliberativo (ID: 5663992, Key: 5663990)
+2025-02-19 11:32:23,418 - INFO - Association result: {'message': 'Artigo 5663990 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_29775', 'status': 'SUCCESS'}
+2025-02-19 11:32:24,653 - INFO - Found page data: True
+2025-02-19 11:32:25,760 - INFO - No existing content found with title: Saúde Legal
+2025-02-19 11:32:32,037 - INFO - Creating regular content for Saúde Legal
+2025-02-19 11:32:32,521 - INFO - Created content: Saúde Legal (ID: 5665314, Key: 5665312)
+2025-02-19 11:32:32,826 - INFO - Association result: {'message': 'Artigo 5665312 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_62657', 'status': 'SUCCESS'}
+2025-02-19 11:32:33,442 - INFO - Found page data: False
+2025-02-19 11:32:34,469 - INFO - No existing content found with title: Planejamento
+2025-02-19 11:32:35,131 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea/migrador-liferay/migrador-liferay/web_content_creator.py", line 311, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-19 11:32:35,797 - INFO - Found page data: False
+2025-02-19 11:32:36,104 - INFO - No existing content found with title: Planejamento
+2025-02-19 11:32:39,883 - INFO - Creating regular content for Planejamento
+2025-02-19 11:32:40,405 - INFO - Created content: Planejamento (ID: 5665334, Key: 5665332)
+2025-02-19 11:32:41,229 - INFO - Found page data: True
+2025-02-19 11:32:42,247 - INFO - No existing content found with title: Mapa Estratégico
+2025-02-19 11:32:51,571 - INFO - Creating regular content for Mapa Estratégico
+2025-02-19 11:32:52,079 - INFO - Created content: Mapa Estratégico (ID: 5665372, Key: 5665370)
+2025-02-19 11:32:52,384 - INFO - Association result: {'message': 'Artigo 5665370 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_53107', 'status': 'SUCCESS'}
+2025-02-19 11:32:53,307 - INFO - Found page data: False
+2025-02-19 11:32:54,133 - INFO - No existing content found with title: Planejamento Estratégico
+2025-02-19 11:32:54,446 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea/migrador-liferay/migrador-liferay/web_content_creator.py", line 311, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-19 11:32:55,368 - INFO - Found page data: True
+2025-02-19 11:32:56,174 - INFO - No existing content found with title: Sistema de Acompanhamento Governamental – SAG
+2025-02-19 11:33:06,830 - INFO - Creating regular content for Sistema de Acompanhamento Governamental – SAG
+2025-02-19 11:33:07,649 - INFO - Created content: Sistema de Acompanhamento Governamental – SAG (ID: 5666916, Key: 5666914)
+2025-02-19 11:33:08,053 - INFO - Association result: {'message': 'Artigo 5666914 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_70382', 'status': 'SUCCESS'}
+2025-02-19 11:33:09,499 - INFO - Found page data: True
+2025-02-19 11:33:10,824 - INFO - No existing content found with title: Plano Distrital de Saúde – PDS
+2025-02-19 11:33:25,275 - INFO - Creating regular content for Plano Distrital de Saúde – PDS
+2025-02-19 11:33:26,095 - INFO - Created content: Plano Distrital de Saúde – PDS (ID: 5666959, Key: 5666957)
+2025-02-19 11:33:26,503 - INFO - Association result: {'message': 'Artigo 5666957 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_79320', 'status': 'SUCCESS'}
+2025-02-19 11:33:27,821 - INFO - Found page data: True
+2025-02-19 11:33:28,744 - INFO - No existing content found with title: Plano Plurianual – PPA
+2025-02-19 11:33:51,179 - INFO - Creating regular content for Plano Plurianual – PPA
+2025-02-19 11:33:51,890 - INFO - Created content: Plano Plurianual – PPA (ID: 5668230, Key: 5668228)
+2025-02-19 11:33:52,514 - INFO - Association result: {'message': 'Artigo 5668228 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_79890', 'status': 'SUCCESS'}
+2025-02-19 11:33:53,739 - INFO - Found page data: True
+2025-02-19 11:33:54,659 - INFO - No existing content found with title: Plano Diretor de Tecnologia da Informação – PDTI 2020/2022
+2025-02-19 11:34:07,255 - INFO - Creating regular content for Plano Diretor de Tecnologia da Informação – PDTI 2020/2022
+2025-02-19 11:34:07,860 - INFO - Created content: Plano Diretor de Tecnologia da Informação – PDTI 2020/2022 (ID: 5668275, Key: 5668273)
+2025-02-19 11:34:08,474 - INFO - Association result: {'message': 'Artigo 5668273 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_95940', 'status': 'SUCCESS'}
+2025-02-19 11:34:09,426 - INFO - Found page data: True
+2025-02-19 11:34:10,625 - INFO - No existing content found with title: Relatórios
+2025-02-19 11:34:11,597 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea/migrador-liferay/migrador-liferay/web_content_creator.py", line 311, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-19 11:34:12,371 - INFO - Found page data: True
+2025-02-19 11:34:13,387 - INFO - No existing content found with title: Relatórios Quadrimestrais
+2025-02-19 11:34:29,289 - INFO - Creating regular content for Relatórios Quadrimestrais
+2025-02-19 11:34:30,386 - INFO - Created content: Relatórios Quadrimestrais (ID: 5670018, Key: 5670016)
+2025-02-19 11:34:30,794 - INFO - Association result: {'message': 'Artigo 5670016 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_20306', 'status': 'SUCCESS'}
+2025-02-19 11:34:32,129 - INFO - Found page data: True
+2025-02-19 11:34:33,455 - INFO - No existing content found with title: Relatório Anuais
+2025-02-19 11:35:07,671 - INFO - Creating regular content for Relatório Anuais
+2025-02-19 11:35:08,686 - INFO - Created content: Relatório Anuais (ID: 5670782, Key: 5670780)
+2025-02-19 11:35:09,299 - INFO - Association result: {'message': 'Artigo 5670780 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_28013', 'status': 'SUCCESS'}
+2025-02-19 11:35:10,671 - INFO - Found page data: True
+2025-02-19 11:35:12,067 - INFO - No existing content found with title: Comitê Ética em Pesquisa
+2025-02-19 11:35:15,853 - INFO - Creating regular content for Comitê Ética em Pesquisa
+2025-02-19 11:35:16,677 - INFO - Created content: Comitê Ética em Pesquisa (ID: 5671609, Key: 5671607)
+2025-02-19 11:35:16,980 - INFO - Association result: {'message': 'Artigo 5671607 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_98105', 'status': 'SUCCESS'}
+2025-02-19 11:35:18,309 - INFO - Found page data: True
+2025-02-19 11:35:19,435 - INFO - No existing content found with title: Notícias
+2025-02-19 11:35:24,567 - INFO - Creating regular content for Notícias
+2025-02-19 11:35:24,967 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 1/3. Aguardando 1s...
+2025-02-19 11:35:26,293 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 2/3. Aguardando 2s...
+2025-02-19 11:35:29,057 - INFO - Association result: {'message': 'Artigo  associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_43275', 'status': 'SUCCESS'}
+2025-02-19 11:35:29,058 - INFO - Using cached content for Notícias
+2025-02-19 11:35:29,980 - INFO - Found page data: False
+2025-02-19 11:35:30,757 - INFO - No existing content found with title: SICOPWEB
+2025-02-19 11:35:31,321 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea/migrador-liferay/migrador-liferay/web_content_creator.py", line 311, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-19 11:35:32,647 - INFO - Found page data: False
+2025-02-19 11:35:33,483 - INFO - No existing content found with title: DF Legis
+2025-02-19 11:35:33,651 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea/migrador-liferay/migrador-liferay/web_content_creator.py", line 311, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-19 11:35:34,382 - INFO - Found page data: False
+2025-02-19 11:35:36,844 - INFO - No existing content found with title: SINJ-DF
+2025-02-19 11:35:37,054 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea/migrador-liferay/migrador-liferay/web_content_creator.py", line 311, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-19 11:35:37,659 - INFO - Found page data: False
+2025-02-19 11:35:38,888 - INFO - No existing content found with title: E-PROTOCOLO
+2025-02-19 11:35:39,105 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea/migrador-liferay/migrador-liferay/web_content_creator.py", line 311, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-19 11:35:40,329 - INFO - Found page data: True
+2025-02-19 11:35:43,396 - INFO - No existing content found with title: Fale com a secretaria
+2025-02-19 11:35:47,302 - INFO - Creating regular content for Fale com a secretaria
+2025-02-19 11:35:47,593 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 1/3. Aguardando 1s...
+2025-02-19 11:35:48,927 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 2/3. Aguardando 2s...
+2025-02-19 11:35:51,697 - INFO - Association result: {'message': 'Artigo  associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_57571', 'status': 'SUCCESS'}
+2025-02-19 11:35:52,001 - INFO - Found page data: False
+2025-02-19 11:35:52,712 - INFO - No existing content found with title: Sem Categoria
+2025-02-19 11:35:53,227 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea/migrador-liferay/migrador-liferay/web_content_creator.py", line 311, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-19 11:35:53,943 - INFO - Found page data: True
+2025-02-19 11:35:55,072 - INFO - No existing content found with title: Video
+2025-02-19 11:35:58,771 - INFO - Creating regular content for Video
+2025-02-19 11:35:59,267 - INFO - Created content: Video (ID: 5671679, Key: 5671677)
+2025-02-19 11:35:59,577 - INFO - Association result: {'message': 'Artigo 5671677 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_16050', 'status': 'SUCCESS'}
+2025-02-19 11:36:00,704 - INFO - Found page data: True
+2025-02-19 11:36:01,453 - INFO - No existing content found with title: Audio
+2025-02-19 11:36:10,145 - INFO - Creating regular content for Audio
+2025-02-19 11:36:10,839 - INFO - Created content: Audio (ID: 5671699, Key: 5671697)
+2025-02-19 11:36:11,144 - INFO - Association result: {'message': 'Artigo 5671697 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_47551', 'status': 'SUCCESS'}
+2025-02-19 11:36:12,586 - INFO - Found page data: True
+2025-02-19 11:36:13,396 - INFO - No existing content found with title: Flickr
+2025-02-19 11:36:17,199 - INFO - Creating regular content for Flickr
+2025-02-19 11:36:17,698 - INFO - Created content: Flickr (ID: 5673319, Key: 5673317)
+2025-02-19 11:36:18,005 - INFO - Association result: {'message': 'Artigo 5673317 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_44735', 'status': 'SUCCESS'}
+2025-02-19 11:36:19,343 - INFO - Found page data: True
+2025-02-19 11:36:20,156 - INFO - No existing content found with title: Ajax
+2025-02-19 11:36:24,195 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea/migrador-liferay/migrador-liferay/web_content_creator.py", line 311, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-19 11:36:25,179 - INFO - Found page data: True
+2025-02-19 11:36:26,070 - INFO - No existing content found with title: Gerenciar Módulos da Home
+2025-02-19 11:36:30,045 - INFO - Creating regular content for Gerenciar Módulos da Home
+2025-02-19 11:36:30,452 - INFO - Created content: Gerenciar Módulos da Home (ID: 5673347, Key: 5673345)
+2025-02-19 11:36:30,807 - INFO - Association result: {'message': 'Artigo 5673345 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_19473', 'status': 'SUCCESS'}
+2025-02-19 11:36:31,834 - INFO - Found page data: True
+2025-02-19 11:36:32,548 - INFO - No existing content found with title: Histórico
+2025-02-19 11:36:36,387 - INFO - Creating regular content for Histórico
+2025-02-19 11:36:36,955 - INFO - Created content: Histórico (ID: 5673367, Key: 5673365)
+2025-02-19 11:36:37,269 - INFO - Association result: {'message': 'Artigo 5673365 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_29936', 'status': 'SUCCESS'}
+2025-02-19 11:36:38,707 - INFO - Found page data: True
+2025-02-19 11:36:39,714 - INFO - No existing content found with title: Modulo-15-Botoes
+2025-02-19 11:36:43,522 - INFO - Creating regular content for Modulo-15-Botoes
+2025-02-19 11:36:43,762 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 1/3. Aguardando 1s...
+2025-02-19 11:36:45,084 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 2/3. Aguardando 2s...
+2025-02-19 11:36:47,808 - INFO - Association result: {'message': 'Artigo  associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_20542', 'status': 'SUCCESS'}
+2025-02-19 11:36:47,809 - INFO - Using cached content for Perguntas Frequentes
+2025-02-19 11:36:48,423 - INFO - Found page data: False
+2025-02-19 11:36:49,802 - INFO - No existing content found with title: Perguntas frequentes da Escola Técnica de Saúde de Brasília (ETESB)
+2025-02-19 11:36:53,712 - INFO - Creating regular content for Perguntas frequentes da Escola Técnica de Saúde de Brasília (ETESB)
+2025-02-19 11:36:54,255 - INFO - Created content: Perguntas frequentes da Escola Técnica de Saúde de Brasília (ETESB) (ID: 5673399, Key: 5673397)
+2025-02-19 11:36:55,578 - INFO - Found page data: True
+2025-02-19 11:36:56,514 - INFO - No existing content found with title: Perguntas frequentes da Escola de Aperfeiçoamento do Sistema Único de Saúde (EAPSUS)
+2025-02-19 11:37:01,535 - INFO - Creating regular content for Perguntas frequentes da Escola de Aperfeiçoamento do Sistema Único de Saúde (EAPSUS)
+2025-02-19 11:37:02,355 - INFO - Created content: Perguntas frequentes da Escola de Aperfeiçoamento do Sistema Único de Saúde (EAPSUS) (ID: 5675128, Key: 5675126)
+2025-02-19 11:37:02,660 - INFO - Association result: {'message': 'Artigo 5675126 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_92045', 'status': 'SUCCESS'}
+2025-02-19 11:37:03,805 - INFO - Found page data: True
+2025-02-19 11:37:04,597 - INFO - No existing content found with title: Perguntas frequentes da Escola Superior de Ciências da Saúde (ESCS)
+2025-02-19 11:37:13,768 - INFO - Creating regular content for Perguntas frequentes da Escola Superior de Ciências da Saúde (ESCS)
+2025-02-19 11:37:14,430 - INFO - Created content: Perguntas frequentes da Escola Superior de Ciências da Saúde (ESCS) (ID: 5675149, Key: 5675147)
+2025-02-19 11:37:14,740 - INFO - Association result: {'message': 'Artigo 5675147 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_26243', 'status': 'SUCCESS'}
+2025-02-19 11:37:15,655 - INFO - Found page data: True
+2025-02-19 11:37:16,682 - INFO - No existing content found with title: Perguntas frequentes da Fundação de Ensino e Pesquisa em Ciências da Saúde (FEPECS)
+2025-02-19 11:37:20,254 - INFO - Creating regular content for Perguntas frequentes da Fundação de Ensino e Pesquisa em Ciências da Saúde (FEPECS)
+2025-02-19 11:37:20,783 - INFO - Created content: Perguntas frequentes da Fundação de Ensino e Pesquisa em Ciências da Saúde (FEPECS) (ID: 5675169, Key: 5675167)
+2025-02-19 11:37:21,188 - INFO - Association result: {'message': 'Artigo 5675167 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_40262', 'status': 'SUCCESS'}
+2025-02-19 11:37:21,191 - INFO - Recursos fechados com sucesso
+2025-02-19 11:37:21,195 - INFO - Inicializando sessões dos criadores em paralelo
+2025-02-19 11:37:21,195 - INFO - Sessões inicializadas com sucesso
+2025-02-19 11:37:21,195 - INFO - Recursos fechados com sucesso
+2025-02-19 11:46:15,209 - INFO - Inicializando sessões dos criadores em paralelo
+2025-02-19 11:46:15,209 - INFO - Sessões inicializadas com sucesso
+2025-02-19 11:46:15,934 - INFO - Found page data: True
+2025-02-19 11:46:16,640 - INFO - No existing content found with title: Home
+2025-02-19 11:46:21,588 - INFO - Creating regular content for Home
+2025-02-19 11:46:22,069 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 1/3. Aguardando 1s...
+2025-02-19 11:46:23,507 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 2/3. Aguardando 2s...
+2025-02-19 11:46:27,200 - INFO - Association result: {'message': 'Artigo  associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_34583', 'status': 'SUCCESS'}
+2025-02-19 11:46:27,460 - INFO - Found page data: False
+2025-02-19 11:46:27,809 - INFO - Found existing content: Escolas (ID: 5637603, Key: 5637601)
+2025-02-19 11:46:27,809 - INFO - Using cached content for Escolas
+2025-02-19 11:46:29,161 - INFO - Found page data: False
+2025-02-19 11:46:30,166 - INFO - No existing content found with title: ESCS - Escola Superior de Ciências da Saúde
+2025-02-19 11:46:30,648 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea/migrador-liferay/migrador-liferay/web_content_creator.py", line 311, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-19 11:46:31,429 - INFO - Found page data: False
+2025-02-19 11:46:32,168 - INFO - No existing content found with title: ESPDF - Escola de Saúde Pública do Distrito Federal
+2025-02-19 11:46:32,696 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea/migrador-liferay/migrador-liferay/web_content_creator.py", line 311, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-19 11:46:33,070 - INFO - Found page data: False
+2025-02-19 11:46:33,339 - INFO - Found existing content: Quem Somos (ID: 5637679, Key: 5637677)
+2025-02-19 11:46:33,340 - INFO - Using cached content for Quem Somos
+2025-02-19 11:46:34,501 - INFO - Found page data: True
+2025-02-19 11:46:35,424 - INFO - Found existing content: Estrutura (ID: 5638469, Key: 5638467)
+2025-02-19 11:46:35,700 - INFO - Association result: {'message': 'Artigo 5638467 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_24477', 'status': 'SUCCESS'}
+2025-02-19 11:46:35,701 - INFO - Using cached content for Estrutura
+2025-02-19 11:46:36,828 - INFO - Found page data: True
+2025-02-19 11:46:37,122 - INFO - Found existing content: Competências (ID: 5639134, Key: 5639132)
+2025-02-19 11:46:37,450 - INFO - Association result: {'message': 'Artigo 5639132 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_36007', 'status': 'SUCCESS'}
+2025-02-19 11:46:38,367 - INFO - Found page data: True
+2025-02-19 11:46:39,064 - INFO - Found existing content: Competências da ESCS (ID: 5639175, Key: 5639173)
+2025-02-19 11:46:39,382 - INFO - Association result: {'message': 'Artigo 5639173 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_17930', 'status': 'SUCCESS'}
+2025-02-19 11:46:40,378 - INFO - Found page data: True
+2025-02-19 11:46:40,836 - INFO - Found existing content: Competências da EAPSUS (ID: 5639931, Key: 5639929)
+2025-02-19 11:46:41,095 - INFO - Association result: {'message': 'Artigo 5639929 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_84725', 'status': 'SUCCESS'}
+2025-02-19 11:46:41,963 - INFO - Found page data: True
+2025-02-19 11:46:42,263 - INFO - Found existing content: Competências da ETESB (ID: 5639983, Key: 5639981)
+2025-02-19 11:46:42,523 - INFO - Association result: {'message': 'Artigo 5639981 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_67942', 'status': 'SUCCESS'}
+2025-02-19 11:46:43,380 - INFO - Found page data: True
+2025-02-19 11:46:43,672 - INFO - Found existing content: Contatos (ID: 5640331, Key: 5640329)
+2025-02-19 11:46:43,979 - INFO - Association result: {'message': 'Artigo 5640329 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_42610', 'status': 'SUCCESS'}
+2025-02-19 11:46:44,902 - INFO - Found page data: True
+2025-02-19 11:46:45,211 - INFO - Found existing content: Quem é Quem (ID: 5641705, Key: 5641703)
+2025-02-19 11:46:45,520 - INFO - Association result: {'message': 'Artigo 5641703 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_25478', 'status': 'SUCCESS'}
+2025-02-19 11:46:46,477 - INFO - Found page data: True
+2025-02-19 11:46:46,847 - INFO - No existing content found with title: Agenda da Secretária
+2025-02-19 11:46:51,909 - INFO - Creating regular content for Agenda da Secretária
+2025-02-19 11:46:52,291 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 1/3. Aguardando 1s...
+2025-02-19 11:46:53,847 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 2/3. Aguardando 2s...
+2025-02-19 11:46:56,581 - INFO - Association result: {'message': 'Artigo  associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_95753', 'status': 'SUCCESS'}
+2025-02-19 11:46:57,502 - INFO - Found page data: True
+2025-02-19 11:46:57,908 - INFO - Found existing content: Agenda Teste (ID: 5641750, Key: 5641748)
+2025-02-19 11:46:58,213 - INFO - Association result: {'message': 'Artigo 5641748 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_10106', 'status': 'SUCCESS'}
+2025-02-19 11:46:58,965 - INFO - Found page data: True
+2025-02-19 11:46:59,248 - INFO - Found existing content: Base Jurídica (ID: 5643219, Key: 5643217)
+2025-02-19 11:46:59,550 - INFO - Association result: {'message': 'Artigo 5643217 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_40578', 'status': 'SUCCESS'}
+2025-02-19 11:47:00,269 - INFO - Found page data: True
+2025-02-19 11:47:00,578 - INFO - No existing content found with title: Governança
+2025-02-19 11:47:00,834 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea/migrador-liferay/migrador-liferay/web_content_creator.py", line 311, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-19 11:47:01,742 - INFO - Found page data: True
+2025-02-19 11:47:02,412 - INFO - Found existing content: Comitê Interno de Governança (CIG) (ID: 5643245, Key: 5643243)
+2025-02-19 11:47:02,659 - INFO - Association result: {'message': 'Artigo 5643243 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_61111', 'status': 'SUCCESS'}
+2025-02-19 11:47:03,461 - INFO - Found page data: True
+2025-02-19 11:47:03,710 - INFO - Found existing content: Comissão de Ética (ID: 5643295, Key: 5643293)
+2025-02-19 11:47:04,050 - INFO - Association result: {'message': 'Artigo 5643293 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_49637', 'status': 'SUCCESS'}
+2025-02-19 11:47:04,914 - INFO - Found page data: True
+2025-02-19 11:47:05,282 - INFO - Found existing content: Legislação (ID: 5644028, Key: 5644026)
+2025-02-19 11:47:05,586 - INFO - Association result: {'message': 'Artigo 5644026 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_76588', 'status': 'SUCCESS'}
+2025-02-19 11:47:06,356 - INFO - Found page data: True
+2025-02-19 11:47:06,719 - INFO - Found existing content: Biblioteca (ID: 5645203, Key: 5645201)
+2025-02-19 11:47:07,021 - INFO - Association result: {'message': 'Artigo 5645201 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_47043', 'status': 'SUCCESS'}
+2025-02-19 11:47:07,022 - INFO - Using cached content for Comitê Interno de Governança (CIG)
+2025-02-19 11:47:07,874 - INFO - Found page data: False
+2025-02-19 11:47:08,251 - INFO - No existing content found with title: Transparência
+2025-02-19 11:47:09,285 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea/migrador-liferay/migrador-liferay/web_content_creator.py", line 311, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-19 11:47:10,094 - INFO - Found page data: False
+2025-02-19 11:47:10,760 - INFO - No existing content found with title: Gestão de Riscos
+2025-02-19 11:47:11,159 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea/migrador-liferay/migrador-liferay/web_content_creator.py", line 311, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-19 11:47:12,265 - INFO - Found page data: False
+2025-02-19 11:47:13,295 - INFO - No existing content found with title: Política de Gestão de Riscos
+2025-02-19 11:47:13,664 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea/migrador-liferay/migrador-liferay/web_content_creator.py", line 311, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-19 11:47:14,339 - INFO - Found page data: False
+2025-02-19 11:47:14,916 - INFO - No existing content found with title: Programa de Integridade
+2025-02-19 11:47:15,184 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea/migrador-liferay/migrador-liferay/web_content_creator.py", line 311, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-19 11:47:16,065 - INFO - Found page data: False
+2025-02-19 11:47:16,899 - INFO - No existing content found with title: Política de Integridade
+2025-02-19 11:47:17,247 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea/migrador-liferay/migrador-liferay/web_content_creator.py", line 311, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-19 11:47:17,905 - INFO - Found page data: False
+2025-02-19 11:47:18,434 - INFO - No existing content found with title: Programa de Integridade Privada
+2025-02-19 11:47:18,735 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea/migrador-liferay/migrador-liferay/web_content_creator.py", line 311, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-19 11:47:19,419 - INFO - Found page data: False
+2025-02-19 11:47:19,922 - INFO - Found existing content: Transparência (ID: 5645256, Key: 5645254)
+2025-02-19 11:47:21,081 - INFO - Found page data: True
+2025-02-19 11:47:21,676 - INFO - Found existing content: Conheça a Lei de Acesso à Informação na FEPECS (ID: 5645275, Key: 5645273)
+2025-02-19 11:47:21,982 - INFO - Association result: {'message': 'Artigo 5645273 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_52922', 'status': 'SUCCESS'}
+2025-02-19 11:47:22,935 - INFO - Found page data: True
+2025-02-19 11:47:23,405 - INFO - Found existing content: Institucional (ID: 5645295, Key: 5645293)
+2025-02-19 11:47:23,715 - INFO - Association result: {'message': 'Artigo 5645293 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_96810', 'status': 'SUCCESS'}
+2025-02-19 11:47:24,578 - INFO - Found page data: True
+2025-02-19 11:47:24,948 - INFO - Found existing content: Ações e Programas (ID: 5646515, Key: 5646513)
+2025-02-19 11:47:25,395 - INFO - Association result: {'message': 'Artigo 5646513 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_88924', 'status': 'SUCCESS'}
+2025-02-19 11:47:26,349 - INFO - Found page data: True
+2025-02-19 11:47:26,681 - INFO - Found existing content: Auditorias (ID: 5646535, Key: 5646533)
+2025-02-19 11:47:26,987 - INFO - Association result: {'message': 'Artigo 5646533 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_18974', 'status': 'SUCCESS'}
+2025-02-19 11:47:28,208 - INFO - Found page data: True
+2025-02-19 11:47:28,525 - INFO - Found existing content: Convênios (ID: 5648012, Key: 5648010)
+2025-02-19 11:47:29,065 - INFO - Association result: {'message': 'Artigo 5648010 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_68052', 'status': 'SUCCESS'}
+2025-02-19 11:47:30,053 - INFO - Found page data: True
+2025-02-19 11:47:30,370 - INFO - No existing content found with title: Despesas
+2025-02-19 11:47:40,412 - INFO - Creating regular content for Despesas
+2025-02-19 11:47:40,717 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 1/3. Aguardando 1s...
+2025-02-19 11:47:42,143 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 2/3. Aguardando 2s...
+2025-02-19 11:47:44,805 - INFO - Association result: {'message': 'Artigo  associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_68173', 'status': 'SUCCESS'}
+2025-02-19 11:47:46,040 - INFO - Found page data: True
+2025-02-19 11:47:46,683 - INFO - Found existing content: Diárias e Passagens 2022 (ID: 5649123, Key: 5649121)
+2025-02-19 11:47:46,933 - INFO - Association result: {'message': 'Artigo 5649121 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_96805', 'status': 'SUCCESS'}
+2025-02-19 11:47:47,704 - INFO - Found page data: True
+2025-02-19 11:47:47,987 - INFO - Found existing content: Diárias e Passagens 2019 (ID: 5649145, Key: 5649143)
+2025-02-19 11:47:48,287 - INFO - Association result: {'message': 'Artigo 5649143 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_55881', 'status': 'SUCCESS'}
+2025-02-19 11:47:49,318 - INFO - Found page data: True
+2025-02-19 11:47:49,725 - INFO - Found existing content: Diárias e Passagens (ID: 5649738, Key: 5649736)
+2025-02-19 11:47:50,033 - INFO - Association result: {'message': 'Artigo 5649736 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_61823', 'status': 'SUCCESS'}
+2025-02-19 11:47:50,034 - INFO - Using cached content for Despesas
+2025-02-19 11:47:51,488 - INFO - Found page data: True
+2025-02-19 11:47:51,795 - INFO - No existing content found with title: Licitações e Contratos
+2025-02-19 11:47:55,790 - INFO - Creating regular content for Licitações e Contratos
+2025-02-19 11:47:56,089 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 1/3. Aguardando 1s...
+2025-02-19 11:47:57,511 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 2/3. Aguardando 2s...
+2025-02-19 11:48:00,270 - INFO - Association result: {'message': 'Artigo  associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_49530', 'status': 'SUCCESS'}
+2025-02-19 11:48:00,270 - INFO - Using cached content for Licitações e Contratos
+2025-02-19 11:48:01,409 - INFO - Found page data: True
+2025-02-19 11:48:01,804 - INFO - Found existing content: Servidores (ID: 5650720, Key: 5650718)
+2025-02-19 11:48:02,034 - INFO - Association result: {'message': 'Artigo 5650718 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_57999', 'status': 'SUCCESS'}
+2025-02-19 11:48:02,960 - INFO - Found page data: True
+2025-02-19 11:48:03,238 - INFO - Found existing content: Informações Classificadas (ID: 5650749, Key: 5650747)
+2025-02-19 11:48:03,552 - INFO - Association result: {'message': 'Artigo 5650747 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_83553', 'status': 'SUCCESS'}
+2025-02-19 11:48:04,387 - INFO - Found page data: True
+2025-02-19 11:48:04,783 - INFO - Found existing content: Perguntas Frequentes da LAI (ID: 5650771, Key: 5650769)
+2025-02-19 11:48:05,081 - INFO - Association result: {'message': 'Artigo 5650769 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_98560', 'status': 'SUCCESS'}
+2025-02-19 11:48:06,231 - INFO - Found page data: True
+2025-02-19 11:48:06,668 - INFO - Found existing content: Perguntas Frequentes da FEPECS (ID: 5650792, Key: 5650790)
+2025-02-19 11:48:07,029 - INFO - Association result: {'message': 'Artigo 5650790 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_35060', 'status': 'SUCCESS'}
+2025-02-19 11:48:07,777 - INFO - Found page data: True
+2025-02-19 11:48:08,022 - INFO - Found existing content: Serviço de Informação ao Cidadão (SIC) (ID: 5651522, Key: 5651520)
+2025-02-19 11:48:08,261 - INFO - Association result: {'message': 'Artigo 5651520 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_54324', 'status': 'SUCCESS'}
+2025-02-19 11:48:09,095 - INFO - Found page data: True
+2025-02-19 11:48:09,381 - INFO - Found existing content: Ouvidoria (ID: 5651543, Key: 5651541)
+2025-02-19 11:48:09,689 - INFO - Association result: {'message': 'Artigo 5651541 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_88001', 'status': 'SUCCESS'}
+2025-02-19 11:48:10,541 - INFO - Found page data: True
+2025-02-19 11:48:11,227 - INFO - Found existing content: A Ouvidoria da Fepecs (ID: 5651563, Key: 5651561)
+2025-02-19 11:48:11,539 - INFO - Association result: {'message': 'Artigo 5651561 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_24200', 'status': 'SUCCESS'}
+2025-02-19 11:48:12,446 - INFO - Found page data: True
+2025-02-19 11:48:12,762 - INFO - Found existing content: Perfil do Ouvidor (ID: 5652604, Key: 5652602)
+2025-02-19 11:48:13,077 - INFO - Association result: {'message': 'Artigo 5652602 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_18329', 'status': 'SUCCESS'}
+2025-02-19 11:48:14,104 - INFO - Found page data: True
+2025-02-19 11:48:14,508 - INFO - Found existing content: Tipos de Manifestações (ID: 5652626, Key: 5652624)
+2025-02-19 11:48:14,815 - INFO - Association result: {'message': 'Artigo 5652624 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_55930', 'status': 'SUCCESS'}
+2025-02-19 11:48:15,670 - INFO - Found page data: True
+2025-02-19 11:48:15,937 - INFO - Found existing content: Painel de Ouvidoria (ID: 5652646, Key: 5652644)
+2025-02-19 11:48:16,242 - INFO - Association result: {'message': 'Artigo 5652644 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_21257', 'status': 'SUCCESS'}
+2025-02-19 11:48:17,203 - INFO - Found page data: True
+2025-02-19 11:48:17,594 - INFO - Found existing content: Canais de Atendimento (ID: 5652666, Key: 5652664)
+2025-02-19 11:48:17,886 - INFO - Association result: {'message': 'Artigo 5652664 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_66816', 'status': 'SUCCESS'}
+2025-02-19 11:48:18,726 - INFO - Found page data: True
+2025-02-19 11:48:19,008 - INFO - Found existing content: Requisitos e Documentos (ID: 5652686, Key: 5652684)
+2025-02-19 11:48:19,423 - INFO - Association result: {'message': 'Artigo 5652684 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_79482', 'status': 'SUCCESS'}
+2025-02-19 11:48:20,688 - INFO - Found page data: True
+2025-02-19 11:48:21,274 - INFO - Found existing content: Passo a Passo (ID: 5653606, Key: 5653604)
+2025-02-19 11:48:21,573 - INFO - Association result: {'message': 'Artigo 5653604 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_25521', 'status': 'SUCCESS'}
+2025-02-19 11:48:22,512 - INFO - Found page data: True
+2025-02-19 11:48:22,801 - INFO - Found existing content: Perguntas Frequentes (ID: 5653626, Key: 5653624)
+2025-02-19 11:48:23,110 - INFO - Association result: {'message': 'Artigo 5653624 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_59359', 'status': 'SUCCESS'}
+2025-02-19 11:48:24,188 - INFO - Found page data: True
+2025-02-19 11:48:24,570 - INFO - Found existing content: Normas e Regulamentação (ID: 5653646, Key: 5653644)
+2025-02-19 11:48:24,875 - INFO - Association result: {'message': 'Artigo 5653644 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_78231', 'status': 'SUCCESS'}
+2025-02-19 11:48:25,794 - INFO - Found page data: True
+2025-02-19 11:48:26,076 - INFO - Found existing content: Plano de Ação Anual (ID: 5654806, Key: 5654804)
+2025-02-19 11:48:26,686 - INFO - Association result: {'message': 'Artigo 5654804 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_23212', 'status': 'SUCCESS'}
+2025-02-19 11:48:27,650 - INFO - Found page data: True
+2025-02-19 11:48:27,916 - INFO - Found existing content: Relatórios de Ouvidoria (ID: 5655832, Key: 5655830)
+2025-02-19 11:48:28,223 - INFO - Association result: {'message': 'Artigo 5655830 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_12948', 'status': 'SUCCESS'}
+2025-02-19 11:48:29,270 - INFO - Found page data: True
+2025-02-19 11:48:29,970 - INFO - Found existing content: Serviço de Informações ao Cidadão – SIC (ID: 5655881, Key: 5655879)
+2025-02-19 11:48:30,329 - INFO - Association result: {'message': 'Artigo 5655879 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_48382', 'status': 'SUCCESS'}
+2025-02-19 11:48:30,330 - INFO - Using cached content for Biblioteca
+2025-02-19 11:48:31,002 - INFO - Found page data: False
+2025-02-19 11:48:31,312 - INFO - Found existing content: Processo Seletivo (ID: 5656603, Key: 5656601)
+2025-02-19 11:48:31,312 - INFO - Using cached content for Processo Seletivo
+2025-02-19 11:48:32,565 - INFO - Found page data: True
+2025-02-19 11:48:33,242 - INFO - Found existing content: Em Andamento (ID: 5656631, Key: 5656629)
+2025-02-19 11:48:33,567 - INFO - Association result: {'message': 'Artigo 5656629 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_91567', 'status': 'SUCCESS'}
+2025-02-19 11:48:34,522 - INFO - Found page data: True
+2025-02-19 11:48:35,400 - INFO - No existing content found with title: ESP/DF em Andamento
+2025-02-19 11:48:39,871 - INFO - Creating regular content for ESP/DF em Andamento
+2025-02-19 11:48:40,218 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 1/3. Aguardando 1s...
+2025-02-19 11:48:41,536 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 2/3. Aguardando 2s...
+2025-02-19 11:48:44,301 - INFO - Association result: {'message': 'Artigo  associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_21656', 'status': 'SUCCESS'}
+2025-02-19 11:48:45,140 - INFO - Found page data: True
+2025-02-19 11:48:45,434 - INFO - No existing content found with title: Fepecs em Andamento
+2025-02-19 11:48:52,024 - INFO - Creating regular content for Fepecs em Andamento
+2025-02-19 11:48:52,305 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 1/3. Aguardando 1s...
+2025-02-19 11:48:53,834 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 2/3. Aguardando 2s...
+2025-02-19 11:48:56,491 - INFO - Association result: {'message': 'Artigo  associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_72669', 'status': 'SUCCESS'}
+2025-02-19 11:48:57,433 - INFO - Found page data: True
+2025-02-19 11:48:57,720 - INFO - No existing content found with title: Escs em Andamento
+2025-02-19 11:49:02,087 - INFO - Creating regular content for Escs em Andamento
+2025-02-19 11:49:02,437 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 1/3. Aguardando 1s...
+2025-02-19 11:49:03,865 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 2/3. Aguardando 2s...
+2025-02-19 11:49:06,626 - INFO - Association result: {'message': 'Artigo  associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_97969', 'status': 'SUCCESS'}
+2025-02-19 11:49:07,559 - INFO - Found page data: True
+2025-02-19 11:49:08,056 - INFO - No existing content found with title: Eapsus em Andamento
+2025-02-19 11:49:17,701 - INFO - Creating regular content for Eapsus em Andamento
+2025-02-19 11:49:18,098 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 1/3. Aguardando 1s...
+2025-02-19 11:49:19,443 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 2/3. Aguardando 2s...
+2025-02-19 11:49:22,196 - INFO - Association result: {'message': 'Artigo  associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_57833', 'status': 'SUCCESS'}
+2025-02-19 11:49:23,044 - INFO - Found page data: True
+2025-02-19 11:49:23,416 - INFO - Found existing content: Comitê Permanente de Processos Seletivos (CPPS) (ID: 5658719, Key: 5658717)
+2025-02-19 11:49:23,723 - INFO - Association result: {'message': 'Artigo 5658717 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_20962', 'status': 'SUCCESS'}
+2025-02-19 11:49:24,549 - INFO - Found page data: True
+2025-02-19 11:49:24,851 - INFO - No existing content found with title: Encerrados
+2025-02-19 11:49:29,116 - INFO - Creating regular content for Encerrados
+2025-02-19 11:49:29,457 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 1/3. Aguardando 1s...
+2025-02-19 11:49:30,813 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 2/3. Aguardando 2s...
+2025-02-19 11:49:33,665 - INFO - Association result: {'message': 'Artigo  associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_97392', 'status': 'SUCCESS'}
+2025-02-19 11:49:34,935 - INFO - Found page data: True
+2025-02-19 11:49:35,249 - INFO - Found existing content: Serviços (ID: 5658751, Key: 5658749)
+2025-02-19 11:49:35,603 - INFO - Association result: {'message': 'Artigo 5658749 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_39891', 'status': 'SUCCESS'}
+2025-02-19 11:49:35,603 - INFO - Using cached content for Serviços
+2025-02-19 11:49:36,012 - INFO - Using cached content for Serviços
+2025-02-19 11:49:37,263 - INFO - Found page data: True
+2025-02-19 11:49:37,972 - INFO - Found existing content: Carta de Serviços (ID: 5658771, Key: 5658769)
+2025-02-19 11:49:38,270 - INFO - Association result: {'message': 'Artigo 5658769 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_35436', 'status': 'SUCCESS'}
+2025-02-19 11:49:39,110 - INFO - Found page data: True
+2025-02-19 11:49:39,811 - INFO - Found existing content: Apresentação da Carta (ID: 5658791, Key: 5658789)
+2025-02-19 11:49:40,145 - INFO - Association result: {'message': 'Artigo 5658789 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_91138', 'status': 'SUCCESS'}
+2025-02-19 11:49:41,045 - INFO - Found page data: True
+2025-02-19 11:49:41,346 - INFO - No existing content found with title: Serviços para o Cidadão
+2025-02-19 11:49:45,354 - INFO - Creating regular content for Serviços para o Cidadão
+2025-02-19 11:49:45,647 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 1/3. Aguardando 1s...
+2025-02-19 11:49:46,969 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 2/3. Aguardando 2s...
+2025-02-19 11:49:49,640 - INFO - Association result: {'message': 'Artigo  associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_62890', 'status': 'SUCCESS'}
+2025-02-19 11:49:50,477 - INFO - Found page data: True
+2025-02-19 11:49:50,761 - INFO - No existing content found with title: Serviços para o Estudante
+2025-02-19 11:49:58,384 - INFO - Creating regular content for Serviços para o Estudante
+2025-02-19 11:49:58,635 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 1/3. Aguardando 1s...
+2025-02-19 11:49:59,978 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 2/3. Aguardando 2s...
+2025-02-19 11:50:02,947 - INFO - Association result: {'message': 'Artigo  associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_88118', 'status': 'SUCCESS'}
+2025-02-19 11:50:03,885 - INFO - Found page data: True
+2025-02-19 11:50:04,173 - INFO - No existing content found with title: Serviços para o Servidor
+2025-02-19 11:50:16,400 - INFO - Creating regular content for Serviços para o Servidor
+2025-02-19 11:50:16,770 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 1/3. Aguardando 1s...
+2025-02-19 11:50:18,230 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 2/3. Aguardando 2s...
+2025-02-19 11:50:20,970 - INFO - Association result: {'message': 'Artigo  associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_62195', 'status': 'SUCCESS'}
+2025-02-19 11:50:20,970 - INFO - Using cached content for Ouvidoria
+2025-02-19 11:50:22,528 - INFO - Found page data: True
+2025-02-19 11:50:22,912 - INFO - Found existing content: Serviço de Informação ao Cidadão – SIC (ID: 5660883, Key: 5660881)
+2025-02-19 11:50:23,218 - INFO - Association result: {'message': 'Artigo 5660881 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_42484', 'status': 'SUCCESS'}
+2025-02-19 11:50:24,376 - INFO - Found page data: True
+2025-02-19 11:50:24,758 - INFO - Found existing content: Imprima aqui a sua carta de serviços (ID: 5662823, Key: 5662821)
+2025-02-19 11:50:25,166 - INFO - Association result: {'message': 'Artigo 5662821 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_85961', 'status': 'SUCCESS'}
+2025-02-19 11:50:26,320 - INFO - Found page data: True
+2025-02-19 11:50:26,718 - INFO - Found existing content: Avalie a Carta de Serviços ao cidadão (ID: 5662845, Key: 5662843)
+2025-02-19 11:50:27,116 - INFO - Association result: {'message': 'Artigo 5662843 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_12781', 'status': 'SUCCESS'}
+2025-02-19 11:50:28,373 - INFO - Found page data: True
+2025-02-19 11:50:28,748 - INFO - Found existing content: Informações (ID: 5662865, Key: 5662863)
+2025-02-19 11:50:29,058 - INFO - Association result: {'message': 'Artigo 5662863 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_94368', 'status': 'SUCCESS'}
+2025-02-19 11:50:29,909 - INFO - Found page data: True
+2025-02-19 11:50:30,702 - INFO - Found existing content: Comissão de Ética da FEPECS (ID: 5662885, Key: 5662883)
+2025-02-19 11:50:31,002 - INFO - Association result: {'message': 'Artigo 5662883 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_89050', 'status': 'SUCCESS'}
+2025-02-19 11:50:32,052 - INFO - Found page data: True
+2025-02-19 11:50:32,354 - INFO - Found existing content: Conselho Fiscal (ID: 5663935, Key: 5663933)
+2025-02-19 11:50:32,745 - INFO - Association result: {'message': 'Artigo 5663933 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_65040', 'status': 'SUCCESS'}
+2025-02-19 11:50:33,911 - INFO - Found page data: True
+2025-02-19 11:50:34,280 - INFO - Found existing content: Conselho Deliberativo (ID: 5663992, Key: 5663990)
+2025-02-19 11:50:34,589 - INFO - Association result: {'message': 'Artigo 5663990 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_29775', 'status': 'SUCCESS'}
+2025-02-19 11:50:35,548 - INFO - Found page data: True
+2025-02-19 11:50:35,917 - INFO - Found existing content: Saúde Legal (ID: 5665314, Key: 5665312)
+2025-02-19 11:50:36,153 - INFO - Association result: {'message': 'Artigo 5665312 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_62657', 'status': 'SUCCESS'}
+2025-02-19 11:50:36,838 - INFO - Found page data: False
+2025-02-19 11:50:37,254 - INFO - Found existing content: Planejamento (ID: 5665334, Key: 5665332)
+2025-02-19 11:50:37,255 - INFO - Using cached content for Planejamento
+2025-02-19 11:50:38,803 - INFO - Found page data: True
+2025-02-19 11:50:39,508 - INFO - Found existing content: Mapa Estratégico (ID: 5665372, Key: 5665370)
+2025-02-19 11:50:39,812 - INFO - Association result: {'message': 'Artigo 5665370 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_53107', 'status': 'SUCCESS'}
+2025-02-19 11:50:40,446 - INFO - Found page data: False
+2025-02-19 11:50:40,832 - INFO - No existing content found with title: Planejamento Estratégico
+2025-02-19 11:50:41,175 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea/migrador-liferay/migrador-liferay/web_content_creator.py", line 311, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-19 11:50:42,066 - INFO - Found page data: True
+2025-02-19 11:50:42,473 - INFO - Found existing content: Sistema de Acompanhamento Governamental – SAG (ID: 5666916, Key: 5666914)
+2025-02-19 11:50:42,783 - INFO - Association result: {'message': 'Artigo 5666914 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_70382', 'status': 'SUCCESS'}
+2025-02-19 11:50:43,603 - INFO - Found page data: True
+2025-02-19 11:50:43,905 - INFO - Found existing content: Plano Distrital de Saúde – PDS (ID: 5666959, Key: 5666957)
+2025-02-19 11:50:44,236 - INFO - Association result: {'message': 'Artigo 5666957 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_79320', 'status': 'SUCCESS'}
+2025-02-19 11:50:45,142 - INFO - Found page data: True
+2025-02-19 11:50:45,440 - INFO - Found existing content: Plano Plurianual – PPA (ID: 5668230, Key: 5668228)
+2025-02-19 11:50:45,747 - INFO - Association result: {'message': 'Artigo 5668228 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_79890', 'status': 'SUCCESS'}
+2025-02-19 11:50:46,571 - INFO - Found page data: True
+2025-02-19 11:50:46,876 - INFO - Found existing content: Plano Diretor de Tecnologia da Informação – PDTI 2020/2022 (ID: 5668275, Key: 5668273)
+2025-02-19 11:50:47,183 - INFO - Association result: {'message': 'Artigo 5668273 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_95940', 'status': 'SUCCESS'}
+2025-02-19 11:50:47,845 - INFO - Found page data: True
+2025-02-19 11:50:48,209 - INFO - No existing content found with title: Relatórios
+2025-02-19 11:50:48,670 - INFO - Creating regular content for Relatórios
+2025-02-19 11:50:49,344 - INFO - Created content: Relatórios (ID: 5698420, Key: 5698418)
+2025-02-19 11:50:49,641 - INFO - Association result: {'message': 'Artigo 5698418 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_12948', 'status': 'SUCCESS'}
+2025-02-19 11:50:50,361 - INFO - Found page data: True
+2025-02-19 11:50:50,972 - INFO - Found existing content: Relatórios Quadrimestrais (ID: 5670018, Key: 5670016)
+2025-02-19 11:50:51,283 - INFO - Association result: {'message': 'Artigo 5670016 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_20306', 'status': 'SUCCESS'}
+2025-02-19 11:50:52,211 - INFO - Found page data: True
+2025-02-19 11:50:52,617 - INFO - Found existing content: Relatório Anuais (ID: 5670782, Key: 5670780)
+2025-02-19 11:50:53,017 - INFO - Association result: {'message': 'Artigo 5670780 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_28013', 'status': 'SUCCESS'}
+2025-02-19 11:50:53,858 - INFO - Found page data: True
+2025-02-19 11:50:54,147 - INFO - Found existing content: Comitê Ética em Pesquisa (ID: 5671609, Key: 5671607)
+2025-02-19 11:50:54,461 - INFO - Association result: {'message': 'Artigo 5671607 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_98105', 'status': 'SUCCESS'}
+2025-02-19 11:50:55,274 - INFO - Found page data: True
+2025-02-19 11:50:55,580 - INFO - No existing content found with title: Notícias
+2025-02-19 11:51:00,648 - INFO - Creating regular content for Notícias
+2025-02-19 11:51:01,004 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 1/3. Aguardando 1s...
+2025-02-19 11:51:02,336 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 2/3. Aguardando 2s...
+2025-02-19 11:51:05,102 - INFO - Association result: {'message': 'Artigo  associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_43275', 'status': 'SUCCESS'}
+2025-02-19 11:51:05,103 - INFO - Using cached content for Notícias
+2025-02-19 11:51:06,139 - INFO - Found page data: False
+2025-02-19 11:51:06,535 - INFO - No existing content found with title: SICOPWEB
+2025-02-19 11:51:06,858 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea/migrador-liferay/migrador-liferay/web_content_creator.py", line 311, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-19 11:51:07,457 - INFO - Found page data: False
+2025-02-19 11:51:07,763 - INFO - No existing content found with title: DF Legis
+2025-02-19 11:51:08,101 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea/migrador-liferay/migrador-liferay/web_content_creator.py", line 311, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-19 11:51:08,902 - INFO - Found page data: False
+2025-02-19 11:51:09,300 - INFO - No existing content found with title: SINJ-DF
+2025-02-19 11:51:10,486 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea/migrador-liferay/migrador-liferay/web_content_creator.py", line 311, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-19 11:51:11,248 - INFO - Found page data: False
+2025-02-19 11:51:11,560 - INFO - No existing content found with title: E-PROTOCOLO
+2025-02-19 11:51:11,780 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea/migrador-liferay/migrador-liferay/web_content_creator.py", line 311, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-19 11:51:12,790 - INFO - Found page data: True
+2025-02-19 11:51:13,092 - INFO - No existing content found with title: Fale com a secretaria
+2025-02-19 11:51:25,808 - INFO - Creating regular content for Fale com a secretaria
+2025-02-19 11:51:26,196 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 1/3. Aguardando 1s...
+2025-02-19 11:51:27,633 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 2/3. Aguardando 2s...
+2025-02-19 11:51:30,598 - INFO - Association result: {'message': 'Artigo  associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_57571', 'status': 'SUCCESS'}
+2025-02-19 11:51:30,919 - INFO - Found page data: False
+2025-02-19 11:51:31,324 - INFO - No existing content found with title: Sem Categoria
+2025-02-19 11:51:31,876 - INFO - Creating regular content for Sem Categoria
+2025-02-19 11:51:32,296 - INFO - Created content: Sem Categoria (ID: 5698437, Key: 5698435)
+2025-02-19 11:51:32,920 - INFO - Found page data: True
+2025-02-19 11:51:33,469 - INFO - Found existing content: Video (ID: 5671679, Key: 5671677)
+2025-02-19 11:51:33,793 - INFO - Association result: {'message': 'Artigo 5671677 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_16050', 'status': 'SUCCESS'}
+2025-02-19 11:51:34,706 - INFO - Found page data: True
+2025-02-19 11:51:35,003 - INFO - Found existing content: Audio (ID: 5671699, Key: 5671697)
+2025-02-19 11:51:35,327 - INFO - Association result: {'message': 'Artigo 5671697 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_47551', 'status': 'SUCCESS'}
+2025-02-19 11:51:36,134 - INFO - Found page data: True
+2025-02-19 11:51:36,550 - INFO - Found existing content: Flickr (ID: 5673319, Key: 5673317)
+2025-02-19 11:51:36,856 - INFO - Association result: {'message': 'Artigo 5673317 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_44735', 'status': 'SUCCESS'}
+2025-02-19 11:51:37,775 - INFO - Found page data: True
+2025-02-19 11:51:38,081 - INFO - No existing content found with title: Ajax
+2025-02-19 11:51:42,404 - ERROR - Error during content migration: No content found
+Traceback (most recent call last):
+  File "/home/sea/migrador-liferay/migrador-liferay/web_content_creator.py", line 311, in migrate_content
+    raise Exception(process_result["error"])
+Exception: No content found
+
+2025-02-19 11:51:43,201 - INFO - Found page data: True
+2025-02-19 11:51:43,485 - INFO - Found existing content: Gerenciar Módulos da Home (ID: 5673347, Key: 5673345)
+2025-02-19 11:51:43,858 - INFO - Association result: {'message': 'Artigo 5673345 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_19473', 'status': 'SUCCESS'}
+2025-02-19 11:51:44,694 - INFO - Found page data: True
+2025-02-19 11:51:44,949 - INFO - Found existing content: Histórico (ID: 5673367, Key: 5673365)
+2025-02-19 11:51:45,204 - INFO - Association result: {'message': 'Artigo 5673365 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_29936', 'status': 'SUCCESS'}
+2025-02-19 11:51:45,944 - INFO - Found page data: True
+2025-02-19 11:51:46,274 - INFO - No existing content found with title: Modulo-15-Botoes
+2025-02-19 11:51:50,292 - INFO - Creating regular content for Modulo-15-Botoes
+2025-02-19 11:51:50,570 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 1/3. Aguardando 1s...
+2025-02-19 11:51:52,002 - WARNING - Erro geral: Failed to create content: 500 - {'status': 'INTERNAL_SERVER_ERROR', 'title': 'Internal Server Error'}. Tentativa 2/3. Aguardando 2s...
+2025-02-19 11:51:54,787 - INFO - Association result: {'message': 'Artigo  associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_20542', 'status': 'SUCCESS'}
+2025-02-19 11:51:54,788 - INFO - Using cached content for Perguntas Frequentes
+2025-02-19 11:51:55,604 - INFO - Found page data: False
+2025-02-19 11:51:56,211 - INFO - Found existing content: Perguntas frequentes da Escola Técnica de Saúde de Brasília (ETESB) (ID: 5673399, Key: 5673397)
+2025-02-19 11:51:57,063 - INFO - Found page data: True
+2025-02-19 11:51:57,364 - INFO - Found existing content: Perguntas frequentes da Escola de Aperfeiçoamento do Sistema Único de Saúde (EAPSUS) (ID: 5675128, Key: 5675126)
+2025-02-19 11:51:57,638 - INFO - Association result: {'message': 'Artigo 5675126 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_92045', 'status': 'SUCCESS'}
+2025-02-19 11:51:58,720 - INFO - Found page data: True
+2025-02-19 11:51:59,012 - INFO - Found existing content: Perguntas frequentes da Escola Superior de Ciências da Saúde (ESCS) (ID: 5675149, Key: 5675147)
+2025-02-19 11:51:59,356 - INFO - Association result: {'message': 'Artigo 5675147 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_26243', 'status': 'SUCCESS'}
+2025-02-19 11:52:00,219 - INFO - Found page data: True
+2025-02-19 11:52:00,511 - INFO - Found existing content: Perguntas frequentes da Fundação de Ensino e Pesquisa em Ciências da Saúde (FEPECS) (ID: 5675169, Key: 5675167)
+2025-02-19 11:52:00,818 - INFO - Association result: {'message': 'Artigo 5675167 associado com sucesso ao portlet com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_40262', 'status': 'SUCCESS'}
+2025-02-19 11:52:00,820 - INFO - Recursos fechados com sucesso
+2025-02-19 11:52:00,821 - INFO - Inicializando sessões dos criadores em paralelo
+2025-02-19 11:52:00,822 - INFO - Sessões inicializadas com sucesso
+2025-02-19 11:52:00,822 - INFO - Recursos fechados com sucesso

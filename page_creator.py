@@ -13,12 +13,12 @@ class PageCreator:
 
     async def create_page(self, title: str, friendly_url: str, parent_id: int = 0, 
                          hierarchy: List[str] = None, page_type: str = "portlet", 
-                         visible: bool = True, column_type: str = "1_column") -> int:
+                         visible: bool = True, column_type: str = "1_column", url_vinculada: str= None) -> int:
         try:
             normalized_title = self.processor.normalize_page_name(title)
             normalized_url = self.processor.normalize_friendly_url(friendly_url)
             page_id = await self._create_page_request(normalized_title, normalized_url, 
-                                                    parent_id, visible, page_type)
+                                                    parent_id, visible, page_type, url_vinculada)
             
             if page_id:
                 await self._update_page_layout(page_id, column_type)
@@ -31,7 +31,7 @@ class PageCreator:
         return 0
 
     async def _create_page_request(self, title: str, url: str, parent_id: int, 
-                                 visible: bool, page_type: str):
+                                visible: bool, page_type: str, url_vinculada: str):
         params = {
             "groupId": str(self.config.site_id),
             "privateLayout": "false",
@@ -41,13 +41,22 @@ class PageCreator:
             "description": "",
             "type": page_type,
             "hidden": str(not visible).lower(),
-            "friendlyURL": f"/{url}",
+            "friendlyURL": f"/{url}"
         }
-        
+
+        if url_vinculada and len(url_vinculada) > 1: #verifica se a url foi passada e se o len dela é o que esperamos
+            params.update({ #aqui ele da um append nos parametros
+                "typeSettings": f"linkToLayoutId=0\ntargetURL={url_vinculada}" #passa o type_settings
+            })
+            print(f"Dentro do if: {params}") #debug
+
+        print(f"Fora do if: {params}") #debug
         async with self.session.post(
             f"{self.config.liferay_url}/api/jsonws/layout/add-layout",
             params=params
         ) as response:
+            print(response)
+            
             if response.status in (200, 201):
                 result = await response.json()
                 return result.get('layoutId') or result.get('plid')
@@ -160,12 +169,12 @@ class PageCreator:
     async def ensure_page_exists(self, title: str, cache_key: str, parent_id: int = 0, 
                                friendly_url: str = "", hierarchy: List[str] = None, 
                                page_type: str = "portlet", visible: bool = True, 
-                               column_type: str = "1_column") -> int:
+                               column_type: str = "1_column", url_vinculada: str= None) -> int:
         if cache_key in self.page_cache:
             return self.page_cache[cache_key]
 
         page_id = await self.create_page(title, friendly_url, parent_id, 
-                                       hierarchy, page_type, visible, column_type)
+                                       hierarchy, page_type, visible, column_type, url_vinculada)
         
         if page_id:
             self.page_cache[cache_key] = page_id
@@ -174,7 +183,7 @@ class PageCreator:
 
     async def create_hierarchy(self, hierarchy: list, final_title: str, final_url: str, 
                              page_type: str = "widget", visible: bool = True, 
-                             column_type: str = "1_column") -> int:
+                             column_type: str = "1_column", url_vinculada: str= None) -> int:
         current_path = ""
         parent_id = 0
         last_page_id = 0
@@ -186,7 +195,7 @@ class PageCreator:
             current_path += f" > {normalized_level}" if current_path else normalized_level
             level_id = await self.ensure_page_exists(normalized_level, current_path, 
                                                    parent_id, final_url, hierarchy, 
-                                                   page_type, visible, column_type)
+                                                   page_type, visible, column_type, url_vinculada)
             
             if level_id:
                 parent_id = level_id
@@ -197,7 +206,7 @@ class PageCreator:
 
         if self._should_create_final_page(hierarchy_levels, final_title):
             final_page_id = await self.create_page(final_title, final_url, parent_id, 
-                                                 hierarchy, page_type, visible, column_type)
+                                                 hierarchy, page_type, visible, column_type, url_vinculada)
             print(f"Página final criada: {final_title} (ID: {final_page_id}) Tipo da página {page_type}")
             
             if final_page_id:
