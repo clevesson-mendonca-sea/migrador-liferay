@@ -29,6 +29,7 @@ class Config:
     folder_type = os.getenv('FOLDER_TYPE', 'journal')
     content_structure_id = os.getenv('LIFERAY_CONTENT_STRUCTURE_ID', '')
     colapse_structure_id = os.getenv('LIFERAY_COLAPSE_STRUCTURE_ID', '')
+    display_template_key = os.getenv('LIFERAY_DISPLAY_TEMPLETE_KEY', '')
 
 def parse_hierarchy(hierarchy_str: str) -> list:
     if not hierarchy_str:
@@ -136,7 +137,7 @@ async def get_sheet_data(is_update=False):
 
     # Obtém os tipos de coluna (1 Coluna, 30/70)
     column_type = [
-        row[18] if len(row) > 18 and row[18].strip() not in ["", "-"] else "1_column"
+        row[16] if len(row) > 16 and row[16].strip() not in ["", "-"] else "1_column"
         for row in rows
     ]
 

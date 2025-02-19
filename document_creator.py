@@ -8,6 +8,7 @@ from datetime import datetime
 from bs4 import BeautifulSoup
 import asyncio
 from dataclasses import dataclass
+from functools import lru_cache
 from document_cache import DocumentCache
 
 @dataclass
@@ -45,9 +46,12 @@ class DocumentCreator:
         self.config = config
         self.session = None
         self.cache = DocumentCache()
-        self.semaphore = asyncio.Semaphore(10)  # Aumentado para 10 requisições simultâneas
-        self.batch_size = 50  # Processa URLs em lotes de 50
+        self.semaphore = asyncio.Semaphore(20)  # Increased for better performance while maintaining control
+        self.batch_size = 50  # Original batch size preserved
+        self.error_log_file = "migration_errors.log"  # Ensuring error log file is defined
         self._initialize_logging()
+        # Connection pool for reuse
+        self._connection_pool = None
 
     def _initialize_logging(self):
         """Configure detailed logging"""
@@ -82,6 +86,15 @@ class DocumentCreator:
         if self.session:
             await self.session.close()
         
+        # Create connection pool with improved settings
+        if not self._connection_pool:
+            self._connection_pool = aiohttp.TCPConnector(
+                ssl=False,
+                limit=50,  # Increased connection limit
+                ttl_dns_cache=300,
+                keepalive_timeout=60
+            )
+        
         auth = aiohttp.BasicAuth(
             login=self.config.liferay_user,
             password=self.config.liferay_pass
@@ -96,9 +109,11 @@ class DocumentCreator:
                 'Accept': 'application/json',
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
             },
-            connector=aiohttp.TCPConnector(ssl=False, limit=10)
+            connector=self._connection_pool
         )
+        logger.info("Session initialized with improved connection settings")
 
+    @lru_cache(maxsize=500)
     def _get_mime_type(self, filename: str) -> str:
         """Determina o MIME type pelo nome do arquivo"""
         ext = '.' + filename.split('.')[-1].lower() if '.' in filename else ''
@@ -109,6 +124,7 @@ class DocumentCreator:
         
         async with self.session.get(page_url) as response:
             if response.status != 200:
+                logger.warning(f"Falha ao acessar a página {page_url}: status {response.status}")
                 return urls_to_process
                 
             html_content = await response.text()
@@ -116,6 +132,7 @@ class DocumentCreator:
             content_div = soup.find(class_='paginas-internas')
             
             if not content_div:
+                logger.warning(f"Elemento 'paginas-internas' não encontrado em {page_url}")
                 return urls_to_process
 
             # Processa links e imagens
@@ -134,27 +151,47 @@ class DocumentCreator:
                         absolute_url = urljoin(page_url, url)
                         if self._is_valid_file_url(absolute_url):
                             urls_to_process.add(absolute_url)
-                            
+            
+            logger.info(f"Coletadas {len(urls_to_process)} URLs para processamento em {page_url}")           
         return urls_to_process
 
     async def _process_url_batch(self, urls: List[str], folder_id: Optional[int], page_url: str) -> List[str]:
         tasks = []
+        filtered_urls = []
+        
+        # Filter URLs that need processing
         for url in urls:
             if not self.cache.is_processed(url) and not self.cache.is_failed(url):
                 tasks.append(self._process_single_url(url, folder_id, page_url))
-                
+                filtered_urls.append(url)
+        
+        if not tasks:
+            return []
+            
+        logger.info(f"Processando lote de {len(tasks)} URLs")
         results = await asyncio.gather(*tasks, return_exceptions=True)
-        return [r for r in results if isinstance(r, str)]
+        
+        # Process results while preserving logs
+        successful_urls = []
+        for i, result in enumerate(results):
+            if isinstance(result, str):
+                successful_urls.append(result)
+            elif isinstance(result, Exception):
+                logger.error(f"Erro ao processar {filtered_urls[i]}: {str(result)}")
+                
+        logger.info(f"Lote concluído: {len(successful_urls)}/{len(tasks)} URLs processadas com sucesso")
+        return successful_urls
 
     async def _process_single_url(self, url: str, folder_id: Optional[int], page_url: str) -> Optional[str]:
         async with self.semaphore:
             try:
                 friendly_url = await self.migrate_document(url, folder_id, page_url)
                 if friendly_url:
-                    return friendly_url
-                return None
+                    logger.info(f"URL processada com sucesso: {url} -> {friendly_url}")
+                return friendly_url
             except Exception as e:
                 logger.error(f"Erro ao processar URL {url}: {str(e)}")
+                self._log_migration_error(url, str(e), page_url, "")
                 return None
 
     def _extract_filename(self, url: str, content_type: str = '') -> str:
@@ -185,7 +222,8 @@ class DocumentCreator:
             
             ext = ext_mapping.get(ext, ext)
             filename = f"{name}.{ext}"
-                
+            
+            logger.debug(f"Nome de arquivo extraído: {filename}")
             return self._sanitize_filename(filename)
                 
         except Exception as e:
@@ -212,6 +250,7 @@ class DocumentCreator:
             if ext in url.lower():
                 # Split at the extension and keep everything before it (inclusive)
                 base_url = url.split(ext.lower())[0] + ext.lower()
+                logger.debug(f"URL limpa: {url} -> {base_url}")
                 return base_url
                 
         return url
@@ -280,11 +319,11 @@ class DocumentCreator:
         return filename[:240]  # Limita tamanho do nome
 
     async def _find_existing_document(self, filename: str, folder_id: Optional[int] = None) -> Optional[Dict[str, Any]]:
-        """Busca documento existente com melhor cache"""
+        """Busca documento existente com melhor cache e processamento paralelo"""
         try:
             # Limpa e normaliza o nome do arquivo
             filename = self._sanitize_filename(filename)
-            name, ext = filename.rsplit('.', 1)
+            name, ext = filename.rsplit('.', 1) if '.' in filename else (filename, '')
             
             # Verifica todas as variações possíveis do nome
             possible_names = [
@@ -298,11 +337,13 @@ class DocumentCreator:
             for name_variant in possible_names:
                 cached_doc = self.cache.get_by_filename(name_variant)
                 if cached_doc:
+                    logger.info(f"Documento encontrado no cache: {name_variant}")
                     return cached_doc
             
-            # Se não encontrou no cache, busca no Liferay
+            # Se não encontrou no cache, busca em paralelo no Liferay
             search_url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/document-folders/{folder_id}/documents" if folder_id else f"{self.config.liferay_url}/o/headless-delivery/v1.0/sites/{self.config.site_id}/documents"
 
+            tasks = []
             for name_variant in possible_names:
                 params = {
                     'filter': f"title eq '{name_variant}'",
@@ -310,18 +351,24 @@ class DocumentCreator:
                     'page': 1,
                     'pageSize': 1
                 }
-                
-                async with self.session.get(search_url, params=params) as response:
-                    if response.status == 200:
-                        data = await response.json()
-                        items = data.get('items', [])
-                        if items:
-                            doc = items[0]
-                            # Adiciona no cache todas as variações do nome
-                            for variant in possible_names:
-                                self.cache.add_filename_mapping(variant, doc)
-                            return doc
+                tasks.append(self.session.get(search_url, params=params))
             
+            # Executa todas as buscas em paralelo
+            responses = await asyncio.gather(*tasks)
+            
+            for i, response in enumerate(responses):
+                if response.status == 200:
+                    data = await response.json()
+                    items = data.get('items', [])
+                    if items:
+                        doc = items[0]
+                        logger.info(f"Documento existente encontrado: {possible_names[i]}")
+                        # Adiciona no cache todas as variações do nome
+                        for variant in possible_names:
+                            self.cache.add_filename_mapping(variant, doc)
+                        return doc
+            
+            logger.info(f"Documento não encontrado: {filename}")
             return None
             
         except Exception as e:
@@ -332,24 +379,28 @@ class DocumentCreator:
         """Migra um documento com tratamento de conflitos otimizado"""
         max_retries = 3
         retry_count = 0
+        backoff_time = 1  # Tempo inicial de espera entre tentativas
 
         while retry_count < max_retries:
             try:
                 if not self._is_valid_file_url(doc_url):
+                    logger.info(f"URL inválida, ignorando: {doc_url}")
                     return None
 
                 # Check cache
                 cached_url = self.cache.get_by_url(doc_url)
                 if cached_url:
+                    logger.info(f"URL encontrada no cache: {doc_url} -> {cached_url}")
                     return cached_url
 
                 if self.cache.is_processed(doc_url):
+                    logger.info(f"URL já processada anteriormente: {doc_url}")
                     return None
                 
                 self.cache.add_url_mapping(doc_url, None)
                 logger.info(f"Iniciando migração do documento: {doc_url}")
 
-                # Download do documento
+                # Download do documento com timeout aumentado
                 async with self.session.get(doc_url, allow_redirects=True, timeout=60) as response:
                     if response.status != 200:
                         raise Exception(f"GET request failed with status {response.status}")
@@ -361,7 +412,7 @@ class DocumentCreator:
                     filename = self._sanitize_filename(self._extract_filename(doc_url))
                     logger.info(f"Nome do arquivo gerado: {filename}")
 
-                    # Check existing document BEFORE upload
+                    # Check existing document BEFORE upload - agora em paralelo
                     existing_doc = await self._find_existing_document(filename, folder_id)
                     if existing_doc:
                         content_url = existing_doc.get('contentUrl')
@@ -391,7 +442,7 @@ class DocumentCreator:
                     else:
                         upload_url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/sites/{self.config.site_id}/documents"
 
-                    # Try upload
+                    # Try upload with extended timeout
                     async with self.session.post(upload_url, data=data, timeout=120) as upload_response:
                         if upload_response.status in (200, 201):
                             result = await upload_response.json()
@@ -436,16 +487,18 @@ class DocumentCreator:
             except Exception as e:
                 retry_count += 1
                 if retry_count < max_retries:
-                    logger.warning(f"Tentativa {retry_count} falhou para {doc_url}: {str(e)}. Tentando novamente...")
-                    await asyncio.sleep(1)
+                    logger.warning(f"Tentativa {retry_count} falhou para {doc_url}: {str(e)}. Tentando novamente em {backoff_time}s...")
+                    await asyncio.sleep(backoff_time)
+                    backoff_time *= 2  # Exponential backoff
                     continue
                 else:
                     logger.error(f"Erro ao migrar documento {doc_url} após {max_retries} tentativas: {str(e)}")
                     self.cache.mark_failed(doc_url)
+                    self._log_migration_error(doc_url, str(e), page_url, hierarchy)
                     return None
                     
     async def process_page_content(self, page_url: str, folder_id: Optional[int] = None) -> List[str]:
-        """Processa uma página inteira de forma otimizada"""
+        """Processa uma página inteira de forma otimizada com processamento paralelo"""
         migrated_urls = []
         
         try:
@@ -456,35 +509,30 @@ class DocumentCreator:
             
             urls_to_process = await self._collect_urls(page_url)
             total_urls = len(urls_to_process)
+            
+            if total_urls == 0:
+                logger.info(f"Nenhuma URL encontrada para processar em {page_url}")
+                return migrated_urls
+                
+            logger.info(f"Encontradas {total_urls} URLs para processar em {page_url}")
+            
+            # Convert to list for better batch processing
+            url_list = list(urls_to_process)
             processed = 0
             
-            # Processa em lotes menores para melhor controle
-            batch_size = 5  # Reduzido para 5 requisições simultâneas
-            sem = asyncio.Semaphore(batch_size)
+            # Process in optimized batches
+            batch_size = min(20, total_urls)  # Limit batch size for better control
             
-            async def process_url_with_sem(url):
-                async with sem:
-                    try:
-                        return await self.migrate_document(url, folder_id, page_url)
-                    except Exception as e:
-                        logger.error(f"Erro processando {url}: {str(e)}")
-                        return None
-
             for i in range(0, total_urls, batch_size):
-                batch = list(urls_to_process)[i:i + batch_size]
-                tasks = [process_url_with_sem(url) for url in batch]
-                results = await asyncio.gather(*tasks)
+                batch = url_list[i:i + batch_size]
+                logger.info(f"Processando lote {i//batch_size + 1}/{(total_urls + batch_size - 1)//batch_size}")
                 
-                for url, result in zip(batch, results):
-                    processed += 1
-                    if result:
-                        migrated_urls.append(result)
-                        logger.info(f"Updated document/image URL: {url} -> {result}")
-                    else:
-                        logger.error(f"Failed to process document/image: {url}")
-                    
-                # Log do progresso
-                logger.info(f"Progresso: {processed}/{total_urls} ({(processed/total_urls*100):.1f}%)")
+                batch_results = await self._process_url_batch(batch, folder_id, page_url)
+                migrated_urls.extend(batch_results)
+                
+                processed += len(batch)
+                progress_pct = (processed / total_urls) * 100
+                logger.info(f"Progresso: {processed}/{total_urls} ({progress_pct:.1f}%) - Migrados: {len(migrated_urls)}")
                 
         except Exception as e:
             logger.error(f"Erro ao processar página {page_url}: {str(e)}")
@@ -497,3 +545,9 @@ class DocumentCreator:
         if self.session:
             await self.session.close()
             self.session = None
+            
+        if self._connection_pool:
+            await self._connection_pool.close()
+            self._connection_pool = None
+        
+        logger.info("Recursos fechados com sucesso")

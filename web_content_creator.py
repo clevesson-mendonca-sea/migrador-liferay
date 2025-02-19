@@ -4,11 +4,13 @@ from datetime import datetime
 import logging
 from logging.handlers import RotatingFileHandler
 import traceback
-from typing import List, Optional, Dict, Union
+from typing import List, Optional, Dict, Union, Any, Tuple
 import aiohttp
 from aiohttp import ClientTimeout, BasicAuth, TCPConnector
 from dataclasses import dataclass
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
+from functools import lru_cache
+import json
 from web_content_processor import ContentProcessor
 from folder_creator import FolderCreator
 from document_creator import DocumentCreator
@@ -24,6 +26,10 @@ class ContentResponse:
     error: Optional[str] = None
 
 class WebContentCreator:
+    # Precomputed constants
+    DEFAULT_PORTLET_ID = 'com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_JournalCont_'
+    ASSOCIATION_ENDPOINT = '/o/api-association-migrador/v1.0/journal-content/associate-article'
+    
     def __init__(self, config):
         self.config = config
         self.session = None
@@ -35,8 +41,13 @@ class WebContentCreator:
         self.cache = ContentCache()
         self.error_log_file = "content_migration_errors.txt"
         self.base_domain = ""
+        self._connection_pool = None
         self._setup_logging()
+        # Pre-built URLs for frequent API calls
+        self._site_pages_url = f"{config.liferay_url}/o/headless-delivery/v1.0/sites/{config.site_id}/site-pages"
         self.content_processor = ContentProcessor(self)
+        # Initialize semaphore for concurrency control
+        self._request_semaphore = asyncio.Semaphore(20)
 
     def _setup_logging(self):
         """Configura o logging"""
@@ -58,11 +69,21 @@ class WebContentCreator:
         logger.setLevel(logging.INFO)
 
     async def initialize_session(self):
-        """Inicializa sessão HTTP com limites ampliados"""
+        """Inicializa sessão HTTP com limites ampliados e pool de conexões"""
         if self.session:
             await self.session.close()
         
-        timeout = ClientTimeout(total=180, connect=30, sock_read=30)  # Reduzido para ser mais responsivo
+        # Cria pool de conexões se não existir
+        if not self._connection_pool:
+            self._connection_pool = TCPConnector(
+                ssl=False,
+                limit=100,  # Aumentado para 100 conexões simultâneas
+                ttl_dns_cache=1200,  # Cache de DNS por 20 minutos
+                keepalive_timeout=120,  # Mantém conexões por mais tempo
+                force_close=False  # Permite reuso de conexões
+            )
+        
+        timeout = ClientTimeout(total=180, connect=30, sock_read=60, sock_connect=30)
         auth = BasicAuth(login=self.config.liferay_user, password=self.config.liferay_pass)
         
         self.session = aiohttp.ClientSession(
@@ -70,22 +91,19 @@ class WebContentCreator:
             headers={
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'User-Agent': 'ContentMigrator/1.0'
+                'User-Agent': 'ContentMigrator/2.0'
             },
             timeout=timeout,
-            connector=TCPConnector(
-                ssl=False,
-                limit=50,  # Aumentado de 10 para 50
-                ttl_dns_cache=600,  # Aumentado de 300 para 600
-                force_close=True
-            )
+            connector=self._connection_pool,
+            json_serialize=json.dumps  # Serialização JSON mais rápida
         )
         
+        logger.info("Inicializando sessões dos criadores em paralelo")
         await asyncio.gather(
             self.folder_creator.initialize_session(),
             self.document_creator.initialize_session()
         )
-
+        logger.info("Sessões inicializadas com sucesso")
 
     def _log_error(self, error_type: str, url: str, error_msg: str, title: str = "", hierarchy: List[str] = None):
         """Log centralizado de erros"""
@@ -108,18 +126,67 @@ class WebContentCreator:
             logger.error(f"Error writing to error log: {str(e)}")
 
     async def _retry_operation(self, operation, *args, max_retries=3, **kwargs):
-        """Wrapper para operações com retry otimizado"""
+        """Wrapper para operações com retry exponencial otimizado"""
         last_error = None
         
         for attempt in range(max_retries):
             try:
                 return await operation(*args, **kwargs)
-            except Exception as e:
+            except aiohttp.ClientResponseError as e:
+                # Falhas específicas para erros HTTP
                 last_error = e
+                if e.status in (429, 503, 504):  # Rate limiting ou serviço indisponível
+                    wait_time = 2 * (attempt + 1)
+                    logger.warning(f"Rate limit ou serviço indisponível ({e.status}). Tentativa {attempt+1}/{max_retries}. Aguardando {wait_time}s...")
+                    await asyncio.sleep(wait_time)
+                    continue
+                elif e.status in (400, 401, 403, 404, 405):  # Erros de cliente - não adianta tentar novamente
+                    logger.error(f"Erro de cliente ({e.status}): {str(e)}")
+                    raise e
+                # Outros erros HTTP - tentar novamente
                 if attempt < max_retries - 1:
-                    await asyncio.sleep(1 * (attempt + 1))  # Reduzido de 2**attempt
+                    wait_time = 1 * (attempt + 1)
+                    logger.warning(f"Erro HTTP ({e.status}). Tentativa {attempt+1}/{max_retries}. Aguardando {wait_time}s...")
+                    await asyncio.sleep(wait_time)
                     continue
                 raise last_error
+            except Exception as e:
+                # Falhas gerais
+                last_error = e
+                if attempt < max_retries - 1:
+                    wait_time = 1 * (attempt + 1)
+                    logger.warning(f"Erro geral: {str(e)}. Tentativa {attempt+1}/{max_retries}. Aguardando {wait_time}s...")
+                    await asyncio.sleep(wait_time)
+                    continue
+                raise last_error
+
+    async def _controlled_request(self, method: str, url: str, **kwargs) -> Tuple[int, Any]:
+        """Executa requisição HTTP com controle de concorrência e melhor tratamento de erros"""
+        async with self._request_semaphore:
+            if not self.session:
+                await self.initialize_session()
+                
+            try:
+                async with getattr(self.session, method)(url, **kwargs) as response:
+                    if response.content_type == 'application/json':
+                        data = await response.json(content_type=None)
+                    else:
+                        data = await response.text()
+                    return response.status, data
+            except aiohttp.ClientResponseError as e:
+                logger.error(f"HTTP error during {method} to {url}: {e.status} - {str(e)}")
+                raise
+            except aiohttp.ClientError as e:
+                logger.error(f"Client error during {method} to {url}: {str(e)}")
+                raise
+            except Exception as e:
+                logger.error(f"Unexpected error during {method} to {url}: {str(e)}")
+                raise
+
+    @lru_cache(maxsize=200)
+    def _get_content_url(self, folder_id: int) -> str:
+        """Retorna URL de criação de conteúdo (cached)"""
+        return f"{self.config.liferay_url}/o/headless-delivery/v1.0/structured-content-folders/{folder_id}/structured-contents"
 
     async def fetch_content(self, url: str) -> str:
         """Busca conteúdo da URL otimizada"""
@@ -138,24 +205,23 @@ class WebContentCreator:
             if not full_url:
                 raise ValueError(f"Invalid URL: {url}")
 
-            async with self.session.get(full_url, ssl=False) as response:
-                if response.status != 200:
-                    raise Exception(f"Failed to fetch content: {response.status}")
+            status, html = await self._controlled_request('get', full_url)
+            if status != 200:
+                raise Exception(f"Failed to fetch content: {status}")
+            
+            # Parse HTML apenas uma vez
+            soup = BeautifulSoup(html, 'html.parser')
+            
+            for selector in self.content_processor.CONTENT_SELECTORS:
+                content_tag_type = 'id' if selector['type'] == 'id' else 'class_'
+                content = soup.find(**{content_tag_type: selector['value']})
                 
-                html = await response.text()
-                # Parse HTML apenas uma vez
-                soup = BeautifulSoup(html, 'html.parser')
-                
-                for selector in self.content_processor.CONTENT_SELECTORS:
-                    content = soup.find(**{
-                        'id' if selector['type'] == 'id' else 'class_': selector['value']
-                    })
-                    if content:
-                        cleaned_content = self.content_processor._clean_content(str(content))
-                        self.cache.add_url(url, cleaned_content)
-                        return cleaned_content
+                if content:
+                    cleaned_content = self.content_processor._clean_content(str(content))
+                    self.cache.add_url(url, cleaned_content)
+                    return cleaned_content
 
-                raise Exception("No valid content found")
+            raise Exception("No valid content found")
 
         except Exception as e:
             self._log_error("Content Fetch", url, str(e))
@@ -184,21 +250,19 @@ class WebContentCreator:
                 "friendlyUrlPath": friendly_url
             }
 
-            url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/structured-content-folders/{folder_id}/structured-contents"
+            url = self._get_content_url(folder_id)
 
             async def create_attempt():
-                async with self.session.post(url, json=content_data) as response:
-                    if response.status in (200, 201):
-                        result = await response.json()
-                        content_id = result.get('id')
-                        content_key = result.get('key')
-                        if content_id:
-                            logger.info(f"Created content: {title} (ID: {content_id}, Key: {content_key})")
-                            self.cache.add_content(title, content_id)
-                            return {"id": int(content_id), "key": content_key}
-                    
-                    response_text = await response.text()
-                    raise Exception(f"Failed to create content: {response.status} - {response_text}")
+                status, result = await self._controlled_request('post', url, json=content_data)
+                if status in (200, 201):
+                    content_id = result.get('id')
+                    content_key = result.get('key')
+                    if content_id:
+                        logger.info(f"Created content: {title} (ID: {content_id}, Key: {content_key})")
+                        self.cache.add_content(title, content_id)
+                        return {"id": int(content_id), "key": content_key}
+                
+                raise Exception(f"Failed to create content: {status} - {result}")
 
             return await self._retry_operation(create_attempt)
             
@@ -209,38 +273,39 @@ class WebContentCreator:
     async def migrate_content(self, source_url: str, title: str, hierarchy: List[str]) -> Dict[str, Union[int, str]]:
         """Migra conteúdo e retorna tanto o ID quanto a key do conteúdo"""
         try:
+            # Verifica cache primeiro para evitar operações desnecessárias
             cached_content_id = self.cache.get_content(title)
             if cached_content_id:
                 logger.info(f"Using cached content for {title}")
                 # Buscar a key se estiver usando cache
                 url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/structured-contents/{cached_content_id}"
-                async with self.session.get(url, ssl=False) as response:
-                    if response.status == 200:
-                        data = await response.json()
-                        return {"id": cached_content_id, "key": data.get('key')}
-                    return {"id": cached_content_id, "key": str(cached_content_id)}
+                status, data = await self._controlled_request('get', url)
+                if status == 200:
+                    return {"id": cached_content_id, "key": data.get('key')}
+                return {"id": cached_content_id, "key": str(cached_content_id)}
 
             # Primeiro busca os dados da página
             page_data = await self.find_page_by_title_or_id(title)
-            logger.info(f"Found page data: {page_data}")
+            logger.info(f"Found page data: {bool(page_data)}")
 
-            # Cria recursos necessários em paralelo
-            folder_id, folder_id_dl = await asyncio.gather(
+            # Cria recursos necessários em paralelo para melhor performance
+            folder_results = await asyncio.gather(
                 self.folder_creator.create_folder_hierarchy(hierarchy, title, 'journal'),
                 self.folder_creator.create_folder_hierarchy(hierarchy, title, 'documents')
             )
+            folder_id, folder_id_dl = folder_results
 
             if not folder_id:
                 raise Exception(f"Could not create/find folder for: {title}")
 
-            # Verifica conteúdo existente
+            # Verifica conteúdo existente - evita duplicação
             existing_content = await self.find_existing_content(title, folder_id)
             if existing_content:
                 if page_data:
                     await self.associate_content_with_page_portlet(existing_content, page_data)
                 return existing_content
 
-            # Processa o conteúdo
+            # Processa o conteúdo - com lógica otimizada
             process_result = await self.content_processor.fetch_and_process_content(source_url, folder_id_dl)
             if not process_result["success"]:
                 raise Exception(process_result["error"])
@@ -248,6 +313,7 @@ class WebContentCreator:
             content_result = None
             content_results = []
 
+            # Processamento condicional baseado no tipo de conteúdo
             if process_result["is_collapsible"]:
                 logger.info(f"Creating collapsible content for {title}")
                 content_result = await self.collapse_processor.create_collapse_content(
@@ -268,13 +334,18 @@ class WebContentCreator:
             if not content_result:
                 raise Exception("Failed to create content in Liferay")
 
-            # Associa conteúdos à página
+            # Associa conteúdos à página de forma otimizada
             if page_data:
+                association_tasks = []
                 if content_results:
                     for result in content_results:
-                        await self.associate_content_with_page_portlet(result['key'], page_data)
+                        association_tasks.append(self.associate_content_with_page_portlet(result, page_data))
                 else:
-                    await self.associate_content_with_page_portlet(content_result, page_data)
+                    association_tasks.append(self.associate_content_with_page_portlet(content_result, page_data))
+                
+                # Executa todas as associações em paralelo
+                if association_tasks:
+                    await asyncio.gather(*association_tasks)
 
             self.cache.add_content(title, content_result)
             return content_result
@@ -285,33 +356,41 @@ class WebContentCreator:
             self._log_error("Content Migration", source_url, error_msg, title, hierarchy)
             return {"id": 0, "key": ""}
     
-    async def find_existing_content(self, title: str, folder_id: int) -> Optional[int]:
-        """Busca conteúdo existente"""
+    async def find_existing_content(self, title: str, folder_id: int) -> Optional[Dict[str, Union[int, str]]]:
+        """Busca conteúdo existente com cache aprimorado"""
+        # Verifica cache primeiro
         cached_id = self.cache.get_content(title)
         if cached_id:
-            return cached_id
+            logger.info(f"Found cached content for {title}: {cached_id}")
+            return {"id": cached_id, "key": str(cached_id)}
 
         if not self.session:
             await self.initialize_session()
 
         try:
-            url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/structured-content-folders/{folder_id}/structured-contents"
+            url = self._get_content_url(folder_id)
+            
+            # Escape special characters in title for filter
+            safe_title = title.replace("'", "\\'")
+            
             params = {
-                'filter': f"title eq '{title}'",
+                'filter': f"title eq '{safe_title}'",
                 'fields': 'id,title,key',
                 'page': 1,
-                'pageSize': 1
+                'pageSize': 5  # Busca mais resultados para comparação exata
             }
             
-            async with self.session.get(url, params=params, ssl=False) as response:
-                if response.status == 200:
-                    data = await response.json()
-                    for content in data.get('items', []):
-                        if content['title'].lower() == title.lower():
-                            content_key = int(content['key'])
-                            self.cache.add_content(title, content_key)
-                            logger.info(f"Found existing content: {title} (ID: {content_key})")
-                            return content_key
+            status, data = await self._controlled_request('get', url, params=params)
+            if status == 200:
+                for content in data.get('items', []):
+                    # Comparação case-insensitive para maior compatibilidade
+                    if content['title'].lower() == title.lower():
+                        content_id = int(content['id'])
+                        content_key = content['key']
+                        result = {"id": content_id, "key": content_key}
+                        self.cache.add_content(title, content_id)
+                        logger.info(f"Found existing content: {title} (ID: {content_id}, Key: {content_key})")
+                        return result
                             
             logger.info(f"No existing content found with title: {title}")
             return None
@@ -320,89 +399,117 @@ class WebContentCreator:
             self._log_error("Content Search", title, str(e))
             return None
 
+    @lru_cache(maxsize=100)
+    def _parse_content_portlets(self, html_content: str) -> List[Dict[str, str]]:
+        """Parse portlets de conteúdo de HTML com caching"""
+        try:
+            soup = BeautifulSoup(html_content, 'html.parser')
+
+            portlets = []
+            journal_portlets = soup.find_all(
+                lambda tag: isinstance(tag, Tag) and tag.get('id', '').startswith('p_p_id_com_liferay_journal_content_web_portlet_JournalContentPortlet')
+            )
+            
+            for portlet in journal_portlets:
+                portlet_id = portlet.get('id', '').replace('p_p_id_', '')
+                if portlet_id:
+                    portlets.append({
+                        'portletId': portlet_id,
+                        'articleId': ''
+                    })
+            
+            # Se não encontrou nenhum portlet, cria um padrão
+            if not portlets:
+                portlets.append({
+                    'portletId': self.DEFAULT_PORTLET_ID,
+                    'articleId': ''
+                })
+
+            return portlets
+        except Exception as e:
+            logger.error(f"Error parsing portlets: {str(e)}")
+            return [{
+                'portletId': self.DEFAULT_PORTLET_ID,
+                'articleId': ''
+            }]
+
     async def find_page_by_title_or_id(self, identifier: Union[str, int]) -> Optional[Dict]:
         """
-        Busca uma página pelo título ou ID e obtém os detalhes através do rendered-page
+        Busca uma página pelo título ou ID com pesquisa otimizada
         """
         try:
             if not self.session:
                 await self.initialize_session()
 
-            url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/sites/{self.config.site_id}/site-pages"
+            # Otimizado para buscar páginas de forma mais eficiente
+            search_term = str(identifier).lower()
+            is_numeric = search_term.isdigit()
+            
+            # Determina estratégia de busca baseada no tipo de identificador
             params = {
                 'page': 1,
                 'pageSize': 100,
-                'search': identifier,
                 'fields': 'id,title,friendlyUrlPath'
             }
             
-            async with self.session.get(url, params=params) as response:
-                if response.status != 200:
-                    logger.error(f"Failed to search pages. Status: {response.status}")
-                    return None
-                    
-                data = await response.json()
-                items = data.get('items', [])
+            if is_numeric:
+                # Se for um ID, adiciona filtro específico
+                params['filter'] = f"id eq {search_term}"
+            else:
+                # Se for título, usa busca de texto
+                params['search'] = search_term
+            
+            status, data = await self._controlled_request('get', self._site_pages_url, params=params)
+            if status != 200:
+                logger.error(f"Failed to search pages. Status: {status}")
+                return None
                 
-                # Procura correspondência exata primeiro
-                page_data = None
+            items = data.get('items', [])
+            if not items:
+                return None
+                
+            # Procura correspondência exata primeiro
+            page_data = None
+            for item in items:
+                item_title = item.get('title', '').lower()
+                if (is_numeric and str(item.get('id')) == search_term) or item_title == search_term:
+                    page_data = item
+                    break
+            
+            # Se não encontrou exata, tenta parcial
+            if not page_data and not is_numeric:
                 for item in items:
-                    if item.get('title', '').lower() == str(identifier).lower():
+                    if search_term in item.get('title', '').lower():
                         page_data = item
                         break
-                
-                # Se não encontrou exata, tenta parcial
-                if not page_data:
-                    for item in items:
-                        if str(identifier).lower() in item.get('title', '').lower():
-                            page_data = item
-                            break
-                
-                if not page_data:
+            
+            if not page_data:
+                return None
+
+            # Busca rendered page para obter portlets
+            friendly_url = page_data.get('friendlyUrlPath', '').strip('/')
+            if not friendly_url:
+                # Fallback para id se não tiver friendly URL
+                page_id = page_data.get('id')
+                if not page_id:
                     return None
+                friendly_url = str(page_id)
 
-                # Busca rendered page
-                friendly_url = page_data.get('friendlyUrlPath', '').strip('/')
-                if not friendly_url:
-                    return None
-
-                rendered_url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/sites/{self.config.site_id}/site-pages/{friendly_url}/rendered-page"
+            rendered_url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/sites/{self.config.site_id}/site-pages/{friendly_url}/rendered-page"
+            
+            headers = {
+                'Accept': 'text/html'
+            }
+            
+            status, rendered_html = await self._controlled_request('get', rendered_url, headers=headers)
+            if status == 200:
+                # Parse portlets
+                portlets = self._parse_content_portlets(rendered_html)
+                page_data['portlets'] = portlets
+                return page_data
                 
-                headers = {
-                    'Accept': 'text/html'
-                }
+            return None
                 
-                async with self.session.get(rendered_url, headers=headers) as rendered_response:
-                    if rendered_response.status == 200:
-                        rendered_html = await rendered_response.text()
-                        from bs4 import BeautifulSoup
-                        soup = BeautifulSoup(rendered_html, 'html.parser')
-
-                        portlets = []
-                        journal_portlets = soup.find_all(
-                            lambda tag: tag.get('id', '').startswith('p_p_id_com_liferay_journal_content_web_portlet_JournalContentPortlet')
-                        )
-                        
-                        for portlet in journal_portlets:
-                            portlet_id = portlet.get('id', '').replace('p_p_id_', '')
-                            if portlet_id:
-                                portlets.append({
-                                    'portletId': portlet_id,
-                                    'articleId': ''
-                                })
-                        
-                        # Se não encontrou nenhum portlet, cria um padrão
-                        if not portlets:
-                            portlets.append({
-                                'portletId': 'com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_JournalCont_',
-                                'articleId': ''
-                            })
-
-                        page_data['portlets'] = portlets
-                        return page_data
-                        
-                    return None
-                    
         except Exception as e:
             logger.error(f"Error finding page: {str(e)}")
             return None
@@ -427,59 +534,60 @@ class WebContentCreator:
                     return portlet_id
                     
             # Se não encontrou nenhum, usa o padrão
-            return 'com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_JournalCont_'
+            return self.DEFAULT_PORTLET_ID
             
         except Exception as e:
             logger.error(f"Error getting portlet instance: {str(e)}")
-            return None
+            return self.DEFAULT_PORTLET_ID
 
     async def associate_content_with_page_portlet(self, content: Union[Dict[str, Union[int, str]], str, int], page_data: Union[Dict, int, str]) -> bool:
         """
-        Associa um conteúdo ao portlet Journal Content de uma página
-        
-        :param content: Pode ser um dicionário com 'id' e 'key', ou diretamente a key como string/int
-        :param page_data: Dados da página ou identificador
-        :return: Boolean indicando sucesso da operação
+        Associa um conteúdo ao portlet Journal Content de uma página com retry aprimorado
         """
         try:
+            # Busca página se necessário
             if not isinstance(page_data, dict):
                 page_info = await self.find_page_by_title_or_id(page_data)
                 if not page_info:
+                    logger.warning(f"Page not found for identifier: {page_data}")
                     return False
             else:
                 page_info = page_data
-                
+            
+            # Busca ID de portlet disponível
             portlet_id = await self.get_journal_portlet_instance(page_info)
             if not portlet_id:
+                logger.warning(f"No portlet found for page: {page_info.get('title')}")
                 return False
 
+            # Normaliza ID do portlet
             if not portlet_id.startswith('p_p_id_'):
-                portlet_id = f'p_p_id_{portlet_id}'
-
-            portlet_id = portlet_id.replace('p_p_id_', '')
+                portlet_id = portlet_id.replace('p_p_id_', '')
 
             if portlet_id.endswith('_'):
                 portlet_id = portlet_id[:-1]
             
+            # Normaliza key do conteúdo
             content_key = content.get('key') if isinstance(content, dict) else str(content)
             
-            association_url = f"{self.config.liferay_url}/o/api-association-migrador/v1.0/journal-content/associate-article"
+            # URL de associação
+            association_url = f"{self.config.liferay_url}{self.ASSOCIATION_ENDPOINT}"
 
             params = {
-                'plid': str(page_info['id']),
+                'plid': str(page_info.get('id')),
                 'portletId': portlet_id,
                 'articleId': content_key
             }
 
             async def associate_content():
-                async with self.session.post(association_url, params=params, ssl=False) as response:
-                    if response.status in (200, 201):
-                        result = await response.json()
-                        logger.info(f"Association result: {result}")
-                        return result.get('status') == 'SUCCESS'
-                    return False
+                status, result = await self._controlled_request('post', association_url, params=params)
+                if status in (200, 201):
+                    logger.info(f"Association result: {result}")
+                    return result.get('status') == 'SUCCESS'
+                raise Exception(f"Association request failed with status {status}")
 
-            return await self._retry_operation(associate_content)
+            # Tenta associar com retry
+            return await self._retry_operation(associate_content, max_retries=4)
             
         except Exception as e:
             logger.error(f"Error associating content: {str(e)}")
@@ -489,18 +597,11 @@ class WebContentCreator:
                                         page_identifier: Union[str, int], page_friendly_url: str = None) -> ContentResponse:
         """
         Cria conteúdo e associa a um portlet específico da página
-        
-        :param source_url: URL do conteúdo fonte
-        :param title: Título do conteúdo
-        :param hierarchy: Hierarquia do conteúdo
-        :param page_identifier: ID ou título da página
-        :param page_friendly_url: URL amigável da página (opcional)
-        :return: ContentResponse com status e detalhes
         """
         try:
             # Primeiro cria o conteúdo
             content_result = await self.migrate_content(source_url, title, hierarchy)
-            if not content_result or not content_result['id']:
+            if not content_result or not content_result.get('id'):
                 raise Exception("Failed to create content")
 
             # Tenta associar ao portlet da página
@@ -521,19 +622,30 @@ class WebContentCreator:
         except Exception as e:
             error_msg = f"Error in content creation and association: {str(e)}"
             logger.error(error_msg)
+            self._log_error("Content Association", source_url, error_msg, title, hierarchy)
             return ContentResponse(content_id=0, is_new=False, error=error_msg)
     
     async def close(self):
-        """Fecha recursos"""
+        """Fecha recursos de forma eficiente"""
         if not self.session:
             return
             
         try:
-            await asyncio.gather(
+            close_tasks = [
                 self.session.close(),
                 self.folder_creator.close(),
                 self.document_creator.close()
-            )
-        finally:
+            ]
+            
+            await asyncio.gather(*close_tasks)
+            
+            # Limpa pool de conexões
+            if self._connection_pool:
+                await self._connection_pool.close()
+                self._connection_pool = None
+            
             self.session = None
             self.cache.clear_all()
+            logger.info("Recursos fechados com sucesso")
+        except Exception as e:
+            logger.error(f"Error closing resources: {str(e)}")

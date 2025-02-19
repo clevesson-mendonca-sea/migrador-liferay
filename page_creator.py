@@ -77,7 +77,15 @@ class PageCreator:
             f"{self.config.liferay_url}/api/jsonws/layout/update-layout",
             params=update
         ) as update_response:
-            return update_response.status in (200, 201)
+            success = update_response.status in (200, 201)
+            
+            # Se a atualização foi bem-sucedida e é um layout com menu, configura o menu
+            if success and column_type == "2_columns_ii":
+                menu_portlet_id = self._extract_menu_portlet_id(type_settings)
+                if menu_portlet_id and hasattr(self.config, 'display_template_key'):
+                    await self.configure_menu_display(page_id, menu_portlet_id, self.config.display_template_key)
+            
+            return success
 
     def _get_type_settings(self, column_type: str) -> str:
         random_id = random.randint(10000, 99999)  # Gera um número aleatório de 5 dígitos
@@ -93,6 +101,61 @@ class PageCreator:
             )
         }
         return settings.get(column_type, "")
+    
+    def _extract_menu_portlet_id(self, type_settings: str) -> str:
+        """
+        Extrai o ID do portlet de menu das configurações de tipo
+        
+        Args:
+            type_settings: String de configurações retornada por _get_type_settings
+            
+        Returns:
+            str: ID do portlet ou None se não encontrado
+        """
+        if "SiteNavigationMenuPortlet" not in type_settings:
+            return None
+            
+        for line in type_settings.split("\n"):
+            if "SiteNavigationMenuPortlet" in line:
+                parts = line.split("=")
+                if len(parts) > 1:
+                    return parts[1].strip()
+        return None
+    
+    async def configure_menu_display(self, page_id: int, portlet_id: str, display_template_key: str) -> bool:
+        """
+        Configura o template de exibição para o portlet de menu de navegação
+        
+        Args:
+            page_id: ID da página
+            portlet_id: ID do portlet de menu (SiteNavigationMenuPortlet)
+            display_template_key: Chave do template de exibição (do env)
+            
+        Returns:
+            bool: True se configurado com sucesso, False caso contrário
+        """
+        print(f"plid: {str(page_id)}, portletId: {portlet_id}, displayTemplateKey: {display_template_key}")
+        try:
+            params = {
+                "plid": str(page_id),
+                "portletId": portlet_id,
+                "displayTemplateKey": display_template_key
+            }
+            
+            async with self.session.post(
+                f"{self.config.liferay_url}/o/api-association-migrador/v1.0/site-navigation/associate-menu",
+                params=params
+            ) as response:
+                success = response.status in (200, 201)
+                if success:
+                    print(f"Menu configurado com sucesso para página {page_id} com template {display_template_key}")
+                else:
+                    error_text = await response.text()
+                    print(f"Erro ao configurar menu: {response.status} - {error_text}")
+                return success
+        except Exception as e:
+            print(f"Exceção ao configurar menu: {str(e)}")
+            return False
 
     async def ensure_page_exists(self, title: str, cache_key: str, parent_id: int = 0, 
                                friendly_url: str = "", hierarchy: List[str] = None, 
