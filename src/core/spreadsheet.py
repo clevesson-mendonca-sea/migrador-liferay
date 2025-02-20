@@ -31,25 +31,32 @@ async def get_sheet_update_data(workbook):
         pages = []
         
         for row in rows:
-            text = " ".join(row).strip()
-            if not text:
-                continue
+            # text = " ".join(row).strip()
+            # if not text:
+            #     continue
                 
-            text = text.replace("Article ID:", "ArticleID:")
+            # text = text.replace("Article ID:", "ArticleID:")
             
-            if "Title:" in text and "ArticleID:" in text:
-                parts = text.split("ArticleID:")
-                if len(parts) == 2:
-                    title = parts[0].replace("Title:", "").strip()
-                    article_id = parts[1].split()[0].strip()
+            # if "Title:" in text and "ArticleID:" in text:
+            #     parts = text.split("ArticleID:")
+            #     if len(parts) == 2:
+            #         print(parts)
+            #         title = parts[0].replace("Title:", "").strip()
+            #         article_id = parts[1].split()[0].strip()
                             
-                    if title and article_id:
-                        pages.append({
-                            'title': title,
-                            'article_id': article_id,
-                            'destination': article_id
-                        })
+            #         if title and article_id:
+            #             pages.append({
+            #                 'title': title,
+            #                 'article_id': article_id,
+            #                 'destination': article_id
+            #             })
             
+            pages.append({
+                'title': row[0],
+                'article_id': row[1],
+                'destination': row[1]
+            })
+
         return pages
             
     except Exception as e:
