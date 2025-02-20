@@ -14,12 +14,13 @@ class PageCreator:
     async def create_page(self, title: str, friendly_url: str, parent_id: int = 0, 
                          hierarchy: List[str] = None, page_type: str = "portlet", 
                          visible: bool = True, column_type: str = "1_column",
-                         menu_title: str = None, url_vinculada: str= None) -> int:
+                         menu_title: str = None, url_vinculada: str = "") -> int:
         try:
             normalized_title = self.processor.normalize_page_name(title)
             normalized_url = self.processor.normalize_friendly_url(friendly_url)
             page_id = await self._create_page_request(normalized_title, normalized_url, 
                                                     parent_id, visible, page_type)
+            print(f"url_vinculada 2 {url_vinculada}")
             
             if page_id:
                 await self._update_page_layout(page_id, column_type, hierarchy, menu_title, url_vinculada)
@@ -250,7 +251,8 @@ class PageCreator:
         # Cria a URL amigável se não fornecida
         if not friendly_url:
             friendly_url = self.processor.normalize_friendly_url(title)
-            
+        print(f"url_vinculada {url_vinculada}")
+        
         page_id = await self.create_page(title, friendly_url, parent_id, 
                                        hierarchy, page_type, visible, column_type,
                                        menu_title, url_vinculada)
@@ -275,7 +277,7 @@ class PageCreator:
             level_id = await self.ensure_page_exists(
                 normalized_level, current_path, parent_id, "", 
                 hierarchy_levels[:hierarchy_levels.index(level)+1], 
-                page_type, visible, column_type, url_vinculada
+                page_type, visible, column_type, menu_title, url_vinculada
             )
             
             if level_id:

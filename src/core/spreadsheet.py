@@ -128,7 +128,7 @@ async def get_sheet_data(is_update=False):
 
     # Process page types
     page_type = [
-        row[13] if len(row) > 13 and row[13].strip() not in ["", "-"] else "widget"
+        row[14] if len(row) > 14 and row[14].strip() not in ["", "-"] else "widget"
         for row in rows
     ]
 
@@ -183,7 +183,8 @@ async def get_sheet_data(is_update=False):
                 # Build complete URLs
                 complete_source_url = url_utils.build_url(source_url, base_domain)
                 complete_dest_url = url_utils.build_url(dest_url, base_domain)
-                link_vincular = row[16].strip() if len(row) > 16 and row[16] else None
+                link_vincular = row[16].strip() if len(row) > 16 and row[16] else ""
+                print(link_vincular)
 
                 if title.strip():
                     page_data = {

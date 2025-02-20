@@ -57,6 +57,8 @@ async def migrate_pages(pages):
                 menu_title=menu_title,
                 url_vinculada=page['url_vincular']
             )
+
+            # print(page['url_vincular'])
             
             if page_id:
                 logger.info(f"Página criada: {page['title']} (ID: {page_id}) tipo({page['type']})")
