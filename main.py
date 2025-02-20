@@ -117,7 +117,7 @@ async def get_sheet_data(is_update=False):
     rows = sheet.get_all_values()[1:]
 
     page_type = [
-        row[14] if len(row) > 14 and row[14].strip() not in ["", "-"] else "widget"
+        row[13] if len(row) > 13 and row[13].strip() not in ["", "-"] else "widget"
         for row in rows
     ]
 
@@ -154,13 +154,16 @@ async def get_sheet_data(is_update=False):
 
     pages = []
     for index, row in enumerate(rows):
-        if all(row[:1]) and len(row) > 6 and row[6]:
+        if all(row[:1]) and len(row) > 8 and row[6]:
             hierarchy = filter_hierarchy(row[6])
             
             if hierarchy:
                 title = hierarchy[-1]
                 visibility = row[7].strip().lower() if len(row) > 7 and row[7] else 'menu'
                 is_visible = visibility == 'menu'
+                
+                # Extrair o título do menu
+                menu_title = row[8].strip() if len(row) > 8 and row[8] else None
                 
                 # Get source and destination URLs
                 source_url = row[0].strip() if row[0] else ''
@@ -178,7 +181,8 @@ async def get_sheet_data(is_update=False):
                         'hierarchy': hierarchy,
                         'type': page_type_formatted[index],
                         'visible': is_visible,
-                        "column_type": column_type_formatted[index]
+                        'column_type': column_type_formatted[index],
+                        'menu_title': menu_title
                     }
                     pages.append(page_data)
 
@@ -205,23 +209,32 @@ async def migrate_pages(pages):
             logger.info(f"\nProcessando página: {page['title']}")
             logger.info(f"Hierarquia: {' > '.join(page['hierarchy'])}")
             logger.info(f"Tipo de pagina: {page['type']}")
+            
+            if 'menu_title' in page and page['menu_title']:
+                logger.info(f"Título do menu: {page['menu_title']}")
 
+            needs_menu = page['column_type'] == '2_columns_ii'
+            menu_title = page.get('menu_title') if needs_menu else None
+            
             page_id = await creator.create_hierarchy(
                 hierarchy=page['hierarchy'],
                 final_title=page['title'],
                 final_url=page['url'].strip('/').split('/')[-1],
                 page_type=page['type'],
                 visible=page['visible'],
-                column_type=page['column_type']
+                column_type=page['column_type'],
+                menu_title=menu_title
             )
             
             if page_id:
                 logger.info(f"Página criada: {page['title']} (ID: {page_id}) tipo({page['type']})")
+                if needs_menu and menu_title:
+                    logger.info(f"Menu configurado com título: {menu_title}")
             else:
                 logger.error(f"Falha ao criar página: {page['title']} {page['type']}")
 
         # await creator.retry_failed_pages()
-        
+           
 async def migrate_folders(pages):
     config = Config()
     folder_creator = FolderCreator(config)
