@@ -21,7 +21,7 @@ class PageCreator:
                                                     parent_id, visible, page_type, url_vinculada)
             
             if page_id:
-                await self._update_page_layout(page_id, column_type)
+                await self._update_page_layout(page_id, column_type, url_vinculada)
                 print(f"Página criada e atualizada: {normalized_title} (ID: {page_id}) | Tipo: {page_type}")
                 return int(page_id)
             
@@ -63,31 +63,6 @@ class PageCreator:
                 return result.get('layoutId') or result.get('plid')
             return 0
 
-    async def _update_page_url_vinculada(self, page_id: int, url_vinculada: str):
-        """
-        Atualiza as configurações da página para definir a URL vinculada.
-
-        Args:
-            page_id (int): ID da página criada.
-            url_vinculada (str): URL para redirecionamento.
-        """
-
-        params = {
-            "groupId": str(self.config.site_id),
-            "privateLayout": "false",
-            "layoutId": page_id,
-            "typeSettings": f"url={url_vinculada}\n"
-        }
-
-        async with self.session.post(
-            f"{self.config.liferay_url}/api/jsonws/layout/update-layout",
-            params=params
-        ) as response:
-            if response.status in (200, 201):
-                print(f"Configurações da página {page_id} atualizadas com sucesso!")
-            else:
-                print(f"Erro ao atualizar configurações da página {page_id}: {await response.text()}")
-
     def _handle_page_creation_error(self, title: str, url: str, parent_id: int, 
                                   hierarchy: List[str], error_message: str):
         error = PageError(
@@ -99,8 +74,8 @@ class PageCreator:
         )
         self.error_tracker.add_error(error)
 
-    async def _update_page_layout(self, page_id: int, column_type: str):
-        type_settings = self._get_type_settings(column_type)
+    async def _update_page_layout(self, page_id: int, column_type: str, url_vinculada: str):
+        type_settings = self._get_type_settings(column_type, url_vinculada)
         update = {
             "groupId": str(self.config.site_id),
             "privateLayout": "false",
@@ -122,11 +97,11 @@ class PageCreator:
             
             return success
 
-    def _get_type_settings(self, column_type: str) -> str:
+    def _get_type_settings(self, column_type: str, url_vinculada: str) -> str:
         random_id = random.randint(10000, 99999)  # Gera um número aleatório de 5 dígitos
         settings = {
             "1_column": (
-                f"column-1=com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_{random_id}\n"
+                f"column-1=com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_{random_id}\nlayoutUpdateable=true\nurl={url_vinculada}\n"
                 f"layout-template-id={column_type}\n"
             ),
             "2_columns_ii": (
