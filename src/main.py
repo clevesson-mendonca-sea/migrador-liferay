@@ -66,7 +66,6 @@ async def main():
             await migrate_pages(pages)
             await migrate_folders(pages)
             content_mapping = await migrate_contents(pages)
-            await migrate_pages(pages)  # Is this repeated intentionally?
 
         if content_mapping:
             logger.info("Adicionando conteúdo às páginas criadas...")
