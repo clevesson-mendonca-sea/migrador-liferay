@@ -54,7 +54,8 @@ async def migrate_pages(pages):
                 page_type=page['type'],
                 visible=page['visible'],
                 column_type=page['column_type'],
-                menu_title=menu_title
+                menu_title=menu_title,
+                url_vinculada=page['url_vincular']
             )
             
             if page_id:

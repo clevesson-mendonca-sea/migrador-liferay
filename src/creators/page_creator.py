@@ -14,7 +14,7 @@ class PageCreator:
     async def create_page(self, title: str, friendly_url: str, parent_id: int = 0, 
                          hierarchy: List[str] = None, page_type: str = "portlet", 
                          visible: bool = True, column_type: str = "1_column",
-                         menu_title: str = None) -> int:
+                         menu_title: str = None, url_vinculada: str= None) -> int:
         try:
             normalized_title = self.processor.normalize_page_name(title)
             normalized_url = self.processor.normalize_friendly_url(friendly_url)
@@ -22,7 +22,7 @@ class PageCreator:
                                                     parent_id, visible, page_type)
             
             if page_id:
-                await self._update_page_layout(page_id, column_type, hierarchy, menu_title)
+                await self._update_page_layout(page_id, column_type, hierarchy, menu_title, url_vinculada)
                 print(f"Página criada e atualizada: {normalized_title} (ID: {page_id}) | Tipo: {page_type}")
                 return int(page_id)
             
@@ -44,7 +44,7 @@ class PageCreator:
             "hidden": str(not visible).lower(),
             "friendlyURL": f"/{url}",
         }
-        
+
         async with self.session.post(
             f"{self.config.liferay_url}/api/jsonws/layout/add-layout",
             params=params
@@ -66,8 +66,8 @@ class PageCreator:
         self.error_tracker.add_error(error)
 
     async def _update_page_layout(self, page_id: int, column_type: str, 
-                               hierarchy: List[str] = None, menu_title: str = None):
-        type_settings = self._get_type_settings(column_type)
+                               hierarchy: List[str] = None, menu_title: str = None, url_vinculada: str= ""):
+        type_settings = self._get_type_settings(column_type, url_vinculada)
         update = {
             "groupId": str(self.config.site_id),
             "privateLayout": "false",
@@ -141,11 +141,11 @@ class PageCreator:
         
         return 0
 
-    def _get_type_settings(self, column_type: str) -> str:
+    def _get_type_settings(self, column_type: str, url_vinculada: str) -> str:
         random_id = random.randint(10000, 99999)  # Gera um número aleatório de 5 dígitos
         settings = {
             "1_column": (
-                f"column-1=com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_{random_id}\n"
+                f"column-1=com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_{random_id}\nlayoutUpdateable=true\nurl={url_vinculada}\n"
                 f"layout-template-id={column_type}\n"
             ),
             "2_columns_ii": (
@@ -226,7 +226,7 @@ class PageCreator:
     async def ensure_page_exists(self, title: str, cache_key: str, parent_id: int = 0, 
                                friendly_url: str = "", hierarchy: List[str] = None, 
                                page_type: str = "portlet", visible: bool = True, 
-                               column_type: str = "1_column", menu_title: str = None) -> int:
+                               column_type: str = "1_column", menu_title: str = None, url_vinculada: str= None) -> int:
         """
         Verifica se uma página já existe no cache ou cria uma nova
         
@@ -253,7 +253,7 @@ class PageCreator:
             
         page_id = await self.create_page(title, friendly_url, parent_id, 
                                        hierarchy, page_type, visible, column_type,
-                                       menu_title)
+                                       menu_title, url_vinculada)
         
         if page_id:
             self.page_cache[cache_key] = page_id
@@ -262,7 +262,7 @@ class PageCreator:
 
     async def create_hierarchy(self, hierarchy: list, final_title: str, final_url: str, 
                              page_type: str = "widget", visible: bool = True, 
-                             column_type: str = "1_column", menu_title: str = None) -> int:
+                             column_type: str = "1_column", menu_title: str = None, url_vinculada: str= None) -> int:
         current_path = ""
         parent_id = 0
         last_page_id = 0
@@ -275,7 +275,7 @@ class PageCreator:
             level_id = await self.ensure_page_exists(
                 normalized_level, current_path, parent_id, "", 
                 hierarchy_levels[:hierarchy_levels.index(level)+1], 
-                page_type, visible, column_type
+                page_type, visible, column_type, url_vinculada
             )
             
             if level_id:
@@ -292,7 +292,7 @@ class PageCreator:
                 
             final_page_id = await self.create_page(
                 final_title, final_url, parent_id, final_hierarchy,
-                page_type, visible, column_type, menu_title
+                page_type, visible, column_type, menu_title, url_vinculada
             )
             print(f"Página final criada: {final_title} (ID: {final_page_id}) Tipo da página {page_type}")
             

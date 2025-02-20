@@ -183,7 +183,8 @@ async def get_sheet_data(is_update=False):
                 # Build complete URLs
                 complete_source_url = url_utils.build_url(source_url, base_domain)
                 complete_dest_url = url_utils.build_url(dest_url, base_domain)
-                
+                link_vincular = row[16].strip() if len(row) > 16 and row[16] else None
+
                 if title.strip():
                     page_data = {
                         'title': title,
@@ -193,7 +194,8 @@ async def get_sheet_data(is_update=False):
                         'type': page_type_formatted[index],
                         'visible': is_visible,
                         'column_type': column_type_formatted[index],
-                        'menu_title': menu_title
+                        'menu_title': menu_title,
+                        "url_vincular": link_vincular
                     }
                     pages.append(page_data)
 
