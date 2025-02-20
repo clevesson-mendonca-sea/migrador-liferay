@@ -46,8 +46,9 @@ class PageCreator:
 
         if url_vinculada and len(url_vinculada) > 1: #verifica se a url foi passada e se o len dela é o que esperamos
             params.update({ #aqui ele da um append nos parametros
-                "typeSettings": f"linkToLayoutId=0\ntargetURL={url_vinculada}" #passa o type_settings
+                "typeSettings": f"url={url_vinculada}\n" #passa o type_settings - tambem não esta funcionando
             })
+            # self._update_page_url_vinculada(self.config.site_id, url_vinculada) - não sei por não esta atualizando :(
             print(f"Dentro do if: {params}") #debug
 
         print(f"Fora do if: {params}") #debug
@@ -61,6 +62,31 @@ class PageCreator:
                 result = await response.json()
                 return result.get('layoutId') or result.get('plid')
             return 0
+
+    async def _update_page_url_vinculada(self, page_id: int, url_vinculada: str):
+        """
+        Atualiza as configurações da página para definir a URL vinculada.
+
+        Args:
+            page_id (int): ID da página criada.
+            url_vinculada (str): URL para redirecionamento.
+        """
+
+        params = {
+            "groupId": str(self.config.site_id),
+            "privateLayout": "false",
+            "layoutId": page_id,
+            "typeSettings": f"url={url_vinculada}\n"
+        }
+
+        async with self.session.post(
+            f"{self.config.liferay_url}/api/jsonws/layout/update-layout",
+            params=params
+        ) as response:
+            if response.status in (200, 201):
+                print(f"Configurações da página {page_id} atualizadas com sucesso!")
+            else:
+                print(f"Erro ao atualizar configurações da página {page_id}: {await response.text()}")
 
     def _handle_page_creation_error(self, title: str, url: str, parent_id: int, 
                                   hierarchy: List[str], error_message: str):
