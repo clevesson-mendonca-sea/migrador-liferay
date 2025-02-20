@@ -1,11 +1,10 @@
-import asyncio
 import logging
 from typing import Dict, Optional, List
 import aiohttp
 from bs4 import BeautifulSoup
-from document_creator import DocumentCreator
-from web_content_creator import WebContentCreator
-from folder_creator import FolderCreator
+from creators.document_creator import DocumentCreator
+from creators.web_content_creator import WebContentCreator
+from creators.folder_creator import FolderCreator
 
 logger = logging.getLogger(__name__)
 

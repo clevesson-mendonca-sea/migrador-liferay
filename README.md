@@ -253,16 +253,52 @@ python main.py --contents
 ## Estrutura do Projeto
 
 ```
-.
-├── main.py                 # Ponto de entrada
-├── page_creator.py         # Criação de páginas
-├── web_content_creator.py  # Migração de conteúdo
-├── folder_creator.py   # Gerenciamento de pastas
-├── url_utils.py           # Utilitários para URLs
-├── document_creator.py    # Migração de documentos
-├── .env                   # Configurações
-├── client_secret.json     # Credenciais Google
-└── requirements.txt       # Dependências
+liferay-migration/
+├── main.py                   # Ponto de entrada principal
+├── .env                      # Variáveis de ambiente
+├── requirements.txt          # Dependências
+├── configs/                  # Configurações
+│   └── config.py             # Classe de configuração
+├── core/                     # Funcionalidades centrais
+│   ├── __init__.py
+│   ├── session_manager.py    # Gerenciamento de sessão HTTP
+│   ├── url_utils.py          # Utilitários para manipulação de URLs
+│   ├── auth.py               # Autenticação
+│   └── spreadsheet.py        # Processamento de planilhas
+├── creators/                 # Classes para criação de recursos
+│   ├── __init__.py
+│   ├── page_creator.py       # Criação de páginas
+│   ├── folder_creator.py     # Criação de pastas
+│   ├── document_creator.py   # Criação de documentos
+│   └── web_content_creator.py # Criação de conteúdo web
+├── processors/               # Processadores
+│   ├── __init__.py
+│   ├── page_processor.py     # Processamento de páginas
+│   ├── folder_error_processor.py # Processamento de erros em pastas
+│   └── web_content_processor.py  # Processamento de conteúdo web
+├── validators/               # Validadores
+│   ├── __init__.py
+│   ├── content_validator.py  # Validação de conteúdo
+│   └── folder_name_validator.py # Validação de nomes de pasta
+├── updaters/                 # Atualizadores
+│   ├── __init__.py
+│   ├── content_update.py     # Atualização de conteúdo
+│   └── collapse_content_creator.py # Criação de conteúdo colapsável
+├── cache/                    # Mecanismos de cache
+│   ├── __init__.py
+│   ├── document_cache.py     # Cache de documentos
+│   ├── web_content_cache.py  # Cache de conteúdo web
+│   └── web_content_mixed.py  # Cache misto de conteúdo
+├── services/                 # Serviços de alto nível
+│   ├── __init__.py
+│   ├── page_service.py       # Serviço de páginas
+│   ├── folder_service.py     # Serviço de pastas
+│   ├── content_service.py    # Serviço de conteúdo
+│   ├── document_service.py   # Serviço de documentos
+│   └── validation_service.py # Serviço de validação
+└── utils/                    # Utilitários gerais
+    ├── __init__.py
+    └── hierarchy_utils.py    # Utilitários para hierarquias
 ```
 
 ## Troubleshooting

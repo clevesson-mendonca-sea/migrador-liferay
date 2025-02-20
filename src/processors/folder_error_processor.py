@@ -4,7 +4,7 @@ import os
 from dataclasses import dataclass, field
 from datetime import datetime
 from typing import List
-from folder_name_validator import FolderNameValidator
+from validators.folder_name_validator import FolderNameValidator
 
 logger = logging.getLogger(__name__)
 

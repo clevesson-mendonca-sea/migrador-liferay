@@ -1,4 +1,3 @@
-import asyncio
 import os
 import traceback
 from bs4 import BeautifulSoup

@@ -1,7 +1,7 @@
 import random
 from typing import List, Optional
-from page_error import ErrorTracker, PageError
-from page_processor import PageProcessor
+from errors.page_error import ErrorTracker, PageError
+from processors.page_processor import PageProcessor
 
 class PageCreator:
     def __init__(self, config):

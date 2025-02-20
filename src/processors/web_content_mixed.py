@@ -2,8 +2,7 @@ import traceback
 from typing import Dict, List
 from bs4 import BeautifulSoup
 import logging
-import re
-from collapse_content_creator import CollapseContentProcessor
+from creators.collapse_content_creator import CollapseContentProcessor
 
 
 class MixedContentProcessor:

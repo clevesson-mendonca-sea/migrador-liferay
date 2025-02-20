@@ -11,13 +11,13 @@ from dataclasses import dataclass
 from bs4 import BeautifulSoup, Tag
 from functools import lru_cache
 import json
-from web_content_processor import ContentProcessor
-from folder_creator import FolderCreator
-from document_creator import DocumentCreator
-from collapse_content_creator import CollapseContentProcessor
-from web_content_cache import ContentCache
-from web_content_mixed import MixedContentProcessor
-from url_utils import UrlUtils
+from processors.web_content_processor import ContentProcessor
+from creators.folder_creator import FolderCreator
+from creators.document_creator import DocumentCreator
+from creators.collapse_content_creator import CollapseContentProcessor
+from cache.web_content_cache import ContentCache
+from processors.web_content_mixed import MixedContentProcessor
+from core.url_utils import UrlUtils
 
 @dataclass
 class ContentResponse:

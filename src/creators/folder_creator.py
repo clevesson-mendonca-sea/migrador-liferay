@@ -6,8 +6,8 @@ from typing import Dict, Optional, List, Set, Tuple, Any
 import aiohttp
 import unicodedata
 from functools import lru_cache
-from folder_error_processor import FolderError, FolderErrorProcessor
-from folder_name_validator import normalize_folder_name
+from processors.folder_error_processor import FolderError, FolderErrorProcessor
+from validators.folder_name_validator import normalize_folder_name
 
 logger = logging.getLogger(__name__)
 

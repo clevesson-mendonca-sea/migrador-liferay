@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 import asyncio
 from dataclasses import dataclass
 from functools import lru_cache
-from document_cache import DocumentCache
+from cache.document_cache import DocumentCache
 
 @dataclass
 class MigrationConfig:

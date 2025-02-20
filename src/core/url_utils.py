@@ -160,3 +160,4 @@ class UrlUtils:
         except Exception as e:
             logger.error(f"Error building URL for {url} with base {base_domain}: {str(e)}")
             return url
+        

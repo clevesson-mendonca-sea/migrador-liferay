@@ -5,7 +5,6 @@ from functools import lru_cache
 from typing import List, Optional, Dict, Set, Tuple, Any, Union
 from urllib.parse import urlparse
 import asyncio
-from collections import defaultdict
 
 logger = logging.getLogger(__name__)
 
