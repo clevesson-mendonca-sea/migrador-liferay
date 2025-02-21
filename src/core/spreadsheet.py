@@ -128,7 +128,7 @@ async def get_sheet_data(is_update=False):
 
     # Process page types
     page_type = [
-        row[14] if len(row) > 14 and row[14].strip() not in ["", "-"] else "widget"
+        row[13] if len(row) > 13 and row[13].strip() not in ["", "-"] else "widget"
         for row in rows
     ]
 
@@ -158,7 +158,7 @@ async def get_sheet_data(is_update=False):
         "1_column"
         for item in column_type
     ]
-
+    
     # Build page data
     url_utils = UrlUtils()
     base_domain = url_utils.extract_domain(config.liferay_url)
@@ -175,7 +175,7 @@ async def get_sheet_data(is_update=False):
                 
                 # Extract menu title
                 menu_title = row[8].strip() if len(row) > 8 and row[8] else None
-                
+
                 # Get source and destination URLs
                 source_url = row[0].strip() if row[0] else ''
                 dest_url = row[1].strip() if len(row) > 1 and row[1] else ''
@@ -183,8 +183,7 @@ async def get_sheet_data(is_update=False):
                 # Build complete URLs
                 complete_source_url = url_utils.build_url(source_url, base_domain)
                 complete_dest_url = url_utils.build_url(dest_url, base_domain)
-                link_vincular = row[16].strip() if len(row) > 16 and row[16] else ""
-                print(link_vincular)
+                link_vincular = row[15].strip() if len(row) > 15 and row[15] else ""
 
                 if title.strip():
                     page_data = {

@@ -239,24 +239,27 @@ class DocumentCreator:
         return '.html' if 'html' in content_type else '.txt'
 
     def _clean_document_url(self, url: str) -> str:
-        """Cleans the document URL by removing unnecessary parameters"""
+        """Limpa a URL do documento removendo parâmetros desnecessários"""
         if not url:
             return url
             
-        extensions = list(self.SUPPORTED_MIME_TYPES.keys())
+        # Remove parâmetros de versão e download
+        url_parts = url.split('?')[0]
+        url_parts = url_parts.split('/version/')[0]
         
-        # Find the first occurrence of any supported extension
-        for ext in extensions:
-            if ext in url.lower():
-                # Split at the extension and keep everything before it (inclusive)
-                base_url = url.split(ext.lower())[0] + ext.lower()
-                logger.debug(f"URL limpa: {url} -> {base_url}")
-                return base_url
-                
-        return url
+        # Remove parâmetros após o nome do arquivo
+        for ext in self.SUPPORTED_MIME_TYPES.keys():
+            if ext in url_parts.lower():
+                base_parts = url_parts.split(ext.lower())
+                if len(base_parts) > 1:
+                    clean_url = base_parts[0] + ext.lower()
+                    logger.debug(f"URL limpa: {url} -> {clean_url}")
+                    return clean_url
+                    
+        return url_parts
 
     async def get_friendly_url(self, doc_id: str, folder_id: Optional[int] = None) -> Optional[str]:
-        """Obtém a friendly URL do documento"""
+        """Obtém a friendly URL do documento de forma otimizada"""
         document_url = f"/o/headless-delivery/v1.0/documents/{doc_id}"
         full_url = f"{self.config.liferay_url}{document_url}"
         
@@ -266,9 +269,9 @@ class DocumentCreator:
                     result = await response.json()
                     if result.get("contentUrl"):
                         friendly_url = result["contentUrl"]
-                        # Clean the URL before returning
+                        # Clean up the URL before returning
                         cleaned_url = self._clean_document_url(friendly_url)
-                        logger.info(f"Friendly URL obtida: {cleaned_url}")
+                        logger.info(f"Friendly URL obtida e limpa: {cleaned_url}")
                         return cleaned_url
                 logger.error(f"Erro ao obter detalhes do documento: {response.status}")
                 
@@ -279,10 +282,16 @@ class DocumentCreator:
         return None
 
     def _is_valid_file_url(self, url: str) -> bool:
-        """Verifica se a URL do arquivo atende aos critérios"""
+        """Verifies if file URL meets criteria"""
         if not url:
             return False
             
+        # Clean up URLs with spaces (often caused by HTML parsing issues)
+        if ' http' in url:
+            url = url.split(' http')[1]
+            if not url.startswith('http'):
+                url = 'http' + url
+                
         if 'sinj' in url.lower():
             return False
             
@@ -376,10 +385,10 @@ class DocumentCreator:
             return None
     
     async def migrate_document(self, doc_url: str, folder_id: Optional[int] = None, page_url: str = "", hierarchy: str = "") -> Optional[str]:
-        """Migra um documento com tratamento de conflitos otimizado"""
+        """Migra um documento com tratamento de URLs melhorado"""
         max_retries = 3
         retry_count = 0
-        backoff_time = 1  # Tempo inicial de espera entre tentativas
+        backoff_time = 1
 
         while retry_count < max_retries:
             try:
@@ -390,8 +399,10 @@ class DocumentCreator:
                 # Check cache
                 cached_url = self.cache.get_by_url(doc_url)
                 if cached_url:
-                    logger.info(f"URL encontrada no cache: {doc_url} -> {cached_url}")
-                    return cached_url
+                    # Clean up cached URL before returning
+                    cleaned_cached_url = self._clean_document_url(cached_url)
+                    logger.info(f"URL encontrada no cache e limpa: {doc_url} -> {cleaned_cached_url}")
+                    return cleaned_cached_url
 
                 if self.cache.is_processed(doc_url):
                     logger.info(f"URL já processada anteriormente: {doc_url}")
@@ -412,37 +423,37 @@ class DocumentCreator:
                     filename = self._sanitize_filename(self._extract_filename(doc_url))
                     logger.info(f"Nome do arquivo gerado: {filename}")
 
-                    # Check existing document BEFORE upload - agora em paralelo
+                    # Check existing document BEFORE upload
                     existing_doc = await self._find_existing_document(filename, folder_id)
                     if existing_doc:
                         content_url = existing_doc.get('contentUrl')
                         if content_url:
-                            self.cache.add_url_mapping(doc_url, content_url)
-                            logger.info(f"Documento já existe, reusando URL: {content_url}")
-                            return content_url
+                            # Clean up the content URL before caching and returning
+                            cleaned_url = self._clean_document_url(content_url)
+                            self.cache.add_url_mapping(doc_url, cleaned_url)
+                            logger.info(f"Documento já existe, reusando URL limpa: {cleaned_url}")
+                            return cleaned_url
 
-                    # Prepare upload
+                    # Try to create at site level first if no folder_id
+                    upload_url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/sites/{self.config.site_id}/documents"
+                    if folder_id:
+                        upload_url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/document-folders/{folder_id}/documents"
+
+                    # Prepare upload with proper metadata
                     data = aiohttp.FormData()
                     data.add_field('file', content, 
                                 filename=filename,
                                 content_type=self._get_mime_type(filename))
-                    
+
                     document_metadata = {
                         "title": filename,
                         "description": f"Migrado de {doc_url}"
                     }
-                    
+
                     data.add_field('documentMetadata',
                                 json.dumps(document_metadata),
                                 content_type='application/json')
 
-                    # Define upload URL
-                    if folder_id:
-                        upload_url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/document-folders/{folder_id}/documents"
-                    else:
-                        upload_url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/sites/{self.config.site_id}/documents"
-
-                    # Try upload with extended timeout
                     async with self.session.post(upload_url, data=data, timeout=120) as upload_response:
                         if upload_response.status in (200, 201):
                             result = await upload_response.json()
@@ -450,37 +461,32 @@ class DocumentCreator:
                             if doc_id:
                                 friendly_url = await self.get_friendly_url(doc_id, folder_id)
                                 if friendly_url:
-                                    self.cache.add_url_mapping(doc_url, friendly_url)
-                                    logger.info(f"Documento migrado com sucesso: {friendly_url}")
-                                    return friendly_url
+                                    # Clean up friendly URL before caching and returning
+                                    cleaned_friendly_url = self._clean_document_url(friendly_url)
+                                    self.cache.add_url_mapping(doc_url, cleaned_friendly_url)
+                                    logger.info(f"Documento migrado com sucesso: {cleaned_friendly_url}")
+                                    return cleaned_friendly_url
                         
                         elif upload_response.status == 409:
-                            # On conflict, immediately check for existing document
-                            logger.warning(f"Conflito detectado para {filename}, buscando documento existente...")
-                            existing_doc = await self._find_existing_document(filename, folder_id)
-                            if existing_doc:
-                                content_url = existing_doc.get('contentUrl')
-                                if content_url:
-                                    self.cache.add_url_mapping(doc_url, content_url)
-                                    logger.info(f"URL do documento existente recuperada: {content_url}")
-                                    return content_url
-                            
-                            # If still no match, try with other filename variations
-                            encoded_filename = filename.replace(' ', '%20')
-                            existing_doc = await self._find_existing_document(encoded_filename, folder_id)
-                            if existing_doc:
-                                content_url = existing_doc.get('contentUrl')
-                                if content_url:
-                                    self.cache.add_url_mapping(doc_url, content_url)
-                                    logger.info(f"URL do documento existente recuperada (encoded): {content_url}")
-                                    return content_url
-                            
-                            response_text = await upload_response.text()
-                            raise Exception(f"Conflito não resolvido: {response_text}")
+                            # Try site-level creation on conflict
+                            if folder_id:
+                                logger.warning(f"Conflito detectado para {filename}, tentando criar no nível do site...")
+                                site_upload_url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/sites/{self.config.site_id}/documents"
+                                
+                                async with self.session.post(site_upload_url, data=data, timeout=120) as site_response:
+                                    if site_response.status in (200, 201):
+                                        result = await site_response.json()
+                                        doc_id = result.get('id')
+                                        if doc_id:
+                                            friendly_url = await self.get_friendly_url(doc_id)
+                                            if friendly_url:
+                                                cleaned_friendly_url = self._clean_document_url(friendly_url)
+                                                self.cache.add_url_mapping(doc_url, cleaned_friendly_url)
+                                                logger.info(f"Documento migrado com sucesso no nível do site: {cleaned_friendly_url}")
+                                                return cleaned_friendly_url
                         
-                        else:
-                            response_text = await upload_response.text()
-                            raise Exception(f"Upload falhou: {upload_response.status} - {response_text}")
+                        response_text = await upload_response.text()
+                        raise Exception(f"Upload falhou: {upload_response.status} - {response_text}")
 
                 return None
 
@@ -489,7 +495,7 @@ class DocumentCreator:
                 if retry_count < max_retries:
                     logger.warning(f"Tentativa {retry_count} falhou para {doc_url}: {str(e)}. Tentando novamente em {backoff_time}s...")
                     await asyncio.sleep(backoff_time)
-                    backoff_time *= 2  # Exponential backoff
+                    backoff_time *= 2
                     continue
                 else:
                     logger.error(f"Erro ao migrar documento {doc_url} após {max_retries} tentativas: {str(e)}")

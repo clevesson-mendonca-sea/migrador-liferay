@@ -14,26 +14,25 @@ class PageCreator:
     async def create_page(self, title: str, friendly_url: str, parent_id: int = 0, 
                          hierarchy: List[str] = None, page_type: str = "portlet", 
                          visible: bool = True, column_type: str = "1_column",
-                         menu_title: str = None, url_vinculada: str = "") -> int:
+                         menu_title: str = None, url_vinculada: str = "") -> tuple[int, int]:
         try:
             normalized_title = self.processor.normalize_page_name(title)
             normalized_url = self.processor.normalize_friendly_url(friendly_url)
-            page_id = await self._create_page_request(normalized_title, normalized_url, 
-                                                    parent_id, visible, page_type)
-            print(f"url_vinculada 2 {url_vinculada}")
-            
-            if page_id:
-                await self._update_page_layout(page_id, column_type, hierarchy, menu_title, url_vinculada)
-                print(f"Página criada e atualizada: {normalized_title} (ID: {page_id}) | Tipo: {page_type}")
-                return int(page_id)
+            page_result = await self._create_page_request(normalized_title, normalized_url, 
+                                                        parent_id, visible, page_type)
+            if page_result:
+                page_id, plid = page_result
+                await self._update_page_layout(page_id, plid, column_type, hierarchy, menu_title, url_vinculada)
+                print(f"Página criada e atualizada: {normalized_title} (ID: {page_id}, PLID: {plid}) | Tipo: {page_type}")
+                return page_id, plid
             
         except Exception as e:
             self._handle_page_creation_error(normalized_title, normalized_url, 
                                            parent_id, hierarchy, str(e))
-        return 0
+        return 0, 0
 
     async def _create_page_request(self, title: str, url: str, parent_id: int, 
-                                 visible: bool, page_type: str):
+                                 visible: bool, page_type: str) -> tuple[int, int]:
         params = {
             "groupId": str(self.config.site_id),
             "privateLayout": "false",
@@ -52,8 +51,10 @@ class PageCreator:
         ) as response:
             if response.status in (200, 201):
                 result = await response.json()
-                return result.get('layoutId') or result.get('plid')
-            return 0
+                page_id = result.get('layoutId', 0)
+                plid = result.get('plid', 0)
+                return page_id, plid
+            return 0, 0
 
     def _handle_page_creation_error(self, title: str, url: str, parent_id: int, 
                                   hierarchy: List[str], error_message: str):
@@ -66,8 +67,8 @@ class PageCreator:
         )
         self.error_tracker.add_error(error)
 
-    async def _update_page_layout(self, page_id: int, column_type: str, 
-                               hierarchy: List[str] = None, menu_title: str = None, url_vinculada: str= ""):
+    async def _update_page_layout(self, page_id: int, plid: int, column_type: str, 
+                               hierarchy: List[str] = None, menu_title: str = None, url_vinculada: str = ""):
         type_settings = self._get_type_settings(column_type, url_vinculada)
         update = {
             "groupId": str(self.config.site_id),
@@ -82,14 +83,13 @@ class PageCreator:
         ) as update_response:
             success = update_response.status in (200, 201)
             
-            # Se a atualização foi bem-sucedida e é um layout com menu, configura o menu
             if success and column_type == "2_columns_ii":
                 menu_portlet_id = self._extract_menu_portlet_id(type_settings)
                 if menu_portlet_id and hasattr(self.config, 'display_template_key'):
                     menu_level = self._determine_menu_level_from_hierarchy(hierarchy)
                     
                     await self.configure_menu_display(
-                        page_id, 
+                        plid,  # Use plid instead of page_id for menu configuration
                         menu_portlet_id, 
                         self.config.display_template_key,
                         menu_title,
@@ -146,7 +146,7 @@ class PageCreator:
         random_id = random.randint(10000, 99999)  # Gera um número aleatório de 5 dígitos
         settings = {
             "1_column": (
-                f"column-1=com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_{random_id}\nlayoutUpdateable=true\nurl={url_vinculada}\n"
+                f"column-1=com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_{random_id}\n"
                 f"layout-template-id={column_type}\n"
             ),
             "2_columns_ii": (
@@ -155,6 +155,15 @@ class PageCreator:
                 f"layout-template-id={column_type}\n"
             )
         }
+        
+        if len(url_vinculada) > 1:
+            settings = {
+                "1_column": (
+                    f"column-1=com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_{random_id}\nlayoutUpdateable=true\nurl={url_vinculada}\n"
+                    f"layout-template-id={column_type}\n"
+                )
+            }
+
         return settings.get(column_type, "")
     
     def _extract_menu_portlet_id(self, type_settings: str) -> str:
@@ -227,54 +236,39 @@ class PageCreator:
     async def ensure_page_exists(self, title: str, cache_key: str, parent_id: int = 0, 
                                friendly_url: str = "", hierarchy: List[str] = None, 
                                page_type: str = "portlet", visible: bool = True, 
-                               column_type: str = "1_column", menu_title: str = None, url_vinculada: str= None) -> int:
-        """
-        Verifica se uma página já existe no cache ou cria uma nova
-        
-        Args:
-            title: Título da página
-            cache_key: Chave para o cache de páginas
-            parent_id: ID da página pai
-            friendly_url: URL amigável
-            hierarchy: Lista da hierarquia completa até este nível
-            page_type: Tipo de página ('portlet', 'widget', etc)
-            visible: Se a página é visível
-            column_type: Tipo de layout de coluna
-            menu_title: Título do menu lateral (opcional)
-            
-        Returns:
-            int: ID da página encontrada ou criada
-        """
+                               column_type: str = "1_column", menu_title: str = None, 
+                               url_vinculada: str = None) -> tuple[int, int]:
         if cache_key in self.page_cache:
             return self.page_cache[cache_key]
 
-        # Cria a URL amigável se não fornecida
         if not friendly_url:
             friendly_url = self.processor.normalize_friendly_url(title)
-        print(f"url_vinculada {url_vinculada}")
         
-        page_id = await self.create_page(title, friendly_url, parent_id, 
-                                       hierarchy, page_type, visible, column_type,
-                                       menu_title, url_vinculada)
+        page_id, plid = await self.create_page(title, friendly_url, parent_id, 
+                                              hierarchy, page_type, visible, column_type,
+                                              menu_title, url_vinculada)
         
         if page_id:
-            self.page_cache[cache_key] = page_id
+            self.page_cache[cache_key] = (page_id, plid)
             
-        return page_id
+        return page_id, plid
+
 
     async def create_hierarchy(self, hierarchy: list, final_title: str, final_url: str, 
                              page_type: str = "widget", visible: bool = True, 
-                             column_type: str = "1_column", menu_title: str = None, url_vinculada: str= None) -> int:
+                             column_type: str = "1_column", menu_title: str = None, 
+                             url_vinculada: str = None) -> tuple[int, int]:
         current_path = ""
         parent_id = 0
         last_page_id = 0
+        last_plid = 0
 
         hierarchy_levels = [x for x in hierarchy if x.lower() != 'raiz']
 
         for level in hierarchy_levels:
             normalized_level = self.processor.normalize_page_name(level)
             current_path += f" > {normalized_level}" if current_path else normalized_level
-            level_id = await self.ensure_page_exists(
+            level_id, level_plid = await self.ensure_page_exists(
                 normalized_level, current_path, parent_id, "", 
                 hierarchy_levels[:hierarchy_levels.index(level)+1], 
                 page_type, visible, column_type, menu_title, url_vinculada
@@ -283,25 +277,27 @@ class PageCreator:
             if level_id:
                 parent_id = level_id
                 last_page_id = level_id
+                last_plid = level_plid
             else:
                 print(f"Falha ao criar nível: {normalized_level}")
-                return 0
+                return 0, 0
 
         if self._should_create_final_page(hierarchy_levels, final_title):
             final_hierarchy = hierarchy_levels.copy()
             if final_title not in final_hierarchy:
                 final_hierarchy.append(final_title)
                 
-            final_page_id = await self.create_page(
+            final_page_id, final_plid = await self.create_page(
                 final_title, final_url, parent_id, final_hierarchy,
                 page_type, visible, column_type, menu_title, url_vinculada
             )
-            print(f"Página final criada: {final_title} (ID: {final_page_id}) Tipo da página {page_type}")
+            print(f"Página final criada: {final_title} (ID: {final_page_id}, PLID: {final_plid}) Tipo da página {page_type}")
             
             if final_page_id:
                 last_page_id = final_page_id
+                last_plid = final_plid
 
-        return last_page_id
+        return last_page_id, last_plid
 
     def _should_create_final_page(self, hierarchy_levels: List[str], final_title: str) -> bool:
         return (not hierarchy_levels or 

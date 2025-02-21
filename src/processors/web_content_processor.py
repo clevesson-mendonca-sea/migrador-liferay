@@ -207,37 +207,103 @@ class ContentProcessor:
             await asyncio.gather(*tasks)
 
     async def _process_single_url(self, tag: Tag, attr: str, url: str, base_domain: str, folder_id: int, base_url: str) -> None:
-        """Processa URLs individuais com concorrência controlada"""
+        """Processa URLs individuais com melhor tratamento de erros"""
         async with self.semaphore:
             try:
-                is_document = any(doc_path in url for doc_path in self.DOCUMENT_PATHS)
-                
-                if is_document:
-                    full_url = url
-                    if not url.startswith(('http://', 'https://')):
-                        full_url = f"{base_domain.rstrip('/')}/{url.lstrip('/')}"
-                    
-                    migrated_url = await self.creator._retry_operation(
-                        self.document_creator.migrate_document,
-                        doc_url=full_url,
-                        folder_id=folder_id,
-                        page_url=base_url
-                    )
+                # 1. Validação e limpeza básica da URL
+                if not url or url.isspace():
+                    logger.warning(f"URL vazia ou inválida encontrada")
+                    self.cache.mark_failed(url)
+                    return
 
-                    if migrated_url:
-                        relative_url = self._clean_url(migrated_url, base_domain)
-                        self.cache.add_url(url, relative_url)
-                        tag[attr] = relative_url
-                    else:
-                        self.cache.mark_failed(url)
+                # 2. Limpa a URL antes de processá-la
+                original_url = url
+                cleaned_url = self._clean_url_before_processing(url)
+                
+                if not cleaned_url:
+                    logger.warning(f"URL inválida após limpeza: {original_url}")
+                    self.cache.mark_failed(original_url)
+                    return
+
+                # 3. Verifica se é um documento
+                is_document = any(doc_path in cleaned_url.lower() for doc_path in self.DOCUMENT_PATHS)
+                
+                # 4. Processa documentos
+                if is_document:
+                    try:
+                        # Constrói URL completa se for relativa
+                        full_url = cleaned_url
+                        if not cleaned_url.startswith(('http://', 'https://')):
+                            full_url = f"{base_domain.rstrip('/')}/{cleaned_url.lstrip('/')}"
+                        
+                        # Validação adicional da URL
+                        parsed_url = urlparse(full_url)
+                        if not all([parsed_url.scheme, parsed_url.netloc]):
+                            logger.error(f"URL mal formada após limpeza: {full_url}")
+                            self.cache.mark_failed(original_url)
+                            tag[attr] = original_url  # Mantém a URL original em caso de erro
+                            return
+
+                        # Use a função existente para migrar o documento
+                        migrated_url = await self.creator._retry_operation(
+                            self.document_creator.migrate_document,
+                            doc_url=full_url,
+                            folder_id=folder_id,
+                            page_url=base_url
+                        )
+
+                        if migrated_url:
+                            relative_url = self._clean_url(migrated_url, base_domain)
+                            self.cache.add_url(original_url, relative_url)
+                            tag[attr] = relative_url
+                        else:
+                            logger.warning(f"Falha na migração do documento: {full_url}")
+                            self.cache.mark_failed(original_url)
+                            tag[attr] = original_url  # Mantém a URL original em caso de falha
+                    except Exception as doc_error:
+                        logger.error(f"Erro ao processar documento {full_url}: {str(doc_error)}")
+                        self.cache.mark_failed(original_url)
+                        tag[attr] = original_url  # Mantém a URL original em caso de exceção
                 else:
                     # Processa outras URLs mantendo externas como absolutas
-                    cleaned_url = self._clean_url(url, base_domain)
-                    tag[attr] = cleaned_url
+                    try:
+                        cleaned_url = self._clean_url(cleaned_url, base_domain)
+                        tag[attr] = cleaned_url
+                    except Exception as url_error:
+                        logger.error(f"Erro ao limpar URL {cleaned_url}: {str(url_error)}")
+                        self.cache.mark_failed(original_url)
+                        tag[attr] = original_url  # Mantém a URL original em caso de exceção
 
             except Exception as e:
-                logger.error(f"Error processing URL {url}: {str(e)}")
+                logger.error(f"Erro crítico processando URL {url}: {str(e)}")
                 self.cache.mark_failed(url)
+                tag[attr] = url  # Mantém a URL original em caso de erro crítico
+
+    def _clean_url_before_processing(self, url: str) -> str:
+        """Limpa e normaliza a URL antes de processá-la"""
+        if not url:
+            return ""
+            
+        # Remove aspas HTML (&quot;)
+        url = url.replace('&quot;', '')
+        
+        # Remove aspas extras
+        url = url.strip('"\'')
+        
+        # Corrige URLs com espaços e múltiplos protocolos
+        if ' http://' in url or ' https://' in url:
+            # Pega apenas a última URL se houver múltiplas
+            parts = re.split(r'\s+(https?://)', url)
+            if len(parts) > 2:  # Encontrou múltiplos protocolos
+                url = parts[-2] + parts[-1]  # Pega o último protocolo e caminho
+            else:
+                # Simples caso de espaço antes do protocolo
+                url = re.sub(r'\s+(https?://)', r'\1', url)
+        
+        # Normaliza barras invertidas
+        url = url.replace('\\', '/')
+        
+        return url.strip()
 
     async def process_content(self, html_content: str, base_url: str, folder_id: Optional[int] = None) -> str:
         """Processa conteúdo HTML com processamento em lotes para melhor performance"""
