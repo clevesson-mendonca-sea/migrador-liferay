@@ -1,5 +1,6 @@
 import random
 from typing import List, Optional
+import unicodedata
 from errors.page_error import ErrorTracker, PageError
 from processors.page_processor import PageProcessor
 
@@ -300,10 +301,33 @@ class PageCreator:
         return last_page_id, last_plid
 
     def _should_create_final_page(self, hierarchy_levels: List[str], final_title: str) -> bool:
-        return (not hierarchy_levels or 
-                self.processor.normalize_page_name(final_title).lower() != 
-                self.processor.normalize_page_name(hierarchy_levels[-1]).lower())
-    
+        """
+        Determina se uma página final deve ser criada separadamente da hierarquia.
+        
+        Args:
+            hierarchy_levels: Lista de níveis de hierarquia já criados
+            final_title: Título da página final
+            
+        Returns:
+            bool: True se a página final deve ser criada, False caso contrário
+        """
+        if not hierarchy_levels:
+            return True
+            
+        
+        def normalize_for_comparison(text):
+            # Remove acentos e converte para minúsculas para comparação
+            text = self.processor.normalize_page_name(text)
+            text = unicodedata.normalize('NFKD', text).encode('ASCII', 'ignore').decode('ASCII')
+            return text.lower().strip()
+        
+        last_level = hierarchy_levels[-1]
+        
+        normalized_final = normalize_for_comparison(final_title)
+        normalized_last = normalize_for_comparison(last_level)
+        
+        return normalized_final != normalized_last
+
     async def retry_failed_pages(self):
         failed_pages = self.error_tracker.get_failed_pages()
         if not failed_pages:
