@@ -1,15 +1,17 @@
 import json
 import logging
 import traceback
-from typing import List, Optional, Dict, Any, Set
+from typing import List, Optional, Dict, Any, Set, Tuple
 import aiohttp
 from urllib.parse import urljoin, urlparse, unquote
 from datetime import datetime
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, SoupStrainer
 import asyncio
 from dataclasses import dataclass
 from functools import lru_cache
 from cache.document_cache import DocumentCache
+import os
+from concurrent.futures import ThreadPoolExecutor
 
 @dataclass
 class MigrationConfig:
@@ -46,12 +48,30 @@ class DocumentCreator:
         self.config = config
         self.session = None
         self.cache = DocumentCache()
-        self.semaphore = asyncio.Semaphore(20)  # Increased for better performance while maintaining control
-        self.batch_size = 50  # Original batch size preserved
-        self.error_log_file = "migration_errors.log"  # Ensuring error log file is defined
-        self._initialize_logging()
-        # Connection pool for reuse
+        # Aumentado para maior paralelismo
+        self.semaphore = asyncio.Semaphore(40)  
+        self.batch_size = 50
+        self.error_log_file = "migration_errors.log"
+        # ThreadPool para operações CPU-bound
+        cpu_count = os.cpu_count() or 4
+        self.thread_pool = ThreadPoolExecutor(max_workers=min(32, cpu_count * 4))
+        # Cache em memória para operações frequentes
+        self._url_cache = {}
+        self._filename_cache = {}
+        self._dns_cache = {}
+        # Conexões e pooling
         self._connection_pool = None
+        self._initialize_logging()
+        # Strainer para parsing seletivo de BeautifulSoup
+        self._content_strainer = SoupStrainer(['a', 'img'])
+        # Contadores para estatísticas
+        self._stats = {
+            "processed": 0,
+            "successful": 0,
+            "failed": 0,
+            "cached": 0,
+            "retries": 0
+        }
 
     def _initialize_logging(self):
         """Configure detailed logging"""
@@ -82,17 +102,18 @@ class DocumentCreator:
             logger.error(f"Erro ao salvar log de erro: {str(e)}")
 
     async def initialize_session(self):
-        """Initialize HTTP session"""
+        """Initialize HTTP session com otimizações"""
         if self.session:
             await self.session.close()
         
-        # Create connection pool with improved settings
+        # Otimiza pool de conexões
         if not self._connection_pool:
             self._connection_pool = aiohttp.TCPConnector(
                 ssl=False,
-                limit=50,  # Increased connection limit
-                ttl_dns_cache=300,
-                keepalive_timeout=60
+                limit=150,  # Triplicado para maior paralelismo
+                ttl_dns_cache=600,  # Cache de DNS por 10 minutos
+                keepalive_timeout=120,  # Keep-alive mais longo
+                force_close=False  # Permite reuso de conexões
             )
         
         auth = aiohttp.BasicAuth(
@@ -100,18 +121,29 @@ class DocumentCreator:
             password=self.config.liferay_pass
         )
         
-        timeout = aiohttp.ClientTimeout(total=60)
+        # Timeout aumentado para downloads maiores
+        timeout = aiohttp.ClientTimeout(total=180, connect=30, sock_read=120)
         
         self.session = aiohttp.ClientSession(
             auth=auth,
             timeout=timeout,
             headers={
                 'Accept': 'application/json',
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                'Connection': 'keep-alive'  # Força conexões persistentes
             },
-            connector=self._connection_pool
+            connector=self._connection_pool,
+            json_serialize=json.dumps  # Serialização JSON mais rápida
         )
-        logger.info("Session initialized with improved connection settings")
+        logger.info("Session initialized with high-performance settings")
+
+    async def _process_in_thread(self, func, *args, **kwargs):
+        """Executa função CPU-bound em thread separada"""
+        loop = asyncio.get_event_loop()
+        return await loop.run_in_executor(
+            self.thread_pool, 
+            lambda: func(*args, **kwargs)
+        )
 
     @lru_cache(maxsize=500)
     def _get_mime_type(self, filename: str) -> str:
@@ -120,79 +152,149 @@ class DocumentCreator:
         return self.SUPPORTED_MIME_TYPES.get(ext, 'application/octet-stream')
 
     async def _collect_urls(self, page_url: str) -> Set[str]:
+        """Coleta URLs com parsing otimizado"""
         urls_to_process = set()
         
-        async with self.session.get(page_url) as response:
-            if response.status != 200:
-                logger.warning(f"Falha ao acessar a página {page_url}: status {response.status}")
-                return urls_to_process
+        try:
+            async with self.session.get(page_url) as response:
+                if response.status != 200:
+                    logger.warning(f"Falha ao acessar a página {page_url}: status {response.status}")
+                    return urls_to_process
+                    
+                html_content = await response.text()
                 
-            html_content = await response.text()
-            soup = BeautifulSoup(html_content, 'html.parser')
-            content_div = soup.find(class_='paginas-internas')
-            
-            if not content_div:
-                logger.warning(f"Elemento 'paginas-internas' não encontrado em {page_url}")
-                return urls_to_process
+                # Parse seletivo apenas dos elementos que nos interessam
+                soup = await self._process_in_thread(
+                    BeautifulSoup, 
+                    html_content, 
+                    'html.parser', 
+                    parse_only=self._content_strainer
+                )
+                
+                content_div = soup.find(class_='paginas-internas')
+                
+                if not content_div:
+                    logger.warning(f"Elemento 'paginas-internas' não encontrado em {page_url}")
+                    return urls_to_process
 
-            # Processa links e imagens
-            for element in content_div.find_all(['a', 'img']):
-                url = element.get('href') or element.get('src')
-                if url:
-                    absolute_url = urljoin(page_url, url)
-                    if self._is_valid_file_url(absolute_url):
-                        urls_to_process.add(absolute_url)
-                        
-            # Processa srcset
-            for img in content_div.find_all('img'):
-                srcset = img.get('srcset')
-                if srcset:
-                    for url in [u.strip().split(' ')[0] for u in srcset.split(',')]:
-                        absolute_url = urljoin(page_url, url)
-                        if self._is_valid_file_url(absolute_url):
-                            urls_to_process.add(absolute_url)
+                # Buscas otimizadas em uma única passagem
+                tasks = [
+                    self._extract_links(content_div, page_url),
+                    self._extract_images(content_div, page_url),
+                    self._extract_srcset(content_div, page_url)
+                ]
+                
+                # Processa tudo em paralelo
+                results = await asyncio.gather(*tasks)
+                
+                # Combina resultados
+                for result_set in results:
+                    urls_to_process.update(result_set)
+                
+                logger.info(f"Coletadas {len(urls_to_process)} URLs para processamento em {page_url}")
+                
+        except Exception as e:
+            logger.error(f"Erro ao coletar URLs em {page_url}: {str(e)}")
             
-            logger.info(f"Coletadas {len(urls_to_process)} URLs para processamento em {page_url}")           
         return urls_to_process
 
-    async def _process_url_batch(self, urls: List[str], folder_id: Optional[int], page_url: str) -> List[str]:
-        tasks = []
-        filtered_urls = []
+    async def _extract_links(self, content_div, page_url) -> Set[str]:
+        """Extrai links de forma paralela"""
+        urls = set()
+        for a in content_div.find_all('a', href=True):
+            url = a.get('href')
+            if url:
+                absolute_url = urljoin(page_url, url)
+                if self._is_valid_file_url(absolute_url):
+                    urls.add(absolute_url)
+        return urls
         
-        # Filter URLs that need processing
+    async def _extract_images(self, content_div, page_url) -> Set[str]:
+        """Extrai imagens de forma paralela"""
+        urls = set()
+        for img in content_div.find_all('img', src=True):
+            url = img.get('src')
+            if url:
+                absolute_url = urljoin(page_url, url)
+                if self._is_valid_file_url(absolute_url):
+                    urls.add(absolute_url)
+        return urls
+        
+    async def _extract_srcset(self, content_div, page_url) -> Set[str]:
+        """Extrai srcset de forma paralela"""
+        urls = set()
+        for img in content_div.find_all('img', srcset=True):
+            srcset = img.get('srcset')
+            if srcset:
+                for url in [u.strip().split(' ')[0] for u in srcset.split(',')]:
+                    absolute_url = urljoin(page_url, url)
+                    if self._is_valid_file_url(absolute_url):
+                        urls.add(absolute_url)
+        return urls
+
+    async def _process_url_batch(self, urls: List[str], folder_id: Optional[int], page_url: str) -> List[str]:
+        """Processa lotes de URLs com controle de concorrência otimizado"""
+        # Verifica cache em paralelo primeiro
+        filtered_urls = []
+        cached_results = []
+        
         for url in urls:
+            # Checa cache primeiro
+            cached_url = self.cache.get_by_url(url)
+            if cached_url:
+                self._stats["cached"] += 1
+                cached_results.append(cached_url)
+                continue
+                
             if not self.cache.is_processed(url) and not self.cache.is_failed(url):
-                tasks.append(self._process_single_url(url, folder_id, page_url))
                 filtered_urls.append(url)
         
-        if not tasks:
-            return []
+        if not filtered_urls:
+            return cached_results
             
-        logger.info(f"Processando lote de {len(tasks)} URLs")
+        logger.info(f"Processando lote de {len(filtered_urls)} URLs (ignoradas {len(urls) - len(filtered_urls)} já processadas)")
+        
+        # Cria tarefas com semáforo incorporado
+        semaphore = asyncio.Semaphore(40)  # Limita execução paralela
+        
+        async def process_with_semaphore(url):
+            async with semaphore:
+                return await self._process_single_url(url, folder_id, page_url)
+        
+        tasks = [process_with_semaphore(url) for url in filtered_urls]
+        
+        # Executa em paralelo com controle de concorrência
         results = await asyncio.gather(*tasks, return_exceptions=True)
         
-        # Process results while preserving logs
-        successful_urls = []
+        # Processa resultados
+        successful_urls = cached_results.copy()  # Inclui URLs do cache
         for i, result in enumerate(results):
-            if isinstance(result, str):
+            if isinstance(result, str) and result:
                 successful_urls.append(result)
+                self._stats["successful"] += 1
             elif isinstance(result, Exception):
                 logger.error(f"Erro ao processar {filtered_urls[i]}: {str(result)}")
+                self._stats["failed"] += 1
                 
-        logger.info(f"Lote concluído: {len(successful_urls)}/{len(tasks)} URLs processadas com sucesso")
+        self._stats["processed"] += len(filtered_urls)
+        
+        # Reporta progresso
+        success_rate = (len(successful_urls) / len(urls)) * 100 if urls else 0
+        logger.info(f"Lote concluído: {len(successful_urls)}/{len(urls)} URLs processadas com sucesso ({success_rate:.1f}%)")
+        
         return successful_urls
 
     async def _process_single_url(self, url: str, folder_id: Optional[int], page_url: str) -> Optional[str]:
-        async with self.semaphore:
-            try:
-                friendly_url = await self.migrate_document(url, folder_id, page_url)
-                if friendly_url:
-                    logger.info(f"URL processada com sucesso: {url} -> {friendly_url}")
-                return friendly_url
-            except Exception as e:
-                logger.error(f"Erro ao processar URL {url}: {str(e)}")
-                self._log_migration_error(url, str(e), page_url, "")
-                return None
+        """Processa URL individual com retry em caso de falha"""
+        try:
+            friendly_url = await self.migrate_document(url, folder_id, page_url)
+            if friendly_url:
+                logger.info(f"URL processada com sucesso: {url} -> {friendly_url}")
+            return friendly_url
+        except Exception as e:
+            logger.error(f"Erro ao processar URL {url}: {str(e)}")
+            self._log_migration_error(url, str(e), page_url, "")
+            return None
 
     def _extract_filename(self, url: str, content_type: str = '') -> str:
         """Extrai e normaliza o nome do arquivo"""
@@ -223,7 +325,6 @@ class DocumentCreator:
             ext = ext_mapping.get(ext, ext)
             filename = f"{name}.{ext}"
             
-            logger.debug(f"Nome de arquivo extraído: {filename}")
             return self._sanitize_filename(filename)
                 
         except Exception as e:
@@ -253,7 +354,6 @@ class DocumentCreator:
                 base_parts = url_parts.split(ext.lower())
                 if len(base_parts) > 1:
                     clean_url = base_parts[0] + ext.lower()
-                    logger.debug(f"URL limpa: {url} -> {clean_url}")
                     return clean_url
                     
         return url_parts
@@ -271,13 +371,11 @@ class DocumentCreator:
                         friendly_url = result["contentUrl"]
                         # Clean up the URL before returning
                         cleaned_url = self._clean_document_url(friendly_url)
-                        logger.info(f"Friendly URL obtida e limpa: {cleaned_url}")
                         return cleaned_url
                 logger.error(f"Erro ao obter detalhes do documento: {response.status}")
                 
         except Exception as e:
             logger.error(f"Erro ao obter friendly URL: {str(e)}")
-            logger.error(traceback.format_exc())
             
         return None
 
@@ -385,8 +483,8 @@ class DocumentCreator:
             return None
     
     async def migrate_document(self, doc_url: str, folder_id: Optional[int] = None, page_url: str = "", hierarchy: str = "") -> Optional[str]:
-        """Migra um documento com tratamento de URLs melhorado"""
-        max_retries = 3
+        """Migra um documento com retry exponencial e paralelismo otimizado"""
+        max_retries = 4  # Aumentado para mais tentativas
         retry_count = 0
         backoff_time = 1
 
@@ -412,7 +510,13 @@ class DocumentCreator:
                 logger.info(f"Iniciando migração do documento: {doc_url}")
 
                 # Download do documento com timeout aumentado
-                async with self.session.get(doc_url, allow_redirects=True, timeout=60) as response:
+                download_timeout = aiohttp.ClientTimeout(total=120, sock_read=90)
+                async with self.session.get(
+                    doc_url, 
+                    allow_redirects=True, 
+                    timeout=download_timeout,
+                    headers={'Accept-Encoding': 'gzip, deflate'}  # Compressão para downloads mais rápidos
+                ) as response:
                     if response.status != 200:
                         raise Exception(f"GET request failed with status {response.status}")
 
@@ -420,11 +524,35 @@ class DocumentCreator:
                     if not content:
                         raise Exception("Empty content")
 
-                    filename = self._sanitize_filename(self._extract_filename(doc_url))
+                    # Extração e sanitização do nome em paralelo para não bloquear
+                    filename = await self._process_in_thread(
+                        lambda: self._sanitize_filename(self._extract_filename(doc_url))
+                    )
                     logger.info(f"Nome do arquivo gerado: {filename}")
 
-                    # Check existing document BEFORE upload
-                    existing_doc = await self._find_existing_document(filename, folder_id)
+                    # Busca documento existente e faz upload em paralelo 
+                    # para otimizar tempo de resposta
+                    existing_doc_task = asyncio.create_task(
+                        self._find_existing_document(filename, folder_id)
+                    )
+                    
+                    # Prepara dados para upload
+                    data = aiohttp.FormData()
+                    data.add_field('file', content, 
+                                  filename=filename,
+                                  content_type=self._get_mime_type(filename))
+
+                    document_metadata = {
+                        "title": filename,
+                        "description": f"Migrado de {doc_url}"
+                    }
+
+                    data.add_field('documentMetadata',
+                                  json.dumps(document_metadata),
+                                  content_type='application/json')
+                    
+                    # Aguarda resultado da busca por documento existente
+                    existing_doc = await existing_doc_task
                     if existing_doc:
                         content_url = existing_doc.get('contentUrl')
                         if content_url:
@@ -439,22 +567,16 @@ class DocumentCreator:
                     if folder_id:
                         upload_url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/document-folders/{folder_id}/documents"
 
-                    # Prepare upload with proper metadata
-                    data = aiohttp.FormData()
-                    data.add_field('file', content, 
-                                filename=filename,
-                                content_type=self._get_mime_type(filename))
-
-                    document_metadata = {
-                        "title": filename,
-                        "description": f"Migrado de {doc_url}"
-                    }
-
-                    data.add_field('documentMetadata',
-                                json.dumps(document_metadata),
-                                content_type='application/json')
-
-                    async with self.session.post(upload_url, data=data, timeout=120) as upload_response:
+                    # Timeout específico para upload
+                    upload_timeout = aiohttp.ClientTimeout(total=180)
+                    
+                    # Tenta upload com exponential backoff em caso de falha
+                    async with self.session.post(
+                        upload_url, 
+                        data=data, 
+                        timeout=upload_timeout,
+                        headers={'Connection': 'keep-alive'}
+                    ) as upload_response:
                         if upload_response.status in (200, 201):
                             result = await upload_response.json()
                             doc_id = result.get('id')
@@ -473,7 +595,7 @@ class DocumentCreator:
                                 logger.warning(f"Conflito detectado para {filename}, tentando criar no nível do site...")
                                 site_upload_url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/sites/{self.config.site_id}/documents"
                                 
-                                async with self.session.post(site_upload_url, data=data, timeout=120) as site_response:
+                                async with self.session.post(site_upload_url, data=data, timeout=upload_timeout) as site_response:
                                     if site_response.status in (200, 201):
                                         result = await site_response.json()
                                         doc_id = result.get('id')
@@ -492,10 +614,14 @@ class DocumentCreator:
 
             except Exception as e:
                 retry_count += 1
+                # Incrementa contador de retries
+                self._stats["retries"] += 1
+                
                 if retry_count < max_retries:
+                    # Backoff exponencial limitado a 30s
+                    backoff_time = min(2 ** retry_count, 30)
                     logger.warning(f"Tentativa {retry_count} falhou para {doc_url}: {str(e)}. Tentando novamente em {backoff_time}s...")
                     await asyncio.sleep(backoff_time)
-                    backoff_time *= 2
                     continue
                 else:
                     logger.error(f"Erro ao migrar documento {doc_url} após {max_retries} tentativas: {str(e)}")
@@ -504,7 +630,7 @@ class DocumentCreator:
                     return None
                     
     async def process_page_content(self, page_url: str, folder_id: Optional[int] = None) -> List[str]:
-        """Processa uma página inteira de forma otimizada com processamento paralelo"""
+        """Processa uma página inteira de forma otimizada com processamento paralelo e batch adaptativo"""
         migrated_urls = []
         
         try:
@@ -512,7 +638,9 @@ class DocumentCreator:
                 await self.initialize_session()
 
             logger.info(f"Processando página: {page_url}")
+            start_time = datetime.now()
             
+            # Coleta URLs
             urls_to_process = await self._collect_urls(page_url)
             total_urls = len(urls_to_process)
             
@@ -526,24 +654,182 @@ class DocumentCreator:
             url_list = list(urls_to_process)
             processed = 0
             
-            # Process in optimized batches
-            batch_size = min(20, total_urls)  # Limit batch size for better control
+            # Adapta tamanho do batch baseado no número total
+            # Mais URLs = batches maiores, menos URLs = batches menores
+            batch_size = min(max(10, total_urls // 10), 30)  # Entre 10 e 30
             
+            # Process em batches com relatório de progresso
             for i in range(0, total_urls, batch_size):
                 batch = url_list[i:i + batch_size]
-                logger.info(f"Processando lote {i//batch_size + 1}/{(total_urls + batch_size - 1)//batch_size}")
+                batch_num = i//batch_size + 1
+                total_batches = (total_urls + batch_size - 1)//batch_size
                 
+                logger.info(f"Processando lote {batch_num}/{total_batches} - {len(batch)} URLs")
+                batch_start = datetime.now()
+                
+                # Processa batch
                 batch_results = await self._process_url_batch(batch, folder_id, page_url)
-                migrated_urls.extend(batch_results)
+                migrated_urls.extend([r for r in batch_results if r])
                 
+                # Calcula progresso e estatísticas
                 processed += len(batch)
                 progress_pct = (processed / total_urls) * 100
-                logger.info(f"Progresso: {processed}/{total_urls} ({progress_pct:.1f}%) - Migrados: {len(migrated_urls)}")
+                batch_time = (datetime.now() - batch_start).total_seconds()
                 
+                # Estima tempo restante
+                elapsed = (datetime.now() - start_time).total_seconds()
+                items_per_second = processed / elapsed if elapsed > 0 else 0
+                remaining_items = total_urls - processed
+                remaining_time = remaining_items / items_per_second if items_per_second > 0 else 0
+                
+                logger.info(f"Progresso: {progress_pct:.1f}% ({processed}/{total_urls}) - "
+                           f"Batch: {len(batch_results)}/{len(batch)} em {batch_time:.1f}s - "
+                           f"Taxa: {items_per_second:.2f} items/s - "
+                           f"Tempo restante estimado: {remaining_time:.1f}s")
+                
+                # Pequena pausa entre batches para liberar recursos
+                await asyncio.sleep(0.5)
+            
+            # Estatísticas finais
+            total_time = (datetime.now() - start_time).total_seconds()
+            
+            logger.info(f"Processamento concluído em {total_time:.1f}s - "
+                       f"Migrados: {len(migrated_urls)}/{total_urls} documentos "
+                       f"({len(migrated_urls)/total_urls*100:.1f}% de sucesso)")
+            
         except Exception as e:
             logger.error(f"Erro ao processar página {page_url}: {str(e)}")
             logger.error(traceback.format_exc())
             
+        return migrated_urls
+
+    async def process_multiple_pages(self, pages: List[Tuple[str, Optional[int]]], parallel_pages: int = 5) -> Dict[str, List[str]]:
+        """
+        Processa múltiplas páginas em paralelo
+        
+        Args:
+            pages: Lista de tuplas (page_url, folder_id)
+            parallel_pages: Número de páginas para processar simultaneamente
+        
+        Returns:
+            Dicionário mapeando URLs de páginas para lista de URLs migradas
+        """
+        results = {}
+        semaphore = asyncio.Semaphore(parallel_pages)
+        
+        async def process_with_semaphore(page_url, folder_id):
+            async with semaphore:
+                return page_url, await self.process_page_content(page_url, folder_id)
+        
+        tasks = [process_with_semaphore(url, folder_id) for url, folder_id in pages]
+        
+        logger.info(f"Iniciando processamento de {len(pages)} páginas (máximo {parallel_pages} em paralelo)")
+        start_time = datetime.now()
+        
+        # Processa em lotes para não sobrecarregar
+        for i in range(0, len(tasks), parallel_pages):
+            batch = tasks[i:i + parallel_pages]
+            batch_results = await asyncio.gather(*batch, return_exceptions=True)
+            
+            for result in batch_results:
+                if isinstance(result, Exception):
+                    logger.error(f"Erro no processamento de página: {str(result)}")
+                    continue
+                    
+                page_url, migrated = result
+                results[page_url] = migrated
+                
+            # Reporta progresso
+            completed = min(i + parallel_pages, len(tasks))
+            logger.info(f"Progresso: {completed}/{len(tasks)} páginas processadas")
+        
+        total_time = (datetime.now() - start_time).total_seconds()
+        total_migrated = sum(len(urls) for urls in results.values())
+        
+        logger.info(f"Processamento multi-página concluído em {total_time:.1f}s")
+        logger.info(f"Total de documentos migrados: {total_migrated}")
+        logger.info(f"Estatísticas: {self._stats}")
+        
+        return results
+
+    async def batch_migrate_documents(self, doc_urls: List[str], folder_id: Optional[int] = None, 
+                                   batch_size: int = 20) -> List[str]:
+        """
+        Migra uma lista de documentos em batches de forma otimizada
+        
+        Args:
+            doc_urls: Lista de URLs de documentos para migrar
+            folder_id: ID da pasta destino (opcional)
+            batch_size: Tamanho do batch
+            
+        Returns:
+            Lista de URLs migradas
+        """
+        migrated_urls = []
+        total = len(doc_urls)
+        
+        if not total:
+            return migrated_urls
+            
+        if not self.session:
+            await self.initialize_session()
+        
+        logger.info(f"Iniciando migração em lote de {total} documentos (batch_size={batch_size})")
+        start_time = datetime.now()
+        
+        # Processa em batches
+        for i in range(0, total, batch_size):
+            batch = doc_urls[i:i + batch_size]
+            logger.info(f"Processando batch {i//batch_size + 1}/{(total+batch_size-1)//batch_size} - {len(batch)} URLs")
+            
+            batch_start = datetime.now()
+            
+            # Executa migrações em paralelo com semáforo
+            tasks = []
+            semaphore = asyncio.Semaphore(batch_size)
+            
+            async def migrate_with_semaphore(url):
+                async with semaphore:
+                    return await self.migrate_document(url, folder_id)
+            
+            tasks = [migrate_with_semaphore(url) for url in batch]
+            results = await asyncio.gather(*tasks, return_exceptions=True)
+            
+            # Processa resultados
+            batch_migrated = []
+            for j, result in enumerate(results):
+                if isinstance(result, str) and result:
+                    batch_migrated.append(result)
+                elif isinstance(result, Exception):
+                    logger.error(f"Erro ao migrar {batch[j]}: {str(result)}")
+            
+            migrated_urls.extend(batch_migrated)
+            
+            # Estatísticas do batch
+            batch_time = (datetime.now() - batch_start).total_seconds()
+            processed = i + len(batch)
+            progress_pct = (processed / total) * 100
+            
+            # Estima tempo restante
+            elapsed = (datetime.now() - start_time).total_seconds()
+            items_per_second = processed / elapsed if elapsed > 0 else 0
+            remaining_items = total - processed
+            remaining_time = remaining_items / items_per_second if items_per_second > 0 else 0
+            
+            logger.info(f"Batch concluído: {len(batch_migrated)}/{len(batch)} migrados ({len(batch_migrated)/len(batch)*100:.1f}%)")
+            logger.info(f"Progresso: {progress_pct:.1f}% ({processed}/{total}) - "
+                       f"Taxa: {items_per_second:.2f} items/s - "
+                       f"Tempo restante: {remaining_time:.1f}s")
+            
+            # Pequena pausa entre batches
+            await asyncio.sleep(0.2)
+        
+        # Estatísticas finais
+        total_time = (datetime.now() - start_time).total_seconds()
+        logger.info(f"Migração em lote concluída em {total_time:.1f}s")
+        logger.info(f"Total migrado: {len(migrated_urls)}/{total} documentos ({len(migrated_urls)/total*100:.1f}%)")
+        logger.info(f"Estatísticas: {self._stats}")
+        
         return migrated_urls
 
     async def close(self):
@@ -555,5 +841,8 @@ class DocumentCreator:
         if self._connection_pool:
             await self._connection_pool.close()
             self._connection_pool = None
+            
+        # Fecha thread pool
+        self.thread_pool.shutdown(wait=True)
         
-        logger.info("Recursos fechados com sucesso")
+        logger.info(f"Recursos fechados com sucesso. Estatísticas finais: {self._stats}")
