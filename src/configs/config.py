@@ -4,6 +4,7 @@ class Config:
     """Configuration class for Liferay migration project."""
     
     def __init__(self):
+        self.wordpress_url = os.getenv('WORDPRESS_URL', '')
         self.liferay_url = os.getenv('LIFERAY_URL', '')
         self.liferay_user = os.getenv('LIFERAY_USERNAME', '')
         self.liferay_pass = os.getenv('LIFERAY_PASSWORD', '')

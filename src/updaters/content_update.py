@@ -198,10 +198,16 @@ class ContentUpdater:
         for img in soup.find_all('img'):
             if img.has_attr('srcset'):
                 del img['srcset']
-                
+                    
             src = img.get('src')
             if src:
+                # Corrige se necessário, substituindo 'sedest' por 'sedes'
                 src = src.replace("sedest", "sedes")
+                
+                # Verifica se a URL é relativa
+                if not src.startswith(('http://', 'https://')):
+                    src = self.config.wordpress_url + src
+
                 img['src'] = src
 
                 if 'wp-content' in src or 'wp-conteudo' in src:
