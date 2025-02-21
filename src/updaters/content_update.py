@@ -14,7 +14,6 @@ class ContentUpdater:
         self.session = None
         self.doc_creator = DocumentCreator(config)
         self.folder_creator = FolderCreator(config)  # Adicionando o FolderCreator
-        self.root_folder_id = "5346800"
         
     async def initialize_session(self):
         if self.session:
@@ -75,7 +74,7 @@ class ContentUpdater:
             # self, title: str, parent_id: int = 0, folder_type: str = 'journal', hierarchy: List[str] = None
             folder_id = await self.folder_creator.create_folder(
                 title=article_title,
-                parent_id=self.root_folder_id,
+                parent_id=self.config.news_folder_id,
                 folder_type='documents'
             )
             
@@ -99,13 +98,30 @@ class ContentUpdater:
             content = article[0] if isinstance(article, list) else article
             
             # Parse o XML para extrair o conteúdo HTML
-            soup = BeautifulSoup(content.get('content', ''), 'xml')
+            try:
+                soup = BeautifulSoup(content.get('content', ''), 'xml')
+            except FeatureNotFound:
+                # Try to import lxml
+                import importlib.util
+                if importlib.util.find_spec("lxml") is None:
+                    logger.error("lxml library is not installed. Please install it with 'pip install lxml'")
+                    # Fallback to html.parser
+                    soup = BeautifulSoup(content.get('content', ''), 'html.parser')
+                    logger.warning("Using html.parser instead of xml parser")
+                else:
+                    # lxml is installed but still not working
+                    logger.error("XML parser not working despite lxml being installed")
+                    raise
             
             # Encontra o elemento com o título do artigo
-            title_element = soup.find('dynamic-element', attrs={'field-reference': 'call'})
-            if title_element:
-                article_title = title_element.find('dynamic-content').text
-                
+            article_title = article.get("titleCurrentValue")
+
+            if not article_title:
+                title_element = soup.find('dynamic-element', attrs={'field-reference': 'call'})
+
+                if title_element:
+                    article_title = title_element.find('dynamic-content').text
+            
             logger.info(f"Criando pasta para o artigo: {article_title}")
             
             article_folder_id = await self.create_article_folder(article_title)

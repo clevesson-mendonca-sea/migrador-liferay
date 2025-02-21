@@ -10,6 +10,7 @@ class Config:
         self.site_id = os.getenv('LIFERAY_SITE_ID', '')
         self.sheet_id = os.getenv('SPREADSHEET_ID', '')
         self.folder_type = os.getenv('FOLDER_TYPE', 'journal')
+        self.news_folder_id = os.getenv('LIFERAY_FOLDER_ID_NEWS', '')
         self.content_structure_id = os.getenv('LIFERAY_CONTENT_STRUCTURE_ID', '')
         self.colapse_structure_id = os.getenv('LIFERAY_COLAPSE_STRUCTURE_ID', '')
         self.display_template_key = os.getenv('LIFERAY_DISPLAY_TEMPLETE_KEY', '')

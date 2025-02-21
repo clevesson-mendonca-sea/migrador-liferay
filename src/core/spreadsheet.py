@@ -24,7 +24,7 @@ async def get_sheet_update_data(workbook):
     try:
         sheet = next(
             sheet for sheet in workbook.worksheets() 
-            if "noticias" in sheet.title.lower()
+            if "semob" in sheet.title.lower()
         )
         rows = sheet.get_all_values()
 
