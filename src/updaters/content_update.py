@@ -206,12 +206,16 @@ class ContentUpdater:
                 
                 # Verifica se a URL é relativa
                 if not src.startswith(('http://', 'https://')):
-                    src = self.config.wordpress_url + src
+                    if '/documents' not in src:
+                        src = self.config.wordpress_url + src
+                    else:
+                        logger.info(f"URL já contém '/documents', não será alterada: {src}")
 
                 img['src'] = src
 
                 if 'wp-content' in src or 'wp-conteudo' in src:
                     try:
+                        # Tenta migrar o documento, caso a URL seja válida
                         new_url = await self.doc_creator.migrate_document(
                             doc_url=src,
                             folder_id=folder_id,
