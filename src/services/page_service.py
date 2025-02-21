@@ -1,4 +1,5 @@
 import logging
+from urllib.parse import urlparse
 from configs.config import Config
 from creators.page_creator import PageCreator
 import aiohttp
@@ -45,7 +46,9 @@ async def migrate_pages(pages):
             menu_title = page.get('menu_title') if needs_menu else None
             
             # Extract the URL-friendly name from the full URL
-            final_url = page['url'].strip('/').split('/')[-1] if page['url'] else ''
+            # final_url = page['url'].strip('/').split('/')[-1] if page['url'] else ''
+            path = urlparse(page['url']).path if page['url'] else ''
+            final_url = path[:-1] if path.endswith('/') else path
             
             page_id = await creator.create_hierarchy(
                 hierarchy=page['hierarchy'],
@@ -54,8 +57,11 @@ async def migrate_pages(pages):
                 page_type=page['type'],
                 visible=page['visible'],
                 column_type=page['column_type'],
-                menu_title=menu_title
+                menu_title=menu_title,
+                url_vinculada=page['url_vincular']
             )
+
+            # print(page['url_vincular'])
             
             if page_id:
                 logger.info(f"Página criada: {page['title']} (ID: {page_id}) tipo({page['type']})")

@@ -168,11 +168,24 @@ class WebContentCreator:
                 
             try:
                 async with getattr(self.session, method)(url, **kwargs) as response:
-                    if response.content_type == 'application/json':
-                        data = await response.json(content_type=None)
-                    else:
+                    status = response.status
+                    
+                    try:
+                        if response.content_type == 'application/json':
+                            data = await response.json(content_type=None)
+                        else:
+                            data = await response.text()
+                            # Try to parse as JSON even if content-type isn't JSON
+                            try:
+                                data = json.loads(data)
+                            except json.JSONDecodeError:
+                                pass
+                    except Exception as e:
+                        logger.warning(f"Error parsing response: {str(e)}")
                         data = await response.text()
-                    return response.status, data
+                    
+                    return status, data
+                    
             except aiohttp.ClientResponseError as e:
                 logger.error(f"HTTP error during {method} to {url}: {e.status} - {str(e)}")
                 raise
@@ -182,7 +195,7 @@ class WebContentCreator:
             except Exception as e:
                 logger.error(f"Unexpected error during {method} to {url}: {str(e)}")
                 raise
-
+            
     @lru_cache(maxsize=200)
     def _get_content_url(self, folder_id: int) -> str:
         """Retorna URL de criação de conteúdo (cached)"""

@@ -27,7 +27,7 @@ class CollapseContentProcessor:
             if 'background' in style:
                 if 'gray' in style or 'grey' in style:
                     return "Cinza"
-                elif 'green' in style or 'verde' in style:
+                elif 'green' in style or '#eaf2e9;' in style:
                     return "Verde"
                 elif 'blue' in style or 'azul' in style:
                     return "Azul"
