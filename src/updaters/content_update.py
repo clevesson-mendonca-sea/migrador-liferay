@@ -200,6 +200,7 @@ class ContentUpdater:
                 del img['srcset']
                     
             src = img.get('src')
+
             if src:
                 # Corrige se necessário, substituindo 'sedest' por 'sedes'
                 src = src.replace("sedest", "sedes")
@@ -226,6 +227,36 @@ class ContentUpdater:
                             logger.info(f"Imagem atualizada: {src} -> {new_url}")
                     except Exception as e:
                         logger.error(f"Erro ao processar imagem {src}: {str(e)}")
+        
+        for a in soup.find_all('a'):
+            if a.has_attr('href'):
+                    
+                href = a.get('href')
+
+            if href:
+                
+                # Verifica se a URL é relativa
+                if not href.startswith(('http://', 'https://')):
+                    if '/documents' not in href:
+                        href = self.config.wordpress_url + href
+                    else:
+                        logger.info(f"URL já contém '/documents', não será alterada: {href}")
+
+                a['href'] = href
+
+                if 'wp-content' in href or 'wp-conteudo' in href:
+                    try:
+                        # Tenta migrar o documento, caso a URL seja válida
+                        new_url = await self.doc_creator.migrate_document(
+                            doc_url=href,
+                            folder_id=folder_id,
+                            page_url=base_url
+                        )
+                        if new_url:
+                            a['href'] = new_url
+                            logger.info(f"Link atualizado: {href} -> {new_url}")
+                    except Exception as e:
+                        logger.error(f"Erro ao processar link {href}: {str(e)}")
 
         return str(soup)
 
