@@ -1,5 +1,6 @@
 import asyncio
 from asyncio.log import logger
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 import logging
 from logging.handlers import RotatingFileHandler
@@ -18,6 +19,7 @@ from creators.collapse_content_creator import CollapseContentProcessor
 from cache.web_content_cache import ContentCache
 from processors.web_content_mixed import MixedContentProcessor
 from core.url_utils import UrlUtils
+from constants.constants import MAX_CONCURRENT_TASKS
 
 @dataclass
 class ContentResponse:
@@ -30,6 +32,10 @@ class WebContentCreator:
     DEFAULT_PORTLET_ID = 'com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_JournalCont_'
     ASSOCIATION_ENDPOINT = '/o/api-association-migrador/v1.0/journal-content/associate-article'
     
+    CONNECTION_POOL_SIZE = 100
+    SEMAPHORE_LIMIT = 20
+    THREAD_POOL_SIZE = 10
+
     def __init__(self, config):
         self.config = config
         self.session = None
@@ -43,11 +49,11 @@ class WebContentCreator:
         self.base_domain = ""
         self._connection_pool = None
         self._setup_logging()
-        # Pre-built URLs for frequent API calls
         self._site_pages_url = f"{config.liferay_url}/o/headless-delivery/v1.0/sites/{config.site_id}/site-pages"
         self.content_processor = ContentProcessor(self)
-        # Initialize semaphore for concurrency control
-        self._request_semaphore = asyncio.Semaphore(20)
+        self._request_semaphore = asyncio.Semaphore(self.SEMAPHORE_LIMIT)
+        self._thread_pool = ThreadPoolExecutor(max_workers=self.THREAD_POOL_SIZE)
+        self._task_semaphore = asyncio.Semaphore(MAX_CONCURRENT_TASKS)
 
     def _setup_logging(self):
         """Configura o logging"""
@@ -73,18 +79,16 @@ class WebContentCreator:
         if self.session:
             await self.session.close()
         
-        # Cria pool de conexões se não existir
-        if not self._connection_pool:
-            self._connection_pool = TCPConnector(
-                ssl=False,
-                limit=100,  # Aumentado para 100 conexões simultâneas
-                ttl_dns_cache=1200,  # Cache de DNS por 20 minutos
-                keepalive_timeout=120,  # Mantém conexões por mais tempo
-                force_close=False  # Permite reuso de conexões
-            )
+        self._connection_pool = aiohttp.TCPConnector(
+            ssl=False,
+            limit=self.CONNECTION_POOL_SIZE,
+            ttl_dns_cache=1200,  # Cache de DNS por 20 minutos
+            keepalive_timeout=120,  # Mantém conexões por mais tempo
+            force_close=False  # Permite reuso de conexões
+        )
         
-        timeout = ClientTimeout(total=180, connect=30, sock_read=60, sock_connect=30)
-        auth = BasicAuth(login=self.config.liferay_user, password=self.config.liferay_pass)
+        timeout = aiohttp.ClientTimeout(total=180, connect=30, sock_read=60, sock_connect=30)
+        auth = aiohttp.BasicAuth(login=self.config.liferay_user, password=self.config.liferay_pass)
         
         self.session = aiohttp.ClientSession(
             auth=auth,
@@ -95,15 +99,14 @@ class WebContentCreator:
             },
             timeout=timeout,
             connector=self._connection_pool,
-            json_serialize=json.dumps  # Serialização JSON mais rápida
+            json_serialize=json.dumps
         )
         
-        logger.info("Inicializando sessões dos criadores em paralelo")
+        # Inicialização paralela dos criadores
         await asyncio.gather(
             self.folder_creator.initialize_session(),
             self.document_creator.initialize_session()
         )
-        logger.info("Sessões inicializadas com sucesso")
 
     def _log_error(self, error_type: str, url: str, error_msg: str, title: str = "", hierarchy: List[str] = None):
         """Log centralizado de erros"""

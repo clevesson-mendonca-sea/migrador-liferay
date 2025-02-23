@@ -6,7 +6,6 @@ from unidecode import unidecode
 logger = logging.getLogger(__name__)
 
 class FolderNameValidator:
-    # Palavras reservadas do Windows que não podem ser usadas
     RESERVED_WORDS = {
         'con', 'prn', 'aux', 'nul',
         'com1', 'com2', 'com3', 'com4', 'com5', 'com6', 'com7', 'com8', 'com9',
@@ -14,7 +13,7 @@ class FolderNameValidator:
     }
 
     # Caracteres que não são permitidos em nomes de pasta
-    INVALID_CHARS = ['\\', '/', ':', '*', '?', '"', '<', '>', '|', '#', '@', '!', '$', '%', '^', '&', '+']
+    INVALID_CHARS = ['\\', '/', ':', '*', '?', '"', '<', '>', '|', '!', '$', '%', '^', '&', '+']
     
     # Padrões inválidos no final do nome
     INVALID_ENDINGS = ['..', '.', '-', ' ']

@@ -1,3 +1,4 @@
+from datetime import datetime
 import random
 from typing import List, Optional
 import unicodedata
@@ -19,19 +20,30 @@ class PageCreator:
         try:
             normalized_title = self.processor.normalize_page_name(title)
             normalized_url = self.processor.normalize_friendly_url(friendly_url)
+            
+            print(f"\nTentando criar página: {normalized_title}")
+            print(f"URL: {normalized_url}")
+            print(f"Hierarquia: {' > '.join(hierarchy) if hierarchy else 'Raiz'}")
+            
             page_result = await self._create_page_request(normalized_title, normalized_url, 
                                                         parent_id, visible, page_type)
             if page_result:
                 page_id, plid = page_result
                 await self._update_page_layout(page_id, plid, column_type, hierarchy, menu_title, url_vinculada)
-                print(f"Página criada e atualizada: {normalized_title} (ID: {page_id}, PLID: {plid}) | Tipo: {page_type}")
+                print(f"✓ Página criada e atualizada: {normalized_title} (ID: {page_id}, PLID: {plid})")
                 return page_id, plid
+            else:
+                error_msg = "Falha ao criar página - resposta vazia do servidor"
+                self._handle_page_creation_error(normalized_title, normalized_url, 
+                                               parent_id, hierarchy, error_msg)
             
         except Exception as e:
+            error_msg = f"Exceção ao criar página: {str(e)}"
             self._handle_page_creation_error(normalized_title, normalized_url, 
-                                           parent_id, hierarchy, str(e))
+                                           parent_id, hierarchy, error_msg)
+            print(f"✗ {error_msg}")
         return 0, 0
-
+    
     async def _create_page_request(self, title: str, url: str, parent_id: int, 
                                  visible: bool, page_type: str) -> tuple[int, int]:
         params = {
@@ -59,14 +71,17 @@ class PageCreator:
 
     def _handle_page_creation_error(self, title: str, url: str, parent_id: int, 
                                   hierarchy: List[str], error_message: str):
+        """Manipula erros de criação de página com mais detalhes"""
         error = PageError(
             title=title,
             url=url,
             parent_id=parent_id,
             hierarchy=hierarchy or [],
-            error_message=error_message
+            error_message=error_message,
+            timestamp=datetime.now().isoformat()
         )
         self.error_tracker.add_error(error)
+        print(f"Erro registrado para página '{title}': {error_message}")
 
     async def _update_page_layout(self, page_id: int, plid: int, column_type: str, 
                                hierarchy: List[str] = None, menu_title: str = None, url_vinculada: str = ""):
@@ -253,7 +268,6 @@ class PageCreator:
             self.page_cache[cache_key] = (page_id, plid)
             
         return page_id, plid
-
 
     async def create_hierarchy(self, hierarchy: list, final_title: str, final_url: str, 
                              page_type: str = "widget", visible: bool = True, 

@@ -1,3 +1,4 @@
+from concurrent.futures import ThreadPoolExecutor
 import logging
 from bs4 import BeautifulSoup, Tag
 import re
@@ -48,7 +49,7 @@ class ContentProcessor:
         'col-md-8'
     }
     
-    DOCUMENT_PATHS = {'/wp-conteudo', '/wp-content'}
+    DOCUMENT_PATHS = {'/wp-conteudo', '/wp-content', '.df.gov.br/wp-', '/uploads'}
     HEADING_TAGS = {'h1', 'h2', 'h3', 'h4'}
 
     def __init__(self, web_content_creator):
@@ -56,10 +57,11 @@ class ContentProcessor:
         self.cache = web_content_creator.cache
         self.url_utils = web_content_creator.url_utils
         self.document_creator = web_content_creator.document_creator
-        self.semaphore = asyncio.Semaphore(10)
+        self.semaphore = asyncio.Semaphore(20)
         self._domain_cache = {}
         self._url_tag_selectors = {'a': 'href', 'img': ['src', 'data-src'], 'link': 'href', 'script': 'src'}
         self._content_type_cache = {}
+        self._thread_pool = ThreadPoolExecutor(max_workers=10)
 
     @lru_cache(maxsize=1000)
     def _clean_url(self, url: str, base_domain: str) -> str:
@@ -191,6 +193,69 @@ class ContentProcessor:
             logger.error(f"Erro ao remover título h3: {str(e)}")
             return html_content
 
+    def _collect_urls(self, soup: BeautifulSoup) -> List[Tuple[Tag, str, str]]:
+        """Enhanced URL collection including background images"""
+        urls_to_process = []
+        
+        # Regular tag processing
+        for tag_name, attrs in self._url_tag_selectors.items():
+            if isinstance(attrs, list):
+                for tag in soup.find_all(tag_name):
+                    for attr in attrs:
+                        if url := tag.get(attr):
+                            urls_to_process.append((tag, attr, url))
+                            break
+            else:
+                for tag in soup.find_all(tag_name):
+                    if url := tag.get(attrs):
+                        urls_to_process.append((tag, attrs, url))
+        
+        # Process elements with background-image in style
+        for tag in soup.find_all(style=True):
+            style = tag.get('style', '')
+            if 'background-image' in style:
+                url_match = re.search(r"url\(['\"]?(.*?)['\"]?\)", style)
+                if url_match and (url := url_match.group(1)):
+                    urls_to_process.append((tag, 'style', url))
+        
+        return urls_to_process
+    
+    async def fetch_and_process_content(self, url: str, folder_id: Optional[int] = None) -> Dict[str, Any]:
+        """Busca e processamento de conteúdo otimizados"""
+        try:
+            html_content = await self.creator.fetch_content(url)
+            if not html_content:
+                return {"success": False, "error": "No content found"}
+
+            # Executa tarefas em paralelo
+            loop = asyncio.get_event_loop()
+            processed_content, is_collapsible = await asyncio.gather(
+                self.process_content(html_content, url, folder_id),
+                loop.run_in_executor(self._thread_pool, self._is_collapsible_content, html_content)
+            )
+
+            if not processed_content:
+                return {"success": False, "error": "Failed to process content"}
+
+            # Executa limpezas em thread separada
+            cleaned_content = await loop.run_in_executor(
+                self._thread_pool,
+                self._clean_and_process_content,
+                processed_content,
+                is_collapsible
+            )
+
+            return {
+                "success": True,
+                "content": cleaned_content["content"],
+                "is_collapsible": is_collapsible,
+                "has_mixed_content": cleaned_content["has_mixed_content"]
+            }
+
+        except Exception as e:
+            logger.error(f"Error processing content from {url}: {str(e)}")
+            return {"success": False, "error": str(e)}
+
     async def _process_url_batch(self, urls_to_process: List[Tuple[Tag, str, str]], base_domain: str, folder_id: int, base_url: str) -> None:
         """Processa um lote de URLs em paralelo com limites de concorrência"""
         tasks = []
@@ -207,16 +272,16 @@ class ContentProcessor:
             await asyncio.gather(*tasks)
 
     async def _process_single_url(self, tag: Tag, attr: str, url: str, base_domain: str, folder_id: int, base_url: str) -> None:
-        """Processa URLs individuais com melhor tratamento de erros"""
+        """Processa URLs individuais com verificação aprimorada para links de imagem"""
         async with self.semaphore:
             try:
-                # 1. Validação e limpeza básica da URL
+                # Validação básica da URL
                 if not url or url.isspace():
                     logger.warning(f"URL vazia ou inválida encontrada")
                     self.cache.mark_failed(url)
                     return
 
-                # 2. Limpa a URL antes de processá-la
+                # Limpa a URL antes do processamento
                 original_url = url
                 cleaned_url = self._clean_url_before_processing(url)
                 
@@ -225,10 +290,9 @@ class ContentProcessor:
                     self.cache.mark_failed(original_url)
                     return
 
-                # 3. Verifica se é um documento
-                is_document = any(doc_path in cleaned_url.lower() for doc_path in self.DOCUMENT_PATHS)
+                # Verifica se é um documento ou imagem
+                is_document = self._should_process_as_document(cleaned_url)
                 
-                # 4. Processa documentos
                 if is_document:
                     try:
                         # Constrói URL completa se for relativa
@@ -236,15 +300,15 @@ class ContentProcessor:
                         if not cleaned_url.startswith(('http://', 'https://')):
                             full_url = f"{base_domain.rstrip('/')}/{cleaned_url.lstrip('/')}"
                         
-                        # Validação adicional da URL
+                        # Validação da URL
                         parsed_url = urlparse(full_url)
                         if not all([parsed_url.scheme, parsed_url.netloc]):
                             logger.error(f"URL mal formada após limpeza: {full_url}")
                             self.cache.mark_failed(original_url)
-                            tag[attr] = original_url  # Mantém a URL original em caso de erro
+                            tag[attr] = original_url
                             return
 
-                        # Use a função existente para migrar o documento
+                        # Migra o documento
                         migrated_url = await self.creator._retry_operation(
                             self.document_creator.migrate_document,
                             doc_url=full_url,
@@ -255,30 +319,101 @@ class ContentProcessor:
                         if migrated_url:
                             relative_url = self._clean_url(migrated_url, base_domain)
                             self.cache.add_url(original_url, relative_url)
-                            tag[attr] = relative_url
+                            
+                            # Se for um atributo style, atualiza apenas a URL dentro do valor
+                            if attr == 'style':
+                                current_style = tag.get('style', '')
+                                new_style = re.sub(
+                                    r'url\([\'"]?([^\'"]*)[\'"]?\)',
+                                    f'url("{relative_url}")',
+                                    current_style
+                                )
+                                tag['style'] = new_style
+                            else:
+                                tag[attr] = relative_url
                         else:
                             logger.warning(f"Falha na migração do documento: {full_url}")
                             self.cache.mark_failed(original_url)
-                            tag[attr] = original_url  # Mantém a URL original em caso de falha
+                            tag[attr] = original_url
                     except Exception as doc_error:
                         logger.error(f"Erro ao processar documento {full_url}: {str(doc_error)}")
                         self.cache.mark_failed(original_url)
-                        tag[attr] = original_url  # Mantém a URL original em caso de exceção
+                        tag[attr] = original_url
                 else:
-                    # Processa outras URLs mantendo externas como absolutas
+                    # Para URLs que não são documentos/imagens
                     try:
                         cleaned_url = self._clean_url(cleaned_url, base_domain)
-                        tag[attr] = cleaned_url
+                        
+                        # Atualiza o atributo apropriadamente
+                        if attr == 'style':
+                            current_style = tag.get('style', '')
+                            new_style = re.sub(
+                                r'url\([\'"]?([^\'"]*)[\'"]?\)',
+                                f'url("{cleaned_url}")',
+                                current_style
+                            )
+                            tag['style'] = new_style
+                        else:
+                            tag[attr] = cleaned_url
                     except Exception as url_error:
                         logger.error(f"Erro ao limpar URL {cleaned_url}: {str(url_error)}")
                         self.cache.mark_failed(original_url)
-                        tag[attr] = original_url  # Mantém a URL original em caso de exceção
+                        tag[attr] = original_url
 
             except Exception as e:
                 logger.error(f"Erro crítico processando URL {url}: {str(e)}")
                 self.cache.mark_failed(url)
-                tag[attr] = url  # Mantém a URL original em caso de erro crítico
+                tag[attr] = url
 
+    def _should_process_as_document(self, url: str) -> bool:
+        """
+        Verifica se a URL deve ser processada como documento/imagem
+        """
+        url_lower = url.lower()
+        
+        # Verifica caminhos de documento
+        if any(doc_path in url_lower for doc_path in self.DOCUMENT_PATHS):
+            return True
+            
+        # Verifica extensões de imagem
+        if any(url_lower.endswith(ext) for ext in self.IMAGE_EXTENSIONS):
+            return True
+            
+        # Verifica se a URL contém palavras-chave indicando conteúdo de mídia
+        media_keywords = {'image', 'img', 'photo', 'media', 'upload', 'arquivo', 'document'}
+        if any(keyword in url_lower for keyword in media_keywords):
+            return True
+            
+        return False
+
+    async def _process_and_get_migrated_url(self, url: str, base_domain: str, folder_id: int, base_url: str) -> Optional[str]:
+        """Helper para processar URL e retornar a URL migrada"""
+        if not url or url.isspace():
+            return None
+
+        cleaned_url = self._clean_url_before_processing(url)
+        if not cleaned_url:
+            return None
+
+        if self._should_process_as_document(cleaned_url):
+            full_url = cleaned_url
+            if not cleaned_url.startswith(('http://', 'https://')):
+                full_url = f"{base_domain.rstrip('/')}/{cleaned_url.lstrip('/')}"
+
+            try:
+                migrated_url = await self.creator._retry_operation(
+                    self.document_creator.migrate_document,
+                    doc_url=full_url,
+                    folder_id=folder_id,
+                    page_url=base_url
+                )
+                if migrated_url:
+                    return self._clean_url(migrated_url, base_domain)
+            except Exception as e:
+                logger.error(f"Error migrating URL {full_url}: {str(e)}")
+
+        return None
+    
     def _clean_url_before_processing(self, url: str) -> str:
         """Limpa e normaliza a URL antes de processá-la"""
         if not url:
@@ -305,29 +440,63 @@ class ContentProcessor:
         
         return url.strip()
 
+    def _clean_and_process_content(self, content: str, is_fully_collapsible: bool) -> Dict[str, Any]:
+        """Executa limpezas e processamentos em uma única thread"""
+        cleaned_content = self._clean_first_div_bootstrap(content)
+        cleaned_content = self._remove_title_from_content(cleaned_content)
+
+        has_some_collapsible = False
+        if not is_fully_collapsible:
+            soup = BeautifulSoup(cleaned_content, 'html.parser')
+            elements = soup.select('div')
+            has_some_collapsible = any(self._is_collapsible_content(str(elem)) for elem in elements)
+
+        return {
+            "content": cleaned_content,
+            "has_mixed_content": has_some_collapsible and not is_fully_collapsible
+        }
+
     async def process_content(self, html_content: str, base_url: str, folder_id: Optional[int] = None) -> str:
-        """Processa conteúdo HTML com processamento em lotes para melhor performance"""
+        """Processamento de conteúdo com verificação aprimorada de links e imagens"""
         if not html_content:
             return ""
 
         soup = BeautifulSoup(html_content, 'html.parser')
         base_domain = self.url_utils.extract_domain(base_url)
 
-        self._clean_img_attributes(soup)
+        # Limpa atributos de imagem em thread separada
+        loop = asyncio.get_event_loop()
+        await loop.run_in_executor(self._thread_pool, self._clean_img_attributes, soup)
 
-        urls_to_process = []
-        
-        for tag_name, attrs in self._url_tag_selectors.items():
-            for tag in soup.find_all(tag_name):
-                # Handle both single attribute and lists of attributes
-                if isinstance(attrs, list):
-                    for attr in attrs:
-                        if url := tag.get(attr):
-                            urls_to_process.append((tag, attr, url))
-                            break  # Only process the first valid attribute
-                elif url := tag.get(attrs):
-                    urls_to_process.append((tag, attrs, url))
+        # Processa elementos com background-image no style
+        elements_with_bg = soup.find_all(lambda tag: tag.get('style') and 'background-image' in tag.get('style'))
+        for element in elements_with_bg:
+            style = element.get('style', '')
+            url_match = re.search(r"url\(['\"]?(.*?)['\"]?\)", style)
+            if url_match and url_match.group(1):
+                url = url_match.group(1)
+                if self._should_process_as_document(url):
+                    await self._process_single_url(element, 'style', url, base_domain, folder_id, base_url)
 
+        # Processa scripts com background-image
+        scripts = soup.find_all('script', string=re.compile(r'background-image'))
+        for script in scripts:
+            if script.string:
+                url_match = re.search(r"url\(['\"]?(.*?)['\"]?\)", script.string)
+                if url_match and url_match.group(1):
+                    url = url_match.group(1)
+                    if self._should_process_as_document(url):
+                        try:
+                            migrated_url = await self._process_and_get_migrated_url(
+                                url, base_domain, folder_id, base_url
+                            )
+                            if migrated_url:
+                                script.string = script.string.replace(url, migrated_url)
+                        except Exception as e:
+                            logger.error(f"Error processing script background image: {str(e)}")
+
+        # Coleta e processa todas as URLs
+        urls_to_process = self._collect_urls(soup)
         batch_size = 20
         for i in range(0, len(urls_to_process), batch_size):
             batch = urls_to_process[i:i + batch_size]

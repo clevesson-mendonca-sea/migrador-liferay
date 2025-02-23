@@ -1,0 +1,1404 @@
+{
+  "total_errors": 127,
+  "timestamp": "2025-02-23T13:37:12.865483",
+  "errors": [
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=false&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:00.509069",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=false&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:00.613213",
+      "retry_count": 0
+    },
+    {
+      "title": "Lei de Acesso À Informação",
+      "url": "lei-de-acesso-a-informacao",
+      "parent_id": 0,
+      "hierarchy": [
+        "Lei de Acesso à Informação"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&title=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&description=&type=portlet&hidden=true&friendlyURL=/lei-de-acesso-a-informacao'",
+      "timestamp": "2025-02-23T13:37:00.833215",
+      "retry_count": 0
+    },
+    {
+      "title": "Sem Categoria",
+      "url": "sem-categoria",
+      "parent_id": 0,
+      "hierarchy": [
+        "Sem Categoria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Sem+Categoria&title=Sem+Categoria&description=&type=portlet&hidden=true&friendlyURL=/sem-categoria'",
+      "timestamp": "2025-02-23T13:37:00.878111",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=false&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:01.627517",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=false&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:01.628341",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=true&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:01.854192",
+      "retry_count": 0
+    },
+    {
+      "title": "Lei de Acesso À Informação",
+      "url": "lei-de-acesso-a-informacao",
+      "parent_id": 0,
+      "hierarchy": [
+        "Lei de Acesso à Informação"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&title=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&description=&type=portlet&hidden=true&friendlyURL=/lei-de-acesso-a-informacao'",
+      "timestamp": "2025-02-23T13:37:02.036221",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=false&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:02.252327",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=true&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:02.253290",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=true&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:02.260603",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=false&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:02.285196",
+      "retry_count": 0
+    },
+    {
+      "title": "Lei de Acesso À Informação",
+      "url": "lei-de-acesso-a-informacao",
+      "parent_id": 0,
+      "hierarchy": [
+        "Lei de Acesso à Informação"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&title=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&description=&type=portlet&hidden=true&friendlyURL=/lei-de-acesso-a-informacao'",
+      "timestamp": "2025-02-23T13:37:02.302451",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=false&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:02.483969",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=false&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:02.518231",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=true&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:02.574321",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=false&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:02.796265",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=false&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:02.889233",
+      "retry_count": 0
+    },
+    {
+      "title": "Sem Categoria",
+      "url": "sem-categoria",
+      "parent_id": 0,
+      "hierarchy": [
+        "Sem Categoria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Sem+Categoria&title=Sem+Categoria&description=&type=portlet&hidden=true&friendlyURL=/sem-categoria'",
+      "timestamp": "2025-02-23T13:37:02.890531",
+      "retry_count": 0
+    },
+    {
+      "title": "Lei de Acesso À Informação",
+      "url": "lei-de-acesso-a-informacao",
+      "parent_id": 0,
+      "hierarchy": [
+        "Lei de Acesso à Informação"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&title=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&description=&type=portlet&hidden=true&friendlyURL=/lei-de-acesso-a-informacao'",
+      "timestamp": "2025-02-23T13:37:03.113970",
+      "retry_count": 0
+    },
+    {
+      "title": "Projetos",
+      "url": "projetos",
+      "parent_id": 0,
+      "hierarchy": [
+        "Projetos"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Projetos&title=Projetos&description=&type=portlet&hidden=true&friendlyURL=/projetos'",
+      "timestamp": "2025-02-23T13:37:03.125156",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=true&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:03.186342",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=true&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:03.224006",
+      "retry_count": 0
+    },
+    {
+      "title": "Conselho Gestor Ppps",
+      "url": "conselho-gestor-ppps",
+      "parent_id": 0,
+      "hierarchy": [
+        "Conselho Gestor PPPs"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Conselho+Gestor+Ppps&title=Conselho+Gestor+Ppps&description=&type=portlet&hidden=true&friendlyURL=/conselho-gestor-ppps'",
+      "timestamp": "2025-02-23T13:37:03.245961",
+      "retry_count": 0
+    },
+    {
+      "title": "Projetos",
+      "url": "projetos",
+      "parent_id": 0,
+      "hierarchy": [
+        "Projetos"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Projetos&title=Projetos&description=&type=portlet&hidden=true&friendlyURL=/projetos'",
+      "timestamp": "2025-02-23T13:37:03.314445",
+      "retry_count": 0
+    },
+    {
+      "title": "Lei de Acesso À Informação",
+      "url": "lei-de-acesso-a-informacao",
+      "parent_id": 0,
+      "hierarchy": [
+        "Lei de Acesso à Informação"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&title=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&description=&type=portlet&hidden=true&friendlyURL=/lei-de-acesso-a-informacao'",
+      "timestamp": "2025-02-23T13:37:03.599036",
+      "retry_count": 0
+    },
+    {
+      "title": "Projetos",
+      "url": "projetos",
+      "parent_id": 0,
+      "hierarchy": [
+        "Projetos"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Projetos&title=Projetos&description=&type=portlet&hidden=true&friendlyURL=/projetos'",
+      "timestamp": "2025-02-23T13:37:03.683526",
+      "retry_count": 0
+    },
+    {
+      "title": "Conselho Gestor Ppps",
+      "url": "conselho-gestor-ppps",
+      "parent_id": 0,
+      "hierarchy": [
+        "Conselho Gestor PPPs"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Conselho+Gestor+Ppps&title=Conselho+Gestor+Ppps&description=&type=portlet&hidden=true&friendlyURL=/conselho-gestor-ppps'",
+      "timestamp": "2025-02-23T13:37:03.987215",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=false&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:04.117240",
+      "retry_count": 0
+    },
+    {
+      "title": "Conselho Gestor Ppps",
+      "url": "conselho-gestor-ppps",
+      "parent_id": 0,
+      "hierarchy": [
+        "Conselho Gestor PPPs"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Conselho+Gestor+Ppps&title=Conselho+Gestor+Ppps&description=&type=portlet&hidden=true&friendlyURL=/conselho-gestor-ppps'",
+      "timestamp": "2025-02-23T13:37:04.136060",
+      "retry_count": 0
+    },
+    {
+      "title": "Projetos",
+      "url": "projetos",
+      "parent_id": 0,
+      "hierarchy": [
+        "Projetos"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Projetos&title=Projetos&description=&type=portlet&hidden=true&friendlyURL=/projetos'",
+      "timestamp": "2025-02-23T13:37:04.190284",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=true&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:04.191957",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=false&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:04.261196",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=true&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:04.422221",
+      "retry_count": 0
+    },
+    {
+      "title": "Projetos",
+      "url": "projetos",
+      "parent_id": 0,
+      "hierarchy": [
+        "Projetos"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Projetos&title=Projetos&description=&type=portlet&hidden=true&friendlyURL=/projetos'",
+      "timestamp": "2025-02-23T13:37:04.547236",
+      "retry_count": 0
+    },
+    {
+      "title": "Lei de Acesso À Informação",
+      "url": "lei-de-acesso-a-informacao",
+      "parent_id": 0,
+      "hierarchy": [
+        "Lei de Acesso à Informação"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&title=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&description=&type=portlet&hidden=true&friendlyURL=/lei-de-acesso-a-informacao'",
+      "timestamp": "2025-02-23T13:37:04.778317",
+      "retry_count": 0
+    },
+    {
+      "title": "Conselho Gestor Ppps",
+      "url": "conselho-gestor-ppps",
+      "parent_id": 0,
+      "hierarchy": [
+        "Conselho Gestor PPPs"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Conselho+Gestor+Ppps&title=Conselho+Gestor+Ppps&description=&type=portlet&hidden=false&friendlyURL=/conselho-gestor-ppps'",
+      "timestamp": "2025-02-23T13:37:04.788191",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=false&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:04.893218",
+      "retry_count": 0
+    },
+    {
+      "title": "Conselho Gestor Ppps",
+      "url": "conselho-gestor-ppps",
+      "parent_id": 0,
+      "hierarchy": [
+        "Conselho Gestor PPPs"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Conselho+Gestor+Ppps&title=Conselho+Gestor+Ppps&description=&type=portlet&hidden=false&friendlyURL=/conselho-gestor-ppps'",
+      "timestamp": "2025-02-23T13:37:04.928208",
+      "retry_count": 0
+    },
+    {
+      "title": "Projetos",
+      "url": "projetos",
+      "parent_id": 0,
+      "hierarchy": [
+        "Projetos"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Projetos&title=Projetos&description=&type=portlet&hidden=true&friendlyURL=/projetos'",
+      "timestamp": "2025-02-23T13:37:04.937190",
+      "retry_count": 0
+    },
+    {
+      "title": "Conselho Gestor Ppps",
+      "url": "conselho-gestor-ppps",
+      "parent_id": 0,
+      "hierarchy": [
+        "Conselho Gestor PPPs"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Conselho+Gestor+Ppps&title=Conselho+Gestor+Ppps&description=&type=portlet&hidden=false&friendlyURL=/conselho-gestor-ppps'",
+      "timestamp": "2025-02-23T13:37:05.061167",
+      "retry_count": 0
+    },
+    {
+      "title": "Adote Uma Praça",
+      "url": "adote-uma-praca",
+      "parent_id": 0,
+      "hierarchy": [
+        "Adote uma Praça"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Adote+Uma+Pra%C3%A7a&title=Adote+Uma+Pra%C3%A7a&description=&type=portlet&hidden=true&friendlyURL=/adote-uma-praca'",
+      "timestamp": "2025-02-23T13:37:05.225616",
+      "retry_count": 0
+    },
+    {
+      "title": "Lei de Acesso À Informação",
+      "url": "lei-de-acesso-a-informacao",
+      "parent_id": 0,
+      "hierarchy": [
+        "Lei de Acesso à Informação"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&title=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&description=&type=portlet&hidden=true&friendlyURL=/lei-de-acesso-a-informacao'",
+      "timestamp": "2025-02-23T13:37:05.252138",
+      "retry_count": 0
+    },
+    {
+      "title": "Projetos",
+      "url": "projetos",
+      "parent_id": 0,
+      "hierarchy": [
+        "Projetos"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Projetos&title=Projetos&description=&type=portlet&hidden=true&friendlyURL=/projetos'",
+      "timestamp": "2025-02-23T13:37:06.740622",
+      "retry_count": 0
+    },
+    {
+      "title": "Projetos",
+      "url": "projetos",
+      "parent_id": 0,
+      "hierarchy": [
+        "Projetos"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Projetos&title=Projetos&description=&type=portlet&hidden=true&friendlyURL=/projetos'",
+      "timestamp": "2025-02-23T13:37:06.781183",
+      "retry_count": 0
+    },
+    {
+      "title": "Sem Categoria",
+      "url": "sem-categoria",
+      "parent_id": 0,
+      "hierarchy": [
+        "Sem Categoria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Sem+Categoria&title=Sem+Categoria&description=&type=portlet&hidden=true&friendlyURL=/sem-categoria'",
+      "timestamp": "2025-02-23T13:37:06.802157",
+      "retry_count": 0
+    },
+    {
+      "title": "Adote Uma Praça",
+      "url": "adote-uma-praca",
+      "parent_id": 0,
+      "hierarchy": [
+        "Adote uma Praça"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Adote+Uma+Pra%C3%A7a&title=Adote+Uma+Pra%C3%A7a&description=&type=portlet&hidden=true&friendlyURL=/adote-uma-praca'",
+      "timestamp": "2025-02-23T13:37:06.825334",
+      "retry_count": 0
+    },
+    {
+      "title": "Lei de Acesso À Informação",
+      "url": "lei-de-acesso-a-informacao",
+      "parent_id": 0,
+      "hierarchy": [
+        "Lei de Acesso à Informação"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&title=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&description=&type=portlet&hidden=true&friendlyURL=/lei-de-acesso-a-informacao'",
+      "timestamp": "2025-02-23T13:37:06.859880",
+      "retry_count": 0
+    },
+    {
+      "title": "Lei de Acesso À Informação",
+      "url": "lei-de-acesso-a-informacao",
+      "parent_id": 0,
+      "hierarchy": [
+        "Lei de Acesso à Informação"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&title=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&description=&type=portlet&hidden=true&friendlyURL=/lei-de-acesso-a-informacao'",
+      "timestamp": "2025-02-23T13:37:06.893945",
+      "retry_count": 0
+    },
+    {
+      "title": "Projetos",
+      "url": "projetos",
+      "parent_id": 0,
+      "hierarchy": [
+        "Projetos"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Projetos&title=Projetos&description=&type=portlet&hidden=true&friendlyURL=/projetos'",
+      "timestamp": "2025-02-23T13:37:06.912372",
+      "retry_count": 0
+    },
+    {
+      "title": "Conselho Gestor Ppps",
+      "url": "conselho-gestor-ppps",
+      "parent_id": 0,
+      "hierarchy": [
+        "Conselho Gestor PPPs"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Conselho+Gestor+Ppps&title=Conselho+Gestor+Ppps&description=&type=portlet&hidden=false&friendlyURL=/conselho-gestor-ppps'",
+      "timestamp": "2025-02-23T13:37:06.935181",
+      "retry_count": 0
+    },
+    {
+      "title": "Projetos",
+      "url": "projetos",
+      "parent_id": 0,
+      "hierarchy": [
+        "Projetos"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Projetos&title=Projetos&description=&type=node&hidden=false&friendlyURL=/projetos'",
+      "timestamp": "2025-02-23T13:37:06.965803",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=true&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:06.976294",
+      "retry_count": 0
+    },
+    {
+      "title": "Adote Uma Praça",
+      "url": "adote-uma-praca",
+      "parent_id": 0,
+      "hierarchy": [
+        "Adote uma Praça"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Adote+Uma+Pra%C3%A7a&title=Adote+Uma+Pra%C3%A7a&description=&type=portlet&hidden=true&friendlyURL=/adote-uma-praca'",
+      "timestamp": "2025-02-23T13:37:07.030991",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=false&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:07.140184",
+      "retry_count": 0
+    },
+    {
+      "title": "Projetos",
+      "url": "projetos",
+      "parent_id": 0,
+      "hierarchy": [
+        "Projetos"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Projetos&title=Projetos&description=&type=portlet&hidden=true&friendlyURL=/projetos'",
+      "timestamp": "2025-02-23T13:37:07.318387",
+      "retry_count": 0
+    },
+    {
+      "title": "Lei de Acesso À Informação",
+      "url": "lei-de-acesso-a-informacao",
+      "parent_id": 0,
+      "hierarchy": [
+        "Lei de Acesso à Informação"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&title=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&description=&type=portlet&hidden=true&friendlyURL=/lei-de-acesso-a-informacao'",
+      "timestamp": "2025-02-23T13:37:07.413361",
+      "retry_count": 0
+    },
+    {
+      "title": "Lei de Acesso À Informação",
+      "url": "lei-de-acesso-a-informacao",
+      "parent_id": 0,
+      "hierarchy": [
+        "Lei de Acesso à Informação"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&title=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&description=&type=portlet&hidden=true&friendlyURL=/lei-de-acesso-a-informacao'",
+      "timestamp": "2025-02-23T13:37:07.415829",
+      "retry_count": 0
+    },
+    {
+      "title": "Lei de Acesso À Informação",
+      "url": "lei-de-acesso-a-informacao",
+      "parent_id": 0,
+      "hierarchy": [
+        "Lei de Acesso à Informação"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&title=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&description=&type=portlet&hidden=true&friendlyURL=/lei-de-acesso-a-informacao'",
+      "timestamp": "2025-02-23T13:37:07.566206",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=true&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:07.709193",
+      "retry_count": 0
+    },
+    {
+      "title": "Adote Uma Praça",
+      "url": "adote-uma-praca",
+      "parent_id": 0,
+      "hierarchy": [
+        "Adote uma Praça"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Adote+Uma+Pra%C3%A7a&title=Adote+Uma+Pra%C3%A7a&description=&type=portlet&hidden=true&friendlyURL=/adote-uma-praca'",
+      "timestamp": "2025-02-23T13:37:07.751690",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=false&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:07.786573",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=false&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:07.876452",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=true&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:07.952385",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=false&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:07.994027",
+      "retry_count": 0
+    },
+    {
+      "title": "Projetos",
+      "url": "projetos",
+      "parent_id": 0,
+      "hierarchy": [
+        "Projetos"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Projetos&title=Projetos&description=&type=portlet&hidden=true&friendlyURL=/projetos'",
+      "timestamp": "2025-02-23T13:37:08.003124",
+      "retry_count": 0
+    },
+    {
+      "title": "Projetos",
+      "url": "projetos",
+      "parent_id": 0,
+      "hierarchy": [
+        "Projetos"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Projetos&title=Projetos&description=&type=portlet&hidden=true&friendlyURL=/projetos'",
+      "timestamp": "2025-02-23T13:37:08.016275",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=true&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:08.018828",
+      "retry_count": 0
+    },
+    {
+      "title": "Adote Uma Praça",
+      "url": "adote-uma-praca",
+      "parent_id": 0,
+      "hierarchy": [
+        "Adote uma Praça"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Adote+Uma+Pra%C3%A7a&title=Adote+Uma+Pra%C3%A7a&description=&type=url&hidden=true&friendlyURL=/adote-uma-praca'",
+      "timestamp": "2025-02-23T13:37:08.045853",
+      "retry_count": 0
+    },
+    {
+      "title": "-",
+      "url": "",
+      "parent_id": 0,
+      "hierarchy": [
+        "-"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=-&title=-&description=&type=portlet&hidden=true&friendlyURL=/'",
+      "timestamp": "2025-02-23T13:37:08.095168",
+      "retry_count": 0
+    },
+    {
+      "title": "Lei de Acesso À Informação",
+      "url": "lei-de-acesso-a-informacao",
+      "parent_id": 0,
+      "hierarchy": [
+        "Lei de Acesso à Informação"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&title=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&description=&type=portlet&hidden=true&friendlyURL=/lei-de-acesso-a-informacao'",
+      "timestamp": "2025-02-23T13:37:08.128202",
+      "retry_count": 0
+    },
+    {
+      "title": "Ouvidoria",
+      "url": "ouvidoria",
+      "parent_id": 0,
+      "hierarchy": [
+        "Ouvidoria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Ouvidoria&title=Ouvidoria&description=&type=portlet&hidden=true&friendlyURL=/ouvidoria'",
+      "timestamp": "2025-02-23T13:37:08.144449",
+      "retry_count": 0
+    },
+    {
+      "title": "Projetos",
+      "url": "projetos",
+      "parent_id": 0,
+      "hierarchy": [
+        "Projetos"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Projetos&title=Projetos&description=&type=portlet&hidden=true&friendlyURL=/projetos'",
+      "timestamp": "2025-02-23T13:37:08.164323",
+      "retry_count": 0
+    },
+    {
+      "title": "Projetos",
+      "url": "projetos",
+      "parent_id": 0,
+      "hierarchy": [
+        "Projetos"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Projetos&title=Projetos&description=&type=portlet&hidden=true&friendlyURL=/projetos'",
+      "timestamp": "2025-02-23T13:37:08.222720",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=true&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:08.251105",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=false&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:08.262356",
+      "retry_count": 0
+    },
+    {
+      "title": "Projetos",
+      "url": "projetos",
+      "parent_id": 0,
+      "hierarchy": [
+        "Projetos"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Projetos&title=Projetos&description=&type=portlet&hidden=true&friendlyURL=/projetos'",
+      "timestamp": "2025-02-23T13:37:08.286039",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=true&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:08.312437",
+      "retry_count": 0
+    },
+    {
+      "title": "Projetos",
+      "url": "projetos",
+      "parent_id": 0,
+      "hierarchy": [
+        "Projetos"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Projetos&title=Projetos&description=&type=portlet&hidden=true&friendlyURL=/projetos'",
+      "timestamp": "2025-02-23T13:37:08.342871",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=false&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:08.366209",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=false&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:08.446397",
+      "retry_count": 0
+    },
+    {
+      "title": "Sem Categoria",
+      "url": "sem-categoria",
+      "parent_id": 0,
+      "hierarchy": [
+        "Sem Categoria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Sem+Categoria&title=Sem+Categoria&description=&type=portlet&hidden=true&friendlyURL=/sem-categoria'",
+      "timestamp": "2025-02-23T13:37:08.518814",
+      "retry_count": 0
+    },
+    {
+      "title": "Lei de Acesso À Informação",
+      "url": "lei-de-acesso-a-informacao",
+      "parent_id": 0,
+      "hierarchy": [
+        "Lei de Acesso à Informação"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&title=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&description=&type=portlet&hidden=true&friendlyURL=/lei-de-acesso-a-informacao'",
+      "timestamp": "2025-02-23T13:37:08.539558",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=true&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:08.592713",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=true&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:08.669912",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=true&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:08.730437",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=true&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:08.757090",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=false&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:08.813410",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=true&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:08.842421",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=true&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:08.882680",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=false&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:08.912664",
+      "retry_count": 0
+    },
+    {
+      "title": "Lei de Acesso À Informação",
+      "url": "lei-de-acesso-a-informacao",
+      "parent_id": 0,
+      "hierarchy": [
+        "Lei de Acesso à Informação"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&title=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&description=&type=portlet&hidden=true&friendlyURL=/lei-de-acesso-a-informacao'",
+      "timestamp": "2025-02-23T13:37:08.944444",
+      "retry_count": 0
+    },
+    {
+      "title": "Projetos",
+      "url": "projetos",
+      "parent_id": 0,
+      "hierarchy": [
+        "Projetos"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Projetos&title=Projetos&description=&type=portlet&hidden=true&friendlyURL=/projetos'",
+      "timestamp": "2025-02-23T13:37:08.979172",
+      "retry_count": 0
+    },
+    {
+      "title": "Sem Categoria",
+      "url": "sem-categoria",
+      "parent_id": 0,
+      "hierarchy": [
+        "Sem Categoria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Sem+Categoria&title=Sem+Categoria&description=&type=portlet&hidden=true&friendlyURL=/sem-categoria'",
+      "timestamp": "2025-02-23T13:37:09.004179",
+      "retry_count": 0
+    },
+    {
+      "title": "Projetos",
+      "url": "projetos",
+      "parent_id": 0,
+      "hierarchy": [
+        "Projetos"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Projetos&title=Projetos&description=&type=portlet&hidden=true&friendlyURL=/projetos'",
+      "timestamp": "2025-02-23T13:37:09.027258",
+      "retry_count": 0
+    },
+    {
+      "title": "Projetos",
+      "url": "projetos",
+      "parent_id": 0,
+      "hierarchy": [
+        "Projetos"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Projetos&title=Projetos&description=&type=portlet&hidden=true&friendlyURL=/projetos'",
+      "timestamp": "2025-02-23T13:37:09.059225",
+      "retry_count": 0
+    },
+    {
+      "title": "Projetos",
+      "url": "projetos",
+      "parent_id": 0,
+      "hierarchy": [
+        "Projetos"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Projetos&title=Projetos&description=&type=portlet&hidden=true&friendlyURL=/projetos'",
+      "timestamp": "2025-02-23T13:37:09.094118",
+      "retry_count": 0
+    },
+    {
+      "title": "Sem Categoria",
+      "url": "sem-categoria",
+      "parent_id": 0,
+      "hierarchy": [
+        "Sem Categoria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Sem+Categoria&title=Sem+Categoria&description=&type=portlet&hidden=true&friendlyURL=/sem-categoria'",
+      "timestamp": "2025-02-23T13:37:09.130368",
+      "retry_count": 0
+    },
+    {
+      "title": "Sem Categoria",
+      "url": "sem-categoria",
+      "parent_id": 0,
+      "hierarchy": [
+        "Sem Categoria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Sem+Categoria&title=Sem+Categoria&description=&type=portlet&hidden=true&friendlyURL=/sem-categoria'",
+      "timestamp": "2025-02-23T13:37:09.146275",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=true&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:09.198240",
+      "retry_count": 0
+    },
+    {
+      "title": "Sem Categoria",
+      "url": "sem-categoria",
+      "parent_id": 0,
+      "hierarchy": [
+        "Sem Categoria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Sem+Categoria&title=Sem+Categoria&description=&type=portlet&hidden=true&friendlyURL=/sem-categoria'",
+      "timestamp": "2025-02-23T13:37:09.224413",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=true&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:09.249691",
+      "retry_count": 0
+    },
+    {
+      "title": "Conselho Gestor Ppps",
+      "url": "conselho-gestor-ppps",
+      "parent_id": 0,
+      "hierarchy": [
+        "Conselho Gestor PPPs"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Conselho+Gestor+Ppps&title=Conselho+Gestor+Ppps&description=&type=portlet&hidden=false&friendlyURL=/conselho-gestor-ppps'",
+      "timestamp": "2025-02-23T13:37:09.285773",
+      "retry_count": 0
+    },
+    {
+      "title": "Sem Categoria",
+      "url": "sem-categoria",
+      "parent_id": 0,
+      "hierarchy": [
+        "Sem Categoria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Sem+Categoria&title=Sem+Categoria&description=&type=portlet&hidden=true&friendlyURL=/sem-categoria'",
+      "timestamp": "2025-02-23T13:37:09.303512",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=false&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:09.325453",
+      "retry_count": 0
+    },
+    {
+      "title": "Lei de Acesso À Informação",
+      "url": "lei-de-acesso-a-informacao",
+      "parent_id": 0,
+      "hierarchy": [
+        "Lei de Acesso à Informação"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&title=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&description=&type=portlet&hidden=true&friendlyURL=/lei-de-acesso-a-informacao'",
+      "timestamp": "2025-02-23T13:37:09.345459",
+      "retry_count": 0
+    },
+    {
+      "title": "Lei de Acesso À Informação",
+      "url": "lei-de-acesso-a-informacao",
+      "parent_id": 0,
+      "hierarchy": [
+        "Lei de Acesso à Informação"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&title=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&description=&type=portlet&hidden=true&friendlyURL=/lei-de-acesso-a-informacao'",
+      "timestamp": "2025-02-23T13:37:09.350320",
+      "retry_count": 0
+    },
+    {
+      "title": "Lei de Acesso À Informação",
+      "url": "lei-de-acesso-a-informacao",
+      "parent_id": 0,
+      "hierarchy": [
+        "Lei de Acesso à Informação"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&title=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&description=&type=portlet&hidden=true&friendlyURL=/lei-de-acesso-a-informacao'",
+      "timestamp": "2025-02-23T13:37:09.354791",
+      "retry_count": 0
+    },
+    {
+      "title": "Lei de Acesso À Informação",
+      "url": "lei-de-acesso-a-informacao",
+      "parent_id": 0,
+      "hierarchy": [
+        "Lei de Acesso à Informação"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&title=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&description=&type=portlet&hidden=true&friendlyURL=/lei-de-acesso-a-informacao'",
+      "timestamp": "2025-02-23T13:37:09.441448",
+      "retry_count": 0
+    },
+    {
+      "title": "Conselho Gestor Ppps",
+      "url": "conselho-gestor-ppps",
+      "parent_id": 0,
+      "hierarchy": [
+        "Conselho Gestor PPPs"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Conselho+Gestor+Ppps&title=Conselho+Gestor+Ppps&description=&type=node&hidden=false&friendlyURL=/conselho-gestor-ppps'",
+      "timestamp": "2025-02-23T13:37:09.466012",
+      "retry_count": 0
+    },
+    {
+      "title": "Lei de Acesso À Informação",
+      "url": "lei-de-acesso-a-informacao",
+      "parent_id": 0,
+      "hierarchy": [
+        "Lei de Acesso à Informação"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&title=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&description=&type=portlet&hidden=true&friendlyURL=/lei-de-acesso-a-informacao'",
+      "timestamp": "2025-02-23T13:37:09.489261",
+      "retry_count": 0
+    },
+    {
+      "title": "Lei de Acesso À Informação",
+      "url": "lei-de-acesso-a-informacao",
+      "parent_id": 0,
+      "hierarchy": [
+        "Lei de Acesso à Informação"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&title=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&description=&type=portlet&hidden=true&friendlyURL=/lei-de-acesso-a-informacao'",
+      "timestamp": "2025-02-23T13:37:09.501154",
+      "retry_count": 0
+    },
+    {
+      "title": "Sem Categoria",
+      "url": "sem-categoria",
+      "parent_id": 0,
+      "hierarchy": [
+        "Sem Categoria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Sem+Categoria&title=Sem+Categoria&description=&type=portlet&hidden=true&friendlyURL=/sem-categoria'",
+      "timestamp": "2025-02-23T13:37:09.518164",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=false&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:09.530389",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=true&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:09.542372",
+      "retry_count": 0
+    },
+    {
+      "title": "Projetos",
+      "url": "projetos",
+      "parent_id": 0,
+      "hierarchy": [
+        "Projetos"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Projetos&title=Projetos&description=&type=portlet&hidden=true&friendlyURL=/projetos'",
+      "timestamp": "2025-02-23T13:37:09.547776",
+      "retry_count": 0
+    },
+    {
+      "title": "Lei de Acesso À Informação",
+      "url": "lei-de-acesso-a-informacao",
+      "parent_id": 0,
+      "hierarchy": [
+        "Lei de Acesso à Informação"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&title=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&description=&type=portlet&hidden=true&friendlyURL=/lei-de-acesso-a-informacao'",
+      "timestamp": "2025-02-23T13:37:09.555175",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=true&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:09.559893",
+      "retry_count": 0
+    },
+    {
+      "title": "Lei de Acesso À Informação",
+      "url": "lei-de-acesso-a-informacao",
+      "parent_id": 0,
+      "hierarchy": [
+        "Lei de Acesso à Informação"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&title=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&description=&type=portlet&hidden=true&friendlyURL=/lei-de-acesso-a-informacao'",
+      "timestamp": "2025-02-23T13:37:09.563852",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=false&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:09.568002",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=false&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:09.607224",
+      "retry_count": 0
+    },
+    {
+      "title": "Lei de Acesso À Informação",
+      "url": "lei-de-acesso-a-informacao",
+      "parent_id": 0,
+      "hierarchy": [
+        "Lei de Acesso à Informação"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&title=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&description=&type=portlet&hidden=true&friendlyURL=/lei-de-acesso-a-informacao'",
+      "timestamp": "2025-02-23T13:37:09.659653",
+      "retry_count": 0
+    },
+    {
+      "title": "Sem Categoria",
+      "url": "sem-categoria",
+      "parent_id": 0,
+      "hierarchy": [
+        "Sem Categoria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Sem+Categoria&title=Sem+Categoria&description=&type=node&hidden=true&friendlyURL=/sem-categoria'",
+      "timestamp": "2025-02-23T13:37:09.693932",
+      "retry_count": 0
+    },
+    {
+      "title": "A Secretaria",
+      "url": "a-secretaria",
+      "parent_id": 0,
+      "hierarchy": [
+        "A Secretaria"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=A+Secretaria&title=A+Secretaria&description=&type=portlet&hidden=false&friendlyURL=/a-secretaria'",
+      "timestamp": "2025-02-23T13:37:09.709360",
+      "retry_count": 0
+    },
+    {
+      "title": "Lei de Acesso À Informação",
+      "url": "lei-de-acesso-a-informacao",
+      "parent_id": 0,
+      "hierarchy": [
+        "Lei de Acesso à Informação"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&title=Lei+de+Acesso+%C3%80+Informa%C3%A7%C3%A3o&description=&type=portlet&hidden=true&friendlyURL=/lei-de-acesso-a-informacao'",
+      "timestamp": "2025-02-23T13:37:09.749455",
+      "retry_count": 0
+    },
+    {
+      "title": "Projetos",
+      "url": "projetos",
+      "parent_id": 0,
+      "hierarchy": [
+        "Projetos"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=0&name=Projetos&title=Projetos&description=&type=portlet&hidden=true&friendlyURL=/projetos'",
+      "timestamp": "2025-02-23T13:37:09.761852",
+      "retry_count": 0
+    },
+    {
+      "title": "Adote Uma Praça",
+      "url": "adote-uma-praca",
+      "parent_id": "1176",
+      "hierarchy": [
+        "Adote uma Praça",
+        "Adote uma praça"
+      ],
+      "error_message": "Exceção ao criar página: 500, message='', url='http://localhost:8080/api/jsonws/layout/add-layout?groupId=372700&privateLayout=false&parentLayoutId=1176&name=Adote+Uma+Pra%C3%A7a&title=Adote+Uma+Pra%C3%A7a&description=&type=portlet&hidden=true&friendlyURL=/adote-uma-praca'",
+      "timestamp": "2025-02-23T13:37:12.865457",
+      "retry_count": 0
+    }
+  ]
+}

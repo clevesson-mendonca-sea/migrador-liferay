@@ -10,5 +10,5 @@ __all__ = [
     'FolderError',
     'PageProcessor',
     'MixedContentProcessor',
-    'ContentProcessor'
+    'ContentProcessor',
 ]

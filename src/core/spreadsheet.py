@@ -11,6 +11,66 @@ from utils.hierarchy_utils import filter_hierarchy
 
 logger = logging.getLogger(__name__)
 
+class SheetColumns:
+    """Define o mapeamento de colunas da planilha"""
+    
+    def __init__(self, sheet):
+        """
+        Inicializa o mapeamento de colunas baseado na estrutura da planilha
+        """
+        self.column_indices = {}
+        self.current_group = None
+        self.column_map = {}
+        
+        all_rows = sheet.get_all_values()
+        if not all_rows:
+            return
+            
+        group_headers = all_rows[0]
+        subheaders = all_rows[1]
+        
+        # Mapear grupos e suas colunas
+        current_group_index = None
+        for i, header in enumerate(group_headers):
+            if header.strip():
+                current_group_index = i
+                self.column_map[current_group_index] = {
+                    'name': header,
+                    'start': i,
+                    'columns': []
+                }
+            
+            if subheaders[i].strip():
+                if current_group_index is not None:
+                    self.column_map[current_group_index]['columns'].append({
+                        'index': i,
+                        'name': subheaders[i].strip()
+                    })
+                    self.column_indices[subheaders[i].strip()] = i
+        
+        # Verificar colunas obrigatórias
+        required_columns = ['De', 'Hierarquia']
+        missing_columns = [col for col in required_columns if col not in self.column_indices]
+        if missing_columns:
+            logger.error(f"Colunas obrigatórias faltando: {missing_columns}")
+            for col in missing_columns:
+                for subheader_index, subheader in enumerate(subheaders):
+                    if col.lower() in subheader.lower():
+                        self.column_indices[col] = subheader_index
+    
+    def get_column_value(self, row: list, column_name: str, default="") -> str:
+        """
+        Obtém o valor de uma coluna pelo nome
+        """
+        try:
+            index = self.column_indices.get(column_name, -1)
+            if index >= 0 and index < len(row):
+                return row[index].strip()
+            return default
+        except Exception as e:
+            logger.error(f"Erro ao obter valor da coluna '{column_name}': {str(e)}")
+            return default
+
 async def get_sheet_update_data(workbook):
     """
     Extracts update data from the 'noticias' worksheet.
@@ -77,13 +137,11 @@ async def get_sheet_data(is_update=False):
     config = Config()
     
     # Authenticate with Google Sheets
-    # Calculate paths relative to project root (not this file's location)
     current_file_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.abspath(os.path.join(current_file_dir, '../..'))
     client_secret_path = os.path.join(project_root, 'client_secret.json')
     token_path = os.path.join(project_root, 'token.json')
     
-    # Check if token.json exists
     if os.path.exists(token_path):
         try:
             creds = Credentials.from_authorized_user_file(token_path, ['https://www.googleapis.com/auth/spreadsheets.readonly'])
@@ -126,85 +184,78 @@ async def get_sheet_data(is_update=False):
     if is_update:
         return await get_sheet_update_data(workbook)
     
-    # Get main mapping sheet
-    sheet = next(
-        sheet for sheet in workbook.worksheets() 
-        if "mapeamento" in sheet.title.lower()
-    )
-    rows = sheet.get_all_values()[1:]
-
-    # Process page types
-    page_type = [
-        row[13] if len(row) > 13 and row[13].strip() not in ["", "-"] else "widget"
-        for row in rows
-    ]
-
-    page_type_formatted = [
-        item.lower().replace("página ", "").strip()
-        for item in page_type
-    ]
-
-    page_type_formatted = [
-        "portlet" if item == "widget" else
-        "node" if item == "definida" else
-        "link_to_layout" if item == "vincular a uma pagina desse site" else
-        "url" if item == "vincular a uma url" else
-        "portlet"
-        for item in page_type_formatted
-    ]
-
-    # Process column types
-    column_type = [
-        row[16] if len(row) > 16 and row[16].strip() not in ["", "-"] else "1_column"
-        for row in rows
-    ]
-
-    column_type_formatted = [
-        "1_column" if item.strip().lower() == "1 coluna" else
-        "2_columns_ii" if item.strip().lower() == "30/70" else
-        "1_column"
-        for item in column_type
-    ]
-    
-    # Build page data
-    url_utils = UrlUtils()
-    base_domain = url_utils.extract_domain(config.liferay_url)
-
-    pages = []
-    for index, row in enumerate(rows):
-        if all(row[:1]) and len(row) > 8 and row[6]:
-            hierarchy = filter_hierarchy(row[6])
+    try:
+        sheet = next(
+            sheet for sheet in workbook.worksheets() 
+            if "mapeamento" in sheet.title.lower()
+        )
+        
+        columns = SheetColumns(sheet)
+        
+        all_rows = sheet.get_all_values()[2:]  # Começar da terceira linha
+        
+        pages = []
+        url_utils = UrlUtils()
+        base_domain = url_utils.extract_domain(config.liferay_url)
+        
+        for i, row in enumerate(all_rows, start=3):
+            source_url = columns.get_column_value(row, 'De')
+            hierarquia = columns.get_column_value(row, 'Hierarquia')
             
-            if hierarchy:
-                title = hierarchy[-1]
-                visibility = row[7].strip().lower() if len(row) > 7 and row[7] else 'menu'
-                is_visible = visibility == 'menu'
-                
-                # Extract menu title
-                menu_title = row[8].strip() if len(row) > 8 and row[8] else None
-
-                # Get source and destination URLs
-                source_url = row[0].strip() if row[0] else ''
-                dest_url = row[1].strip() if len(row) > 1 and row[1] else ''
-                
-                # Build complete URLs
-                complete_source_url = url_utils.build_url(source_url, base_domain)
-                complete_dest_url = url_utils.build_url(dest_url, base_domain)
-                link_vincular = row[15].strip() if len(row) > 15 and row[15] else ""
-
-                if title.strip():
-                    page_data = {
-                        'title': title,
-                        'url': complete_source_url,
-                        'destination': complete_dest_url,
-                        'hierarchy': hierarchy,
-                        'type': page_type_formatted[index],
-                        'visible': is_visible,
-                        'column_type': column_type_formatted[index],
-                        'menu_title': menu_title,
-                        "url_vincular": link_vincular
-                    }
-                    pages.append(page_data)
-
-    logger.info(f"Total de páginas processadas: {len(pages)}")
-    return pages
+            if source_url and hierarquia:
+                try:
+                    hierarchy = filter_hierarchy(hierarquia)
+                    
+                    if hierarchy:
+                        title = hierarchy[-1]
+                        
+                        # Obter outros valores
+                        visibility = columns.get_column_value(row, 'Visibilidade', 'menu')
+                        tipo_pagina = columns.get_column_value(row, 'Tipo de página', 'widget')
+                        layout = columns.get_column_value(row, 'Layout', '1 coluna')
+                        
+                        # Processar tipos
+                        page_type = tipo_pagina.lower().replace("página ", "").strip()
+                        page_type = (
+                            "portlet" if page_type in ["widget", "", "-"] else
+                            "node" if "definida" in page_type else
+                            "link_to_layout" if "vincular a uma pagina desse site" in page_type else
+                            "url" if "vincular a uma url" in page_type else
+                            "portlet"
+                        )
+                        
+                        layout_type = (
+                            "1_column" if "1 coluna" in layout.lower() else
+                            "2_columns_ii" if "30/70" in layout.lower() else
+                            "1_column"
+                        )
+                        
+                        if title.strip():
+                            page_data = {
+                                'title': title,
+                                'url': url_utils.build_url(source_url, base_domain),
+                                'destination': url_utils.build_url(columns.get_column_value(row, 'Para'), base_domain),
+                                'hierarchy': hierarchy,
+                                'type': page_type,
+                                'visible': visibility.lower() == 'menu',
+                                'column_type': layout_type,
+                                'menu_title': columns.get_column_value(row, 'Menu lateral'),
+                                'url_vincular': columns.get_column_value(row, 'Link da página para a qual redireciona')
+                            }
+                            pages.append(page_data)
+                            # logger.info(f"Página processada: {title}")
+                            
+                except Exception as e:
+                    logger.error(f"Erro processando página: {str(e)}")
+                    logger.error(f"Dados da linha: {row}")
+        
+        if pages:
+            logger.info(f"Total de páginas processadas: {len(pages)}")
+        else:
+            logger.error("Nenhuma página válida encontrada na planilha")
+        
+        return pages
+        
+    except Exception as e:
+        logger.error(f"Erro ao processar planilha: {str(e)}")
+        return []

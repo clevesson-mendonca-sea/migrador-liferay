@@ -1,3 +1,4 @@
+import asyncio
 import logging
 from configs.config import Config
 from creators.web_content_creator import WebContentCreator
@@ -5,43 +6,103 @@ from updaters.content_update import ContentUpdater
 
 logger = logging.getLogger(__name__)
 
+BATCH_SIZE = 25
+MAX_CONCURRENT_TASKS = 50
+
 async def migrate_contents(pages):
     """
-    Migrates web content based on the provided pages.
-    
-    Args:
-        pages (list): List of page data dictionaries
-        
-    Returns:
-        dict: Dictionary mapping page titles to content IDs
+    Migrates web content based on the provided pages using batch processing
+    with progress tracking
     """
     config = Config()
     content_creator = WebContentCreator(config)
     content_mapping = {}
+    total_pages = len(pages)
+    processed_count = 0
 
     try:
         await content_creator.initialize_session()
         
-        for page in pages:
-            logger.info(f"\nProcessando conteúdo: {page['title']}")
-            logger.info(f"Hierarquia: {' > '.join(page['hierarchy'])}")
-
-            content_id = await content_creator.migrate_content(
-                source_url=page['url'],
-                title=page['title'],
-                hierarchy=page['hierarchy']
-            )
+        batches = [pages[i:i + BATCH_SIZE] for i in range(0, len(pages), BATCH_SIZE)]
+        
+        for batch in batches:
+            batch_results = await _process_batch(batch, content_creator, content_mapping)
+            processed_count += len(batch_results)
+            completion_percentage = (processed_count / total_pages) * 100
+            remaining_percentage = 100 - completion_percentage
             
-            if content_id:
-                logger.info(f"Conteúdo migrado: {page['title']} (ID: {content_id})")
-                content_mapping[page['title']] = content_id
-            else:
-                logger.error(f"Falha ao migrar conteúdo: {page['title']}")
-
+            logger.info(f"\nProgress Update:")
+            logger.info(f"Processed: {processed_count}/{total_pages} items")
+            logger.info(f"Completed: {completion_percentage:.1f}%")
+            logger.info(f"Remaining: {remaining_percentage:.1f}%")
+            
+            # Log success/failure counts for this batch
+            success_count = sum(1 for result in batch_results if result)
+            failure_count = len(batch_results) - success_count
+            if failure_count > 0:
+                logger.warning(f"Batch failures: {failure_count} items failed in this batch")
+                
     finally:
         await content_creator.close()
     
+    # Final summary
+    total_success = sum(1 for v in content_mapping.values() if v)
+    total_failure = total_pages - total_success
+    logger.info("\nFinal Migration Summary:")
+    logger.info(f"Total items processed: {total_pages}")
+    logger.info(f"Successfully migrated: {total_success}")
+    logger.info(f"Failed migrations: {total_failure}")
+    logger.info(f"Overall success rate: {(total_success/total_pages)*100:.1f}%")
+    
     return content_mapping
+
+async def _process_batch(batch, content_creator, content_mapping):
+    """
+    Processes a batch of pages in parallel and returns results
+    """
+    tasks = []
+    results = []
+    
+    for page in batch:
+        task = asyncio.create_task(_process_single_page(page, content_creator, content_mapping))
+        tasks.append(task)
+    
+    completed_tasks = await asyncio.gather(*tasks, return_exceptions=True)
+    
+    for result in completed_tasks:
+        if isinstance(result, Exception):
+            logger.error(f"Batch processing error: {str(result)}")
+            results.append(False)
+        else:
+            results.append(result)
+    
+    return results
+
+async def _process_single_page(page, content_creator, content_mapping):
+    """
+    Processes a single page with improved error handling and result tracking
+    """
+    try:
+        logger.info(f"\nProcessing content: {page['title']}")
+        logger.info(f"Hierarchy: {' > '.join(page['hierarchy'])}")
+
+        content_id = await content_creator.migrate_content(
+            source_url=page['url'],
+            title=page['title'],
+            hierarchy=page['hierarchy']
+        )
+        
+        if content_id:
+            logger.info(f"Content migrated: {page['title']} (ID: {content_id})")
+            content_mapping[page['title']] = content_id
+            return True
+        else:
+            logger.error(f"Failed to migrate content: {page['title']}")
+            return False
+            
+    except Exception as e:
+        logger.error(f"Error processing page {page['title']}: {str(e)}")
+        return False
 
 async def update_contents(pages):
     """

@@ -183,13 +183,13 @@ class FolderCreator:
         return None
 
     async def create_folder(self, title: str, parent_id: int = 0, folder_type: str = 'journal', hierarchy: List[str] = None) -> int:
-        """Create a folder in Liferay with retry and improved caching"""
+        """Versão melhorada do create_folder com melhor tratamento para erros 409"""
         normalized_title = normalize_folder_name(title)
         if not normalized_title:
             logger.error(f"Nome de pasta inválido: {title}")
             return 0
 
-        # Check cache first
+        # Verificar cache
         cached_id = self._get_cached_folder_id(normalized_title, parent_id, folder_type)
         if cached_id:
             logger.info(f"Pasta encontrada no cache: {normalized_title} (ID: {cached_id})")
@@ -214,7 +214,17 @@ class FolderCreator:
                     logger.info(f"Pasta criada: {normalized_title} (ID: {folder_id})")
                     self._cache_folder_id(normalized_title, parent_id, folder_type, folder_id)
                     return folder_id
-                    
+            
+            # Tratamento específico para conflito (pasta já existe)
+            if status == 409:
+                # Tenta buscar a pasta existente em vez de falhar
+                logger.info(f"Conflito ao criar pasta {normalized_title} - buscando existente")
+                existing_id = await self.find_existing_folder(normalized_title, parent_id, folder_type)
+                if existing_id:
+                    logger.info(f"Recuperada pasta existente: {normalized_title} (ID: {existing_id})")
+                    return existing_id
+            
+            # Logar erro
             error_msg = f"HTTP {status}: {json.dumps(result) if isinstance(result, dict) else result}"
             self.error_processor.add_error(FolderError(
                 title=normalized_title,
@@ -228,6 +238,17 @@ class FolderCreator:
         try:
             return await self._retry_operation(create_attempt, max_retries=3)
         except Exception as e:
+            # Se a mensagem de erro contém indicação de conflito, tenta buscar a pasta
+            error_str = str(e).lower()
+            if "conflict" in error_str or "already exists" in error_str or "409" in error_str:
+                logger.warning(f"Tentando recuperar pasta após conflito: {normalized_title}")
+                existing_id = await self.find_existing_folder(normalized_title, parent_id, folder_type)
+                if existing_id:
+                    # Remover entrada de erro, pois resolvemos o problema
+                    self.error_processor.remove_error(normalized_title, folder_type, parent_id)
+                    return existing_id
+            
+            # Registrar erro
             self.error_processor.add_error(FolderError(
                 title=normalized_title,
                 folder_type=folder_type,
@@ -236,9 +257,8 @@ class FolderCreator:
                 error_message=f"Erro: {str(e)}\n{traceback.format_exc()}"
             ))
             logger.error(f"Erro ao criar pasta {normalized_title}: {str(e)}")
-            logger.error(traceback.format_exc())
             return 0
-
+        
     async def _fetch_and_cache_parent_folders(self, parent_id: int, folder_type: str) -> Dict[str, int]:
         """Fetch all folders under a parent and cache them for future lookups"""
         # Check if we already have this parent's contents
@@ -289,44 +309,164 @@ class FolderCreator:
             logger.error(f"Error fetching parent folders: {str(e)}")
             return {}
 
-    async def ensure_folder_exists(self, title: str, parent_id: int = 0, folder_type: str = 'journal') -> int:
-        """Ensure a folder exists, using optimized cache and bulk folder fetching"""
+    async def find_existing_folder(self, title: str, parent_id: int = 0, folder_type: str = 'journal') -> Optional[int]:
+        """
+        Busca uma pasta existente diretamente pela API em vez de tentar criar e lidar com conflitos.
+        Esta abordagem é mais eficiente para casos onde temos muitos conflitos HTTP 409.
+        """
         normalized_title = normalize_folder_name(title)
         comparison_key = self.get_comparison_key(normalized_title)
         
-        # Fast path: Check multi-level cache first
+        # Verificar cache primeiro
+        cached_id = self._get_cached_folder_id(normalized_title, parent_id, folder_type)
+        if cached_id:
+            return cached_id
+        
+        # Se já temos um cache de conteúdo para este parent, verificar nele
+        parent_key = (parent_id, folder_type)
+        if parent_key in self.parent_contents_cache:
+            if comparison_key in self.parent_contents_cache[parent_key]:
+                folder_id = self.parent_contents_cache[parent_key][comparison_key]
+                self._cache_folder_id(normalized_title, parent_id, folder_type, folder_id)
+                return folder_id
+        
+        # Caso contrário, buscar via API
+        url = self._get_folder_url(folder_type, parent_id)
+        
+        try:
+            # Escape special characters for filter
+            safe_title = normalized_title.replace("'", "\\'")
+            
+            # First try exact match with filter
+            params = {
+                'filter': f"name eq '{safe_title}'",
+                'fields': 'id,name',
+                'page': 1,
+                'pageSize': 5
+            }
+            
+            status, data = await self._controlled_request('get', url, params=params)
+            
+            if status == 200:
+                items = data.get('items', [])
+                
+                # Check for exact match (case insensitive)
+                for item in items:
+                    if self.get_comparison_key(item['name']) == comparison_key:
+                        folder_id = int(item['id'])
+                        logger.info(f"Pasta existente encontrada: {normalized_title} (ID: {folder_id})")
+                        self._cache_folder_id(normalized_title, parent_id, folder_type, folder_id)
+                        return folder_id
+                
+                logger.info(f"Pasta não encontrada: {normalized_title}")
+                return None
+            
+            logger.warning(f"Erro ao buscar pasta: HTTP {status}")
+            return None
+        
+        except Exception as e:
+            logger.error(f"Erro ao buscar pasta {normalized_title}: {str(e)}")
+            return None
+
+    async def ensure_folder_exists(self, title: str, parent_id: int = 0, folder_type: str = 'journal') -> int:
+        """
+        Versão otimizada de ensure_folder_exists que primeiro busca a pasta existente
+        e só tenta criar em caso de não encontrar.
+        """
+        normalized_title = normalize_folder_name(title)
+        comparison_key = self.get_comparison_key(normalized_title)
+        
+        # Verificar cache primeiro (mesma lógica anterior)
         cached_id = self._get_cached_folder_id(normalized_title, parent_id, folder_type)
         if cached_id:
             logger.info(f"Pasta encontrada no cache: {normalized_title} (ID: {cached_id})")
             return cached_id
         
-        # Fast path: Check existence cache to avoid duplicate API calls
+        # Se sabemos que já verificamos e a pasta não existe
         if (parent_id, folder_type, comparison_key) in self.existence_cache:
-            # We've checked this before and know it doesn't exist
             logger.info(f"Cache indica que pasta não existe: {normalized_title}")
             return await self.create_folder(normalized_title, parent_id, folder_type)
         
         try:
-            # Optimized approach: fetch and cache all folders under this parent at once
+            # Primeiro, tenta obter dados do parent em massa para melhor eficiência
             parent_folders = await self._fetch_and_cache_parent_folders(parent_id, folder_type)
             
-            # Check if our folder exists in the fetched data
+            # Verificar se nossa pasta existe nos dados obtidos
             if comparison_key in parent_folders:
                 folder_id = parent_folders[comparison_key]
                 logger.info(f"Pasta existente encontrada: {normalized_title} (ID: {folder_id})")
                 return folder_id
             
-            # Mark as checked so we don't waste time checking again
+            # Marcar como verificada para não perdermos tempo verificando novamente
             self.existence_cache.add((parent_id, folder_type, comparison_key))
             
-            # If not found, create it
+            # Se não encontrou, tentar criar
             logger.info(f"Pasta não encontrada, criando: {normalized_title}")
-            return await self.create_folder(normalized_title, parent_id, folder_type)
-
+            folder_id = await self.create_folder(normalized_title, parent_id, folder_type)
+            
+            # Tratamento especial para erros 409 - buscar a pasta existente
+            if folder_id == 0:
+                # Se houve erro ao criar, tentar buscar diretamente
+                existing_id = await self.find_existing_folder(normalized_title, parent_id, folder_type)
+                if existing_id:
+                    logger.info(f"Encontrada pasta existente após falha na criação: {normalized_title} (ID: {existing_id})")
+                    return existing_id
+            
+            return folder_id
+        
         except Exception as e:
-            logger.error(f"Erro ao buscar pasta {normalized_title}: {str(e)}")
-            logger.error(traceback.format_exc())
+            logger.error(f"Erro ao verificar/criar pasta {normalized_title}: {str(e)}")
             return 0
+
+    async def create_folder_hierarchy_batch(self, hierarchies: List[Tuple[List[str], str, str]]) -> Dict[str, int]:
+        """
+        Cria múltiplas hierarquias de pastas em paralelo com controle de concorrência.
+        
+        Args:
+            hierarchies: Lista de tuplas (hierarchy, final_title, folder_type)
+        
+        Returns:
+            Dict[str, int]: Mapeamento de títulos finais para IDs de pastas
+        """
+        result_map = {}
+        
+        # Agrupar por níveis para processamento em paralelo e preservar dependências
+        # Isso permite processar hierarquias em paralelo mas respeitando a profundidade
+        hierarchy_by_depth = {}
+        
+        for hierarchy, final_title, folder_type in hierarchies:
+            depth = len(hierarchy)
+            if depth not in hierarchy_by_depth:
+                hierarchy_by_depth[depth] = []
+            hierarchy_by_depth[depth].append((hierarchy, final_title, folder_type))
+        
+        # Processar cada nível de profundidade em ordem
+        sorted_depths = sorted(hierarchy_by_depth.keys())
+        
+        for depth in sorted_depths:
+            batch = hierarchy_by_depth[depth]
+            tasks = []
+            
+            for hierarchy, final_title, folder_type in batch:
+                task = asyncio.create_task(
+                    self.create_folder_hierarchy(hierarchy, final_title, folder_type)
+                )
+                tasks.append((final_title, task))
+            
+            # Aguardar conclusão do lote atual
+            for title, task in tasks:
+                try:
+                    folder_id = await task
+                    if folder_id:
+                        result_map[title] = folder_id
+                except Exception as e:
+                    logger.error(f"Erro ao criar hierarquia para '{title}': {str(e)}")
+            
+            # Pequena pausa entre níveis para evitar sobrecarga
+            if depth < max(sorted_depths):
+                await asyncio.sleep(0.2)
+        
+        return result_map
 
     async def create_folder_hierarchy(self, hierarchy: List[str], final_title: str, folder_type: str = 'journal') -> int:
         """Create a folder hierarchy with parallel processing where possible"""
