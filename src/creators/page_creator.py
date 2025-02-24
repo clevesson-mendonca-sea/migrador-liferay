@@ -24,7 +24,7 @@ class PageCreator:
             if page_result:
                 page_id, plid = page_result
                 await self._update_page_layout(page_id, plid, column_type, hierarchy, menu_title, url_vinculada)
-                print(f"Página criada e atualizada: {normalized_title} (ID: {page_id}, PLID: {plid}) | Tipo: {page_type}")
+                print(f"Página criada e atualizada: {normalized_title} (ID: {page_id}, PLID: {plid}) | Tipo: {page_type} | url {normalized_url}")
                 return page_id, plid
             
         except Exception as e:
@@ -235,30 +235,34 @@ class PageCreator:
             return False
 
     async def ensure_page_exists(self, title: str, cache_key: str, parent_id: int = 0, 
-                               friendly_url: str = "", hierarchy: List[str] = None, 
-                               page_type: str = "portlet", visible: bool = True, 
-                               column_type: str = "1_column", menu_title: str = None, 
-                               url_vinculada: str = None) -> tuple[int, int]:
+                            friendly_url: str = "", hierarchy: List[str] = None, 
+                            page_type: str = "portlet", visible: bool = True, 
+                            column_type: str = "1_column", menu_title: str = None, 
+                            url_vinculada: str = None) -> tuple[int, int]:
         if cache_key in self.page_cache:
             return self.page_cache[cache_key]
 
         if not friendly_url:
             friendly_url = self.processor.normalize_friendly_url(title)
+            
+            if parent_id != 0 and hierarchy and len(hierarchy) > 1:
+                if len(hierarchy) >= 2 and self.processor.normalize_page_name(hierarchy[-2]) == self.processor.normalize_page_name(hierarchy[-1]):
+                    friendly_url = f"{friendly_url}-{len(hierarchy)}"
+                    print(f"Generated unique friendly URL for page with same name as parent: {friendly_url}")
         
         page_id, plid = await self.create_page(title, friendly_url, parent_id, 
-                                              hierarchy, page_type, visible, column_type,
-                                              menu_title, url_vinculada)
+                                            hierarchy, page_type, visible, column_type,
+                                            menu_title, url_vinculada)
         
         if page_id:
             self.page_cache[cache_key] = (page_id, plid)
             
         return page_id, plid
 
-
     async def create_hierarchy(self, hierarchy: list, final_title: str, final_url: str, 
-                             page_type: str = "widget", visible: bool = True, 
-                             column_type: str = "1_column", menu_title: str = None, 
-                             url_vinculada: str = None) -> tuple[int, int]:
+                            page_type: str = "widget", visible: bool = True, 
+                            column_type: str = "1_column", menu_title: str = None, 
+                            url_vinculada: str = None) -> tuple[int, int]:
         current_path = ""
         parent_id = 0
         last_page_id = 0
@@ -266,15 +270,22 @@ class PageCreator:
 
         hierarchy_levels = [x for x in hierarchy if x.lower() != 'raiz']
 
-        for level in hierarchy_levels:
+        for i, level in enumerate(hierarchy_levels):
             normalized_level = self.processor.normalize_page_name(level)
             current_path += f" > {normalized_level}" if current_path else normalized_level
+
+            same_as_parent = i > 0 and self.processor.normalize_page_name(hierarchy_levels[i-1]) == normalized_level
+
+            friendly_url = final_url
+            if same_as_parent:
+                friendly_url = f"{self.processor.normalize_friendly_url(final_url)}-{i+1}"
+            
             level_id, level_plid = await self.ensure_page_exists(
-                normalized_level, current_path, parent_id, "", 
-                hierarchy_levels[:hierarchy_levels.index(level)+1], 
+                normalized_level, current_path, parent_id, friendly_url, 
+                hierarchy_levels[:i+1], 
                 page_type, visible, column_type, menu_title, url_vinculada
             )
-            
+
             if level_id:
                 parent_id = level_id
                 last_page_id = level_id
@@ -287,9 +298,17 @@ class PageCreator:
             final_hierarchy = hierarchy_levels.copy()
             if final_title not in final_hierarchy:
                 final_hierarchy.append(final_title)
-                
+
+            same_as_parent = (hierarchy_levels and 
+                            self.processor.normalize_page_name(hierarchy_levels[-1]) == 
+                            self.processor.normalize_page_name(final_title))
+
+            unique_final_url = final_url
+            if same_as_parent:
+                unique_final_url = f"{self.processor.normalize_friendly_url(final_url)}-page"
+
             final_page_id, final_plid = await self.create_page(
-                final_title, final_url, parent_id, final_hierarchy,
+                final_title, unique_final_url, parent_id, final_hierarchy,
                 page_type, visible, column_type, menu_title, url_vinculada
             )
             print(f"Página final criada: {final_title} (ID: {final_page_id}, PLID: {final_plid}) Tipo da página {page_type}")

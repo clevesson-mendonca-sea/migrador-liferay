@@ -135,7 +135,7 @@ async def get_sheet_data(is_update=False):
 
     # Process page types
     page_type = [
-        row[13] if len(row) > 13 and row[13].strip() not in ["", "-"] else "widget"
+        row[12] if len(row) > 12 and row[12].strip() not in ["", "-"] else "widget"
         for row in rows
     ]
 

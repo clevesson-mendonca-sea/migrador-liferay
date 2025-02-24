@@ -6,8 +6,10 @@ class PageProcessor:
     def normalize_friendly_url(title: str) -> str:
         nfkd_form = unicodedata.normalize('NFKD', title)
         only_ascii = "".join([c for c in nfkd_form if not unicodedata.combining(c)])
-        friendly_url = re.sub(r'[^a-zA-Z0-9-]', '-', only_ascii)
-        friendly_url = re.sub(r'-+', '-', friendly_url).strip('-').lower()
+        friendly_url = re.sub(r'[^a-zA-Z0-9-/]', '-', only_ascii)
+        friendly_url = re.sub(r'-+', '-', friendly_url)
+        friendly_url = friendly_url.strip('/')
+        friendly_url = friendly_url.lower()
         return friendly_url
 
     @staticmethod
