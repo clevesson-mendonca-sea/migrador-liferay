@@ -18,6 +18,7 @@ class ContentProcessor:
         {'type': 'class', 'value': 'col-md-8 col-md-offset-1'},
         {'type': 'class', 'value': 'col-md-8 col-md-offset-1 pull-right'},
         {'type': 'class', 'value': 'col-md-8 col-md-offset-1 pull-right col-xs-12'},
+        {'type': 'class', 'value': 'col-md-8 col-md-offset-2 corpo-principal margin-top-40'},
         {'type': 'class', 'value': 'col-md-8'},
     ]
     

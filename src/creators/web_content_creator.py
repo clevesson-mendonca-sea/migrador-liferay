@@ -7,7 +7,6 @@ from logging.handlers import RotatingFileHandler
 import traceback
 from typing import List, Optional, Dict, Union, Any, Tuple
 import aiohttp
-from aiohttp import ClientTimeout, BasicAuth, TCPConnector
 from dataclasses import dataclass
 from bs4 import BeautifulSoup, Tag
 from functools import lru_cache

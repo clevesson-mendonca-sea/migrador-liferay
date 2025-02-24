@@ -3,6 +3,7 @@ import traceback
 from bs4 import BeautifulSoup
 import json
 import logging
+from typing import List, Dict, Optional, Tuple
 
 logger = logging.getLogger(__name__)
 
@@ -11,18 +12,9 @@ class CollapseContentProcessor:
         self.config = config
         self.structure_id = os.getenv('LIFERAY_COLAPSE_STRUCTURE_ID', '')
         
-class CollapseContentProcessor:
-    def __init__(self, config):
-        self.config = config
-        self.structure_id = os.getenv('LIFERAY_COLAPSE_STRUCTURE_ID', '')
-        
     def _get_panel_color(self, panel_heading):
-        """
-        Determina a cor do painel baseado nas classes e estilos.
-        Prioriza o background do style.
-        """
+        """Determina a cor do painel"""
         try:
-            # Verifica o estilo background
             style = panel_heading.get('style', '').lower()
             if 'background' in style:
                 if 'gray' in style or 'grey' in style:
@@ -31,67 +23,67 @@ class CollapseContentProcessor:
                     return "Verde"
                 elif 'blue' in style or 'azul' in style:
                     return "Azul"
-            
-            # # Se não encontrou no background, verifica as classes
-            # classes = ' '.join(panel_heading.get('class', [])).lower()
-            # if 'verde' in classes or 'success' in classes:
-            #     return "Verde"
-            # elif 'vermelho' in classes or 'danger' in classes:
-            #     return "Vermelho"
-            # elif 'cinza' in classes or 'gray' in classes:
-            #     return "Cinza"
-            
-            # Cor padrão se nenhuma for encontrada
             return "Azul"
         except Exception as e:
             logger.error(f"Error determining panel color: {str(e)}")
             return "Azul"
 
-    def process_collapse_content(self, html_content: str):
-        """
-        Processa o HTML e extrai os elementos colapsáveis seguindo o padrão específico do site.
-        """
-        soup = BeautifulSoup(html_content, 'html.parser')
-        panels = soup.find_all('div', class_=['panel panel-success', 'panel panel-default', 'panel'])
+    def extract_nested_panels(self, panel_body) -> List[Dict]:
+        """Extrai painéis aninhados do corpo do painel principal"""
+        nested_panels = []
+        nested_elements = panel_body.find_all('div', class_=['panel panel-success', 'panel panel-default', 'panel'])
         
-        logger.info(f"Found {len(panels)} panels to process")
-
-        def extract_panel_data(panel):
-            """ Extrai os dados de um painel seguindo o padrão específico do site. """
-            logger.debug("Extracting panel data")
+        # Remove os painéis aninhados do corpo original para não duplicar
+        for nested_panel in nested_elements:
+            nested_panel.extract()
+            nested_panels.append(nested_panel)
             
-            # Busca cabeçalho
+        return nested_panels
+
+    async def process_panel(self, web_content_creator, panel, folder_id: int, title_prefix: str = "") -> Tuple[Optional[Dict], List[int]]:
+        """Processa um painel individual e seus filhos"""
+        try:
+            # Extrai os dados básicos do painel
             panel_heading = panel.find('div', class_='panel-heading')
             if not panel_heading:
-                logger.debug("No panel-heading found")
-                return None
+                return None, []
 
-            # Determina a cor usando o novo método
             panel_color = self._get_panel_color(panel_heading)
-            logger.debug(f"Determined panel color: {panel_color}")
-
-            # Busca título dentro do panel-heading
+            
+            # Busca título
             panel_title = panel_heading.find('p', class_='panel-title')
             if not panel_title:
                 panel_title = panel_heading.find(['h3', 'h4', 'p'])
             
-            # Extrai o texto do título, removendo a seta (⇵) se presente
-            title_text = panel_title.get_text(strip=True) if panel_title else ""
+            title_text = panel_title.get_text(strip=True) if panel_title else "Seção"
             title_text = title_text.replace('⇵', '').strip()
-            if not title_text:
-                title_text = "Seção"
             
-            logger.debug(f"Found title: {title_text}")
+            # Prepara o título completo com prefixo se necessário
+            full_title = f"{title_prefix} - {title_text}" if title_prefix else title_text
 
-            # Busca o corpo do painel na estrutura específica
+            # Busca o corpo e extrai painéis aninhados
             panel_collapse = panel.find('div', class_='panel-collapse')
             panel_body = (panel_collapse and panel_collapse.find('div', class_='panel-body')) or panel.find('div', class_='panel-body')
             
             if not panel_body:
-                logger.debug("No panel-body found")
-                return None
+                return None, []
 
-            # Remove atributos desnecessários mantendo apenas o conteúdo
+            # Extrai e processa painéis aninhados
+            nested_panels = self.extract_nested_panels(panel_body)
+            nested_content_ids = []
+            
+            # Cria os painéis aninhados primeiro
+            for nested_panel in nested_panels:
+                nested_result = await self.process_panel(
+                    web_content_creator, 
+                    nested_panel,
+                    folder_id,
+                    full_title
+                )
+                if nested_result and nested_result[0]:
+                    nested_content_ids.extend(nested_result[1])
+
+            # Limpa o HTML do corpo
             for tag in panel_body.find_all(True):
                 attrs = dict(tag.attrs)
                 allowed_attrs = {'src', 'href', 'style', 'class'}
@@ -101,8 +93,8 @@ class CollapseContentProcessor:
 
             content_html = str(panel_body)
 
-            # Estrutura do campo colapsável
-            collapse_field = {
+            # Cria o conteúdo principal
+            content_fields = [{
                 "name": "collapse",
                 "nestedContentFields": [
                     {
@@ -125,73 +117,82 @@ class CollapseContentProcessor:
                         }
                     }
                 ]
-            }
+            }]
 
-            return collapse_field
+            # Adiciona referências aos painéis aninhados se houver
+            if nested_content_ids:
+                for content_id in nested_content_ids:
+                    content_fields[0]["nestedContentFields"].append({
+                        "name": "groupCollapse",
+                        "contentFieldValue": {
+                            "data": str(content_id)
+                        }
+                    })
 
-        content_fields = []
-        for panel in panels:
-            panel_data = extract_panel_data(panel)
-            if panel_data:
-                content_fields.append(panel_data)
-                logger.debug(f"Added panel data: {json.dumps(panel_data, indent=2)}")
-
-        if not content_fields:
-            logger.error("No valid content fields were generated")
-            return []
-
-        logger.info(f"Successfully processed {len(content_fields)} panels")
-        return content_fields
-
-    async def create_collapse_content(self, web_content_creator, title: str, html_content: str, folder_id: int):
-        """Cria um conteúdo colapsável no Liferay mantendo a estrutura original"""
-        if not web_content_creator.session:
-            await web_content_creator.initialize_session()
-
-        try:
-            content_fields = self.process_collapse_content(html_content)
-            if not content_fields:
-                raise Exception("No valid content fields were generated")
-
-            # Monta o payload com a estrutura exata esperada
+            # Cria o conteúdo no Liferay
             content_data = {
                 "contentStructureId": self.structure_id,
                 "contentFields": content_fields,
                 "structuredContentFolderId": folder_id,
-                "title": title,
-                "friendlyUrlPath": web_content_creator.url_utils.sanitize_content_path(title)
+                "title": full_title,
+                "friendlyUrlPath": web_content_creator.url_utils.sanitize_content_path(full_title)
             }
 
-            logger.debug(f"Sending content data: {json.dumps(content_data, indent=2)}")
+            content_id = await self.create_content(web_content_creator, content_data)
+            if content_id:
+                return content_data, [content_id] + nested_content_ids
+            
+            return None, nested_content_ids
 
-            url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/structured-content-folders/{folder_id}/structured-contents"
+        except Exception as e:
+            logger.error(f"Error processing panel: {str(e)}")
+            return None, []
+
+    async def create_content(self, web_content_creator, content_data: Dict) -> Optional[int]:
+        """Cria o conteúdo no Liferay"""
+        if not web_content_creator.session:
+            await web_content_creator.initialize_session()
+
+        try:
+            url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/structured-content-folders/{content_data['structuredContentFolderId']}/structured-contents"
 
             async def create_attempt():
                 async with web_content_creator.session.post(url, json=content_data) as response:
                     response_text = await response.text()
                     
                     if response.status in (200, 201):
-                        try:
-                            result = json.loads(response_text)
-                            content_id = result.get('id')
-                            content_key = result.get('key')
-                            
-                            if content_id:
-                                logger.info(f"Successfully created collapse content: {title} (ID: {content_id})")
-                                return int(content_key)
-                        except json.JSONDecodeError as je:
-                            logger.error(f"Failed to parse response JSON: {str(je)}")
-                            raise Exception(f"Invalid JSON response: {response_text}")
+                        result = json.loads(response_text)
+                        content_id = result.get('id')
+                        if content_id:
+                            logger.info(f"Created collapse content: {content_data['title']} (ID: {content_id})")
+                            return int(content_id)
                     
-                    logger.error(f"Failed to create collapse content. Status: {response.status}")
-                    # logger.error(f"Response: {response_text}")
-                    # logger.error(f"Request data: {json.dumps(content_data, indent=2)}")
-                    raise Exception(f"Content creation failed with status {response.status}: {response_text}")
+                    raise Exception(f"Content creation failed: {response.status}")
 
             return await web_content_creator._retry_operation(create_attempt)
 
         except Exception as e:
-            logger.error(f"Error creating collapse content '{title}': {str(e)}")
+            logger.error(f"Error creating content: {str(e)}")
+            return None
+
+    async def create_collapse_content(self, web_content_creator, title: str, html_content: str, folder_id: int):
+        """Ponto de entrada principal para criar conteúdo colapsável"""
+        try:
+            soup = BeautifulSoup(html_content, 'html.parser')
+            root_panels = soup.find_all('div', class_=['panel panel-success', 'panel panel-default', 'panel'], recursive=False)
+            
+            logger.info(f"Found {len(root_panels)} root panels to process")
+            
+            all_content_ids = []
+            for panel in root_panels:
+                result = await self.process_panel(web_content_creator, panel, folder_id)
+                if result and result[1]:
+                    all_content_ids.extend(result[1])
+            
+            # Retorna o primeiro ID que será o conteúdo principal
+            return all_content_ids[0] if all_content_ids else 0
+
+        except Exception as e:
+            logger.error(f"Error in create_collapse_content: {str(e)}")
             logger.error(traceback.format_exc())
-            web_content_creator._log_error("Collapse Content Creation", title, str(e))
             return 0
