@@ -74,7 +74,7 @@ async def main():
             content_creator = WebContentCreator(config)
             try:
                 await content_creator.initialize_session()
-                await content_creator.add_content_to_created_pages(content_mapping)
+                # await content_creator.add_content_to_created_pages(content_mapping)
             finally:
                 await content_creator.close()
             

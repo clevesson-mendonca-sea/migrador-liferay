@@ -43,10 +43,8 @@ class WebContentCreator:
         self.base_domain = ""
         self._connection_pool = None
         self._setup_logging()
-        # Pre-built URLs for frequent API calls
         self._site_pages_url = f"{config.liferay_url}/o/headless-delivery/v1.0/sites/{config.site_id}/site-pages"
         self.content_processor = ContentProcessor(self)
-        # Initialize semaphore for concurrency control
         self._request_semaphore = asyncio.Semaphore(20)
 
     def _setup_logging(self):

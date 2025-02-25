@@ -32,7 +32,16 @@ class ContentProcessor:
         r'^col-xs-'
     ]))
     
-    DATE_PATTERN = re.compile(r'\d{2}/\d{2}/\d{2}\s+às\s+\d{2}h\d{2}')
+    # Padrões de data aprimorados
+    DATE_PATTERNS = [
+        # Padrão completo com atualização
+        re.compile(r'\d{1,2}/\d{1,2}/\d{2,4}\s+às\s+\d{1,2}h\d{1,2}(?:\s+-\s+Atualizado\s+em\s+\d{1,2}/\d{1,2}/\d{2,4}\s+às\s+\d{1,2}h\d{1,2})?'),
+        # Padrão simples de data com hora
+        re.compile(r'\d{1,2}/\d{1,2}/\d{2,4}\s+às\s+\d{1,2}h\d{1,2}'),
+        # Padrão de atualização/publicação
+        re.compile(r'(?:Atualizado|Publicado)\s+em\s+\d{1,2}/\d{1,2}/\d{2,4}')
+    ]
+    
     EMAIL_HREF_PATTERN = re.compile(r'^/[^/]+@[^/]+')
     EMPTY_PARAGRAPH_PATTERN = re.compile(r'^\s*(&nbsp;|\xa0)?\s*$')
 
@@ -50,6 +59,12 @@ class ContentProcessor:
     
     DOCUMENT_PATHS = {'/wp-conteudo', '/wp-content'}
     HEADING_TAGS = {'h1', 'h2', 'h3', 'h4'}
+    
+    # Padrões de colapsáveis
+    COLLAPSE_PANEL_PATTERNS = [
+        {'panel': ['panel', 'panel-success', 'panel-default'], 'heading': 'panel-heading', 'body': 'panel-body'},
+        {'button': ['btn', 'btn-primary'], 'collapse': 'collapse', 'container': 'well'}
+    ]
 
     def __init__(self, web_content_creator):
         self.creator = web_content_creator
@@ -106,15 +121,50 @@ class ContentProcessor:
     def _clean_img_attributes(self, soup: BeautifulSoup) -> None:
         """Remove atributos desnecessários das tags de imagem"""
         for img in soup.find_all('img'):
+            # Backup do src original para garantir que não se perca
+            orig_src = img.get('src')
+            
+            # Remover apenas atributos desnecessários
             img.attrs = {k: v for k, v in img.attrs.items() if k not in self.IMG_ATTRIBUTES_TO_REMOVE}
+            
+            # Garantir que o src está presente e não foi alterado
+            if orig_src and 'src' not in img.attrs:
+                img['src'] = orig_src
+                logger.debug(f"Restaurado atributo src: {orig_src}")
 
     def _clean_content(self, html_content: str) -> str:
-        """Limpa o conteúdo HTML de elementos desnecessários"""
+        """Limpa o conteúdo HTML de elementos desnecessários preservando imagens"""
         if not html_content:
             return ""
             
         soup = BeautifulSoup(html_content, 'html.parser')
         
+        # Salvar todas as tags de imagem e seus containers antes da limpeza
+        images_data = []
+        for img in soup.find_all('img'):
+            # Salvar src original
+            src = img.get('src', '')
+            
+            # Encontrar o container de parágrafo mais próximo
+            container = img.parent
+            while container and container.name != 'p':
+                container = container.parent
+                
+            if container and container.name == 'p':
+                # Salvar a estrutura completa: p > a > img
+                if img.parent and img.parent.name == 'a':
+                    a_tag = img.parent
+                    a_href = a_tag.get('href', '')
+                    # Se o parágrafo contém apenas este link com imagem, salvar toda a estrutura
+                    if len(container.contents) == 1 and container.contents[0] == a_tag:
+                        images_data.append(('p_with_a_and_img', container, a_href, src))
+                    else:
+                        images_data.append(('img_in_a', img, a_href, src))
+                else:
+                    images_data.append(('img', img, None, src))
+            else:
+                images_data.append(('img', img, None, src))
+                
         # Verificar se o conteúdo foi selecionado por classe
         is_class_selector = False
         root_element = soup.find()
@@ -130,40 +180,89 @@ class ContentProcessor:
         
         elements_to_remove = []
         
-        # Remove date/time patterns
-        for date_div in soup.find_all('div', style='font-size:14px;'):
-            if self.DATE_PATTERN.search(date_div.text):
-                elements_to_remove.append(date_div)
+        # 1. Remover divs com datas
+        date_divs = soup.find_all('div', style=lambda s: s and 'font-size:14px' in s)
+        for div in date_divs:
+            text = div.get_text(strip=True)
+            for pattern in self.DATE_PATTERNS:
+                if pattern.search(text):
+                    logger.info(f"Removendo div com data: '{text}'")
+                    elements_to_remove.append(div)
+                    break
+        
+        # 2. Verificar outras datas em parágrafos e spans
+        for element in soup.find_all(['p', 'span']):
+            if not element.string:
+                continue
+                
+            text = element.string.strip()
+            for pattern in self.DATE_PATTERNS:
+                if pattern.search(text) and len(text) < 50:
+                    # Verificar se este elemento contém uma imagem antes de remover
+                    contains_img = bool(element.find('img'))
+                    if not contains_img:
+                        logger.info(f"Removendo elemento com data: '{text}'")
+                        elements_to_remove.append(element)
+                    break
         
         # Remover o título principal apenas se o conteúdo foi encontrado por seletor de classe
         if is_class_selector:
-            # Remover o primeiro heading
+            # Remover o primeiro heading - verificar se não contém imagem
             first_heading = soup.find(list(self.HEADING_TAGS))
-            if first_heading:
+            if first_heading and not first_heading.find('img'):
                 elements_to_remove.append(first_heading)
         
-        # Remove all elements marked for removal
-        for element in elements_to_remove:
-            element.decompose()
+        # Remove margin-top divs - verificar se não contêm imagens
+        for div in soup.find_all('div', class_=lambda c: c and 'margin-top' in c):
+            if not div.find('img'):
+                elements_to_remove.append(div)
         
-        # Limpa atributos de imagem
+        # Remover elementos marcados (que não contenham imagens)
+        for element in elements_to_remove:
+            if not element.find('img'):  # Verificação adicional
+                element.decompose()
+            else:
+                logger.info(f"Não removendo elemento com imagem: {element.name}")
+        
+        # Limpar atributos de imagem sem remover as próprias imagens
         self._clean_img_attributes(soup)
         
-        # Processamen de elementos em uma única passagem
-        for element in soup.find_all(['a', 'p', 'div']):
-            if element.name == 'a' and 'href' in element.attrs:
+        # Processar elementos em uma única passagem (verificando imagens)
+        for element in soup.find_all(['a', 'p']):
+            if element.name == 'a' and 'href' in element.attrs and not element.find('img'):
                 href = element['href']
                 if self.EMAIL_HREF_PATTERN.match(href):
                     element['href'] = f'mailto:{href.lstrip("/")}'
                     
-            elif element.name == 'p':
+            elif element.name == 'p' and not element.find('img'):
                 if not element.string:
                     continue
                 if self.EMPTY_PARAGRAPH_PATTERN.match(str(element.string)):
                     element.decompose()
-                    
-            elif element.name == 'div' and element.get('class') and 'margin-top-20' in element.get('class', []):
-                element.decompose()
+        
+        # Verificar se alguma imagem foi perdida e restaurá-la
+        current_images = set(img.get('src', '') for img in soup.find_all('img'))
+        for img_type, element, href, src in images_data:
+            if src and src not in current_images:
+                logger.info(f"Restaurando imagem perdida: {src}")
+                if img_type == 'img':
+                    # Criar nova tag img
+                    new_img = soup.new_tag('img', src=src)
+                    soup.append(new_img)
+                elif img_type == 'img_in_a' and href:
+                    # Criar estrutura a > img
+                    new_a = soup.new_tag('a', href=href)
+                    new_img = soup.new_tag('img', src=src)
+                    new_a.append(new_img)
+                    soup.append(new_a)
+                elif img_type == 'p_with_a_and_img' and href:
+                    # Criar estrutura p > a > img
+                    new_p = soup.new_tag('p')
+                    new_a = soup.new_tag('a', href=href)
+                    new_img = soup.new_tag('img', src=src)
+                    new_a.append(new_img)
+                    new_p.append(new_a)
+                    soup.append(new_p)
         
         return str(soup)
 
@@ -178,12 +277,16 @@ class ContentProcessor:
                 
             first_h3 = main_div.find('h3')
             if first_h3:
-                logger.info(f"Removendo primeiro h3: '{first_h3.text.strip()}'")
-                first_h3.decompose()
-                
-                # Isso elimina espaços em branco desnecessários após o título
-                if main_div.find('p') and not main_div.find('p').get_text(strip=True):
-                    main_div.find('p').decompose()
+                # Verificar se o h3 contém uma imagem antes de remover
+                if not first_h3.find('img'):
+                    logger.info(f"Removendo primeiro h3: '{first_h3.text.strip()}'")
+                    first_h3.decompose()
+                    
+                    # Isso elimina espaços em branco desnecessários após o título
+                    if main_div.find('p') and not main_div.find('p').get_text(strip=True) and not main_div.find('p').find('img'):
+                        main_div.find('p').decompose()
+                else:
+                    logger.info(f"Não removendo h3 '{first_h3.text.strip()}' porque contém imagem")
                     
             return str(soup)
             
@@ -244,6 +347,11 @@ class ContentProcessor:
                             tag[attr] = original_url  # Mantém a URL original em caso de erro
                             return
 
+                        # Verificar se a URL é de imagem para log específico
+                        is_image = any(full_url.lower().endswith(ext) for ext in ['.jpg', '.jpeg', '.png', '.gif', '.svg', '.webp'])
+                        if is_image:
+                            logger.info(f"Processando imagem: {full_url}")
+
                         # Use a função existente para migrar o documento
                         migrated_url = await self.creator._retry_operation(
                             self.document_creator.migrate_document,
@@ -256,6 +364,9 @@ class ContentProcessor:
                             relative_url = self._clean_url(migrated_url, base_domain)
                             self.cache.add_url(original_url, relative_url)
                             tag[attr] = relative_url
+                            
+                            if is_image:
+                                logger.info(f"Imagem migrada com sucesso: {original_url} -> {relative_url}")
                         else:
                             logger.warning(f"Falha na migração do documento: {full_url}")
                             self.cache.mark_failed(original_url)
@@ -313,6 +424,10 @@ class ContentProcessor:
         soup = BeautifulSoup(html_content, 'html.parser')
         base_domain = self.url_utils.extract_domain(base_url)
 
+        # Contagem de imagens antes do processamento
+        img_count_before = len(soup.find_all('img'))
+        logger.info(f"Processando conteúdo com {img_count_before} imagens")
+
         self._clean_img_attributes(soup)
 
         urls_to_process = []
@@ -323,15 +438,34 @@ class ContentProcessor:
                 if isinstance(attrs, list):
                     for attr in attrs:
                         if url := tag.get(attr):
+                            # Log especial para imagens
+                            if tag_name == 'img' and attr == 'src':
+                                logger.debug(f"Adicionando imagem para processamento: {url}")
                             urls_to_process.append((tag, attr, url))
                             break  # Only process the first valid attribute
                 elif url := tag.get(attrs):
+                    # Log especial para links com imagens
+                    if tag_name == 'a' and tag.find('img'):
+                        logger.debug(f"Adicionando link com imagem para processamento: {url}")
                     urls_to_process.append((tag, attrs, url))
+
+        # Log especial para processamento de imagens
+        image_urls = [(tag, attr, url) for tag, attr, url in urls_to_process if 
+                    (isinstance(tag, Tag) and tag.name == 'img' and attr == 'src') or
+                    (any(url.lower().endswith(ext) for ext in ['.jpg', '.jpeg', '.png', '.gif', '.svg', '.webp']))]
+        
+        if image_urls:
+            logger.info(f"Encontradas {len(image_urls)} URLs de imagens para processamento")
 
         batch_size = 20
         for i in range(0, len(urls_to_process), batch_size):
             batch = urls_to_process[i:i + batch_size]
             await self._process_url_batch(batch, base_domain, folder_id, base_url)
+
+        # Contagem de imagens após o processamento
+        img_count_after = len(soup.find_all('img'))
+        if img_count_before != img_count_after:
+            logger.warning(f"Número de imagens mudou durante o processamento: {img_count_before} -> {img_count_after}")
 
         return str(soup)
 
@@ -369,6 +503,42 @@ class ContentProcessor:
             logger.error(f"Error cleaning bootstrap classes: {str(e)}")
             return html_content
 
+    def _detect_collapsible_type(self, html_content: str) -> str:
+        """
+        Detecta o tipo de conteúdo colapsável
+        Retorna: 'panel', 'button', 'mixed', 'none'
+        """
+        try:
+            soup = BeautifulSoup(html_content, 'html.parser')
+            
+            # Verifica padrão de painel tradicional (panel-default, panel-success)
+            has_panel = bool(soup.select('div.panel, div.panel-default, div.panel-success'))
+            
+            # Verifica padrão de botão com collapse
+            has_button_collapse = False
+            buttons = soup.select('button.btn.btn-primary[data-toggle="collapse"], button.btn[data-toggle="collapse"]')
+            
+            if buttons:
+                for button in buttons:
+                    target_id = button.get('data-target', '').strip('#')
+                    if target_id and soup.select(f'div.collapse#{target_id}, div.collapse.in#{target_id}'):
+                        has_button_collapse = True
+                        break
+            
+            # Determina o tipo
+            if has_panel and has_button_collapse:
+                return 'mixed'
+            elif has_panel:
+                return 'panel'
+            elif has_button_collapse:
+                return 'button'
+            else:
+                return 'none'
+                
+        except Exception as e:
+            logger.error(f"Error detecting collapsible type: {str(e)}")
+            return 'none'
+
     def _is_collapsible_content(self, html_content: str) -> bool:
         """Verifica se o conteúdo é colapsável com cache"""
         # Use cache when possible
@@ -377,27 +547,11 @@ class ContentProcessor:
             return self._content_type_cache[content_hash]
             
         try:
-            soup = BeautifulSoup(html_content, 'html.parser')
+            collapsible_type = self._detect_collapsible_type(html_content)
+            result = collapsible_type != 'none'
             
-            # Use attribute selectors for better performance
-            panels = soup.select('div.panel, div.panel-default, div.panel-success')
-            if not panels:
-                self._content_type_cache[content_hash] = False
-                return False
-            
-            # Use faster selector-based checks
-            for panel in panels:
-                has_heading = bool(panel.select_one('div.panel-heading'))
-                has_collapse = bool(panel.select_one('div.panel-collapse'))
-                has_body = bool(panel.select_one('div.panel-body'))
-                has_title = bool(panel.select_one('h4.panel-title, h3.panel-title, p.panel-title'))
-                
-                if (has_heading and (has_collapse or has_body)) or (has_title and has_body):
-                    self._content_type_cache[content_hash] = True
-                    return True
-            
-            self._content_type_cache[content_hash] = False
-            return False
+            self._content_type_cache[content_hash] = result
+            return result
             
         except Exception as e:
             logger.error(f"Error checking collapsible content: {str(e)}")
@@ -405,53 +559,112 @@ class ContentProcessor:
             return False
 
     async def fetch_and_process_content(self, url: str, folder_id: Optional[int] = None) -> Dict[str, any]:
-        """Busca e processa conteúdo completo com processamento parale"""
+        """Busca e processa conteúdo completo com processamento paralelo"""
         try:
             # Busca conteúdo
             html_content = await self.creator.fetch_content(url)
             if not html_content:
                 return {"success": False, "error": "No content found"}
 
-            # Executa tarefas em paralelo para melhor performance
-            tasks = [
-                self.process_content(html_content, url, folder_id),
-                self._is_collapsible_content_async(html_content)
-            ]
+            logger.info(f"Processando conteúdo da URL: {url}")
             
-            processed_content, is_fully_collapsible = await asyncio.gather(*tasks)
+            # Contar imagens no conteúdo original
+            soup_original = BeautifulSoup(html_content, 'html.parser')
+            img_count_original = len(soup_original.find_all('img'))
+            if img_count_original > 0:
+                logger.info(f"Conteúdo original contém {img_count_original} imagens")
+                
+                # Listar todas as imagens para debug
+                for img in soup_original.find_all('img'):
+                    logger.debug(f"Imagem original: {img.get('src', 'sem-src')}")
+
+            # Processar conteúdo
+            processed_content = await self.process_content(html_content, url, folder_id)
             
             if not processed_content:
                 return {"success": False, "error": "Failed to process content"}
             
-            # Limpa classes bootstrap
+            # Verificar imagens após processamento inicial
+            soup_processed = BeautifulSoup(processed_content, 'html.parser')
+            img_count_processed = len(soup_processed.find_all('img'))
+            if img_count_processed != img_count_original:
+                logger.warning(f"Após processamento inicial: {img_count_processed}/{img_count_original} imagens")
+            
+            # Limpar classes Bootstrap
             cleaned_content = self._clean_first_div_bootstrap(processed_content)
             
-            # Remoção do título duplicado
-            cleaned_content = self._remove_title_from_content(cleaned_content)
+            # Verificar imagens após limpeza de Bootstrap
+            soup_cleaned = BeautifulSoup(cleaned_content, 'html.parser')
+            img_count_cleaned = len(soup_cleaned.find_all('img'))
+            if img_count_cleaned != img_count_processed:
+                logger.warning(f"Após limpeza de Bootstrap: {img_count_cleaned}/{img_count_processed} imagens")
             
-            # Verificação de mixed_content
-            has_some_collapsible = False
-            if not is_fully_collapsible:
-                soup = BeautifulSoup(cleaned_content, 'html.parser')
+            # Limpar conteúdo (remoção de datas, etc.)
+            cleaned_content = self._clean_content(cleaned_content)
+            
+            # Verificar imagens após limpeza de conteúdo
+            soup_after_clean = BeautifulSoup(cleaned_content, 'html.parser')
+            img_count_after_clean = len(soup_after_clean.find_all('img'))
+            if img_count_after_clean != img_count_cleaned:
+                logger.warning(f"Após limpeza de conteúdo: {img_count_after_clean}/{img_count_cleaned} imagens")
+            
+            # Remover título
+            final_content = self._remove_title_from_content(cleaned_content)
+            
+            # Verificar imagens após remoção de título
+            soup_final = BeautifulSoup(final_content, 'html.parser')
+            img_count_final = len(soup_final.find_all('img'))
+            if img_count_final != img_count_after_clean:
+                logger.warning(f"Após remoção de título: {img_count_final}/{img_count_after_clean} imagens")
+            
+            # Verificar se alguma imagem foi perdida completamente
+            if img_count_original > 0 and img_count_final < img_count_original:
+                logger.warning(f"ALERTA: {img_count_original - img_count_final} imagens foram perdidas durante o processamento")
                 
-                # Extract div elements more efficiently using CSS selector
-                elements = soup.select('div', limit=30)
+                # Tentar recuperar imagens perdidas
+                original_imgs = soup_original.find_all('img')
+                final_imgs = soup_final.find_all('img')
+                final_srcs = [img.get('src', '') for img in final_imgs]
                 
-                # Process in larger chunks with optimized batch size
-                chunk_size = 15
-                chunks = [elements[i:i + chunk_size] for i in range(0, len(elements), chunk_size)]
+                for img in original_imgs:
+                    original_src = img.get('src', '')
+                    if original_src and original_src not in final_srcs:
+                        logger.info(f"Tentando recuperar imagem perdida: {original_src}")
+                        
+                        # Encontrar a URL migrada no cache
+                        migrated_src = self.cache.get_url(original_src)
+                        if migrated_src:
+                            # Criar uma nova tag de imagem com a URL migrada
+                            container_p = soup_final.new_tag('p')
+                            new_img = soup_final.new_tag('img', src=migrated_src)
+                            
+                            # Copiar atributos importantes da imagem original
+                            for attr in ['alt', 'width', 'height', 'class', 'style']:
+                                if attr_value := img.get(attr):
+                                    new_img[attr] = attr_value
+                            
+                            # Adicionar a imagem recuperada ao conteúdo
+                            container_p.append(new_img)
+                            if soup_final.body:
+                                soup_final.body.append(container_p)
+                            else:
+                                soup_final.append(container_p)
+                            
+                            logger.info(f"Imagem recuperada: {original_src} -> {migrated_src}")
                 
-                # Check all chunks in parallel
-                results = await asyncio.gather(*[
-                    self._check_collapsible_elements(chunk) for chunk in chunks
-                ])
-                has_some_collapsible = any(results)
-
+                # Usar o HTML atualizado com imagens recuperadas
+                if img_count_original > img_count_final:
+                    final_content = str(soup_final)
+            
+            # Detectar tipo de colapsável
+            collapsible_type = self._detect_collapsible_type(final_content)
+            
             return {
                 "success": True,
-                "content": cleaned_content,
-                "is_collapsible": is_fully_collapsible,
-                "has_mixed_content": has_some_collapsible and not is_fully_collapsible
+                "content": final_content,
+                "is_collapsible": collapsible_type in ('panel', 'button'),
+                "has_mixed_content": collapsible_type == 'mixed',
+                "collapsible_type": collapsible_type
             }
 
         except Exception as e:
