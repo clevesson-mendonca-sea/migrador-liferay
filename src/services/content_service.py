@@ -1,4 +1,5 @@
 import logging
+import traceback
 from tqdm.asyncio import tqdm
 from configs.config import Config
 from creators.web_content_creator import WebContentCreator
@@ -19,12 +20,13 @@ async def migrate_contents(pages):
     config = Config()
     content_creator = WebContentCreator(config)
     content_mapping = {}
+    error_details = []
 
     try:
         await content_creator.initialize_session()
 
         with tqdm(total=len(pages), desc="Migrando conteúdos", unit="page") as pbar:
-            for page in pages:
+            for index, page in enumerate(pages):
                 title = page['title']
                 hierarchy = " > ".join(page['hierarchy'])
                 source_url = page['url']
@@ -39,10 +41,27 @@ async def migrate_contents(pages):
                         content_mapping[title] = content_id
                         logger.info(f"✅ Migrado: {title} (ID: {content_id})")
                     else:
-                        logger.error(f"❌ Falha ao migrar: {title}")
+                        error_msg = f"Falha ao migrar - ID não retornado"
+                        logger.error(f"❌ {error_msg}: {title}")
+                        error_details.append({
+                            'index': index + 1,
+                            'title': title,
+                            'url': source_url,
+                            'error': error_msg,
+                            'stack': None,
+                        })
 
                 except Exception as e:
-                    logger.error(f"🚨 Erro ao migrar {title}: {str(e)}")
+                    error_msg = str(e)
+                    stack_trace = traceback.format_exc()
+                    logger.error(f"🚨 Erro ao migrar {title}: {error_msg}")
+                    error_details.append({
+                        'index': index + 1,
+                        'title': title,
+                        'url': source_url,
+                        'error': error_msg,
+                        'stack': stack_trace,
+                    })
 
                 pbar.update(1)  # Atualiza a barra de progresso
 
@@ -54,6 +73,19 @@ async def migrate_contents(pages):
 
     logger.info("\n📊 Resumo da Migração:")
     logger.info(f"🟢 Sucesso: {success} / 🔴 Falhas: {failed} / 📦 Total: {total}")
+
+    # Exibe o relatório detalhado de erros
+    if error_details:
+        logger.info("\n⚠️ Detalhes dos Erros na Migração:")
+        logger.info("=" * 80)
+        for i, error in enumerate(error_details):
+            logger.error(f"Erro #{i+1} - Linha {error['index']} da planilha")
+            logger.error(f"  Título: {error['title']}")
+            logger.error(f"  URL: {error['url']}")
+            logger.error(f"  Erro: {error['error']}")
+            if error['stack']:
+                logger.error(f"  Stack Trace:\n{error['stack']}")
+            logger.error("-" * 80)
 
     return content_mapping
 
@@ -69,6 +101,7 @@ async def update_contents(pages):
     """
     config = Config()
     content_updater = ContentUpdater(config)
+    error_details = []
 
     try:
         await content_updater.initialize_session()
@@ -83,9 +116,10 @@ async def update_contents(pages):
         results = {}
 
         with tqdm(total=len(pages_to_update), desc="Atualizando conteúdos", unit="article") as pbar:
-            for page in pages_to_update:
+            for index, page in enumerate(pages_to_update):
                 article_id = page['article_id']
                 title = page['title']
+                original_index = pages.index(page)
 
                 logger.info(f"\n📄 Atualizando: {title} | ID: {article_id}")
 
@@ -96,10 +130,27 @@ async def update_contents(pages):
                     if success:
                         logger.info(f"✅ Atualizado: {title}")
                     else:
-                        logger.error(f"❌ Falha: {title}")
+                        error_msg = "Falha na atualização - retornou falso"
+                        logger.error(f"❌ {error_msg}: {title}")
+                        error_details.append({
+                            'index': original_index + 1,
+                            'title': title,
+                            'article_id': article_id,
+                            'error': error_msg,
+                            'stack': None,
+                        })
 
                 except Exception as e:
-                    logger.error(f"🚨 Erro ao atualizar {title}: {str(e)}")
+                    error_msg = str(e)
+                    stack_trace = traceback.format_exc()
+                    logger.error(f"🚨 Erro ao atualizar {title}: {error_msg}")
+                    error_details.append({
+                        'index': original_index + 1,
+                        'title': title,
+                        'article_id': article_id,
+                        'error': error_msg,
+                        'stack': stack_trace,
+                    })
                     results[article_id] = False
 
                 pbar.update(1)  # Atualiza a barra de progresso
@@ -110,14 +161,49 @@ async def update_contents(pages):
         logger.info("\n📊 Resumo da Atualização:")
         logger.info(f"🟢 Sucesso: {success} / 🔴 Falhas: {failed} / 📦 Total: {total}")
 
-        if failed > 0:
-            logger.info("❗ Artigos com falha:")
-            for article_id, success in results.items():
-                if not success:
-                    failed_page = next((p for p in pages_to_update if p['article_id'] == article_id), None)
-                    logger.error(f"- {failed_page['title']} (ID: {article_id})" if failed_page else f"- ID: {article_id}")
+        # Exibe o relatório detalhado de erros
+        if error_details:
+            logger.info("\n⚠️ Detalhes dos Erros na Atualização:")
+            logger.info("=" * 80)
+            for i, error in enumerate(error_details):
+                logger.error(f"Erro #{i+1} - Linha {error['index']} da planilha")
+                logger.error(f"  Título: {error['title']}")
+                logger.error(f"  ID do Artigo: {error['article_id']}")
+                logger.error(f"  Erro: {error['error']}")
+                if error['stack']:
+                    logger.error(f"  Stack Trace:\n{error['stack']}")
+                logger.error("-" * 80)
 
         return results
 
     finally:
         await content_updater.close()
+
+def export_error_report(error_details, filename="erros_migracao.txt"):
+    """
+    Exporta um relatório detalhado de erros para um arquivo.
+
+    Args:
+        error_details (list): Lista de dicionários com detalhes dos erros.
+        filename (str): Nome do arquivo para salvar o relatório.
+    """
+    try:
+        with open(filename, "w", encoding="utf-8") as f:
+            f.write("RELATÓRIO DETALHADO DE ERROS\n")
+            f.write("=" * 80 + "\n\n")
+            
+            for i, error in enumerate(error_details):
+                f.write(f"Erro #{i+1} - Linha {error['index']} da planilha\n")
+                f.write(f"  Título: {error['title']}\n")
+                if 'url' in error:
+                    f.write(f"  URL: {error['url']}\n")
+                if 'article_id' in error:
+                    f.write(f"  ID do Artigo: {error['article_id']}\n")
+                f.write(f"  Erro: {error['error']}\n")
+                if error['stack']:
+                    f.write(f"  Stack Trace:\n{error['stack']}\n")
+                f.write("-" * 80 + "\n\n")
+        
+        logger.info(f"📝 Relatório de erros exportado para: {filename}")
+    except Exception as e:
+        logger.error(f"❌ Falha ao exportar relatório de erros: {str(e)}")

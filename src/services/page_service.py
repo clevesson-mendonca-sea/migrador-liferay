@@ -1,6 +1,7 @@
 import logging
 import time
 import asyncio
+import traceback
 from urllib.parse import urlparse
 from configs.config import Config
 from creators.page_creator import PageCreator
@@ -28,6 +29,8 @@ async def migrate_pages(pages):
     failed = 0
     
     hierarchy_cache = {}
+    
+    error_details = []
     
     auth = aiohttp.BasicAuth(
         login=config.liferay_user,
@@ -90,19 +93,57 @@ async def migrate_pages(pages):
                     successful += 1
                     
                     # Armazenar no cache a hierarquia completa para reutilização
-                    for i in range(1, len(page['hierarchy']) + 1):
-                        partial_hierarchy = tuple(page['hierarchy'][:i])
+                    for j in range(1, len(page['hierarchy']) + 1):
+                        partial_hierarchy = tuple(page['hierarchy'][:j])
                         if partial_hierarchy not in hierarchy_cache:
                             hierarchy_cache[partial_hierarchy] = True
                 else:
+                    error_msg = "Falha ao criar página - ID não retornado"
                     logger.error(f"Falha ao criar página: {page['title']} {page['type']}")
+                    
+                    error_details.append({
+                        'index': i + 1,
+                        'title': page['title'],
+                        'url': page['url'],
+                        'type': page['type'],
+                        'hierarchy': " > ".join(page['hierarchy']),
+                        'error': error_msg,
+                        'stack': None
+                    })
+                    
                     failed += 1
             
             except asyncio.TimeoutError:
+                error_msg = "Timeout ao processar página"
                 logger.error(f"Timeout ao processar página: {page['title']}")
+                
+                error_details.append({
+                    'index': i + 1,
+                    'title': page['title'],
+                    'url': page['url'],
+                    'type': page['type'],
+                    'hierarchy': " > ".join(page['hierarchy']),
+                    'error': error_msg,
+                    'stack': None
+                })
+                
                 failed += 1
+                
             except Exception as e:
-                logger.error(f"Erro ao processar página {page['title']}: {str(e)}")
+                error_msg = str(e)
+                stack_trace = traceback.format_exc()
+                logger.error(f"Erro ao processar página {page['title']}: {error_msg}")
+                
+                error_details.append({
+                    'index': i + 1,
+                    'title': page['title'],
+                    'url': page['url'],
+                    'type': page['type'],
+                    'hierarchy': " > ".join(page['hierarchy']),
+                    'error': error_msg,
+                    'stack': stack_trace
+                })
+                
                 failed += 1
 
             # Mostrar um resumo a cada 30 páginas
@@ -116,7 +157,6 @@ async def migrate_pages(pages):
                 logger.info(f"Tempo decorrido: {elapsed_time:.1f}s, Média/página: {avg_time:.2f}s")
                 logger.info(f"Tempo estimado restante: {est_remaining:.1f}s")
         
-        # Resumo final da migração
         total_time = time.time() - start_time
         logger.info(f"\n=== RESUMO FINAL DA MIGRAÇÃO ===")
         logger.info(f"Total de páginas processadas: {total_pages}")
@@ -125,4 +165,49 @@ async def migrate_pages(pages):
         logger.info(f"Tempo total: {total_time:.2f} segundos")
         logger.info(f"Média por página: {total_time/total_pages:.2f} segundos")
         
+        if error_details:
+            logger.info("\n⚠️ DETALHES DOS ERROS NA MIGRAÇÃO DE PÁGINAS:")
+            logger.info("=" * 80)
+            for i, error in enumerate(error_details):
+                logger.error(f"Erro #{i+1} - Linha {error['index']} da planilha")
+                logger.error(f"  Título: {error['title']}")
+                logger.error(f"  URL: {error['url']}")
+                logger.error(f"  Tipo: {error['type']}")
+                logger.error(f"  Hierarquia: {error['hierarchy']}")
+                logger.error(f"  Erro: {error['error']}")
+                if error['stack']:
+                    logger.error(f"  Stack Trace:\n{error['stack']}")
+                logger.error("-" * 80)
+            
+            # Exportar relatório de erros para arquivo
+            export_error_report(error_details, "erros_migracao_paginas.txt")
+        
         return page_mapping
+
+def export_error_report(error_details, filename="erros_migracao.txt"):
+    """
+    Exporta um relatório detalhado de erros para um arquivo.
+
+    Args:
+        error_details (list): Lista de dicionários com detalhes dos erros.
+        filename (str): Nome do arquivo para salvar o relatório.
+    """
+    try:
+        with open(filename, "w", encoding="utf-8") as f:
+            f.write("RELATÓRIO DETALHADO DE ERROS - MIGRAÇÃO DE PÁGINAS\n")
+            f.write("=" * 80 + "\n\n")
+            
+            for i, error in enumerate(error_details):
+                f.write(f"Erro #{i+1} - Linha {error['index']} da planilha\n")
+                f.write(f"  Título: {error['title']}\n")
+                f.write(f"  URL: {error['url']}\n")
+                f.write(f"  Tipo: {error['type']}\n")
+                f.write(f"  Hierarquia: {error['hierarchy']}\n")
+                f.write(f"  Erro: {error['error']}\n")
+                if error['stack']:
+                    f.write(f"  Stack Trace:\n{error['stack']}\n")
+                f.write("-" * 80 + "\n\n")
+        
+        logger.info(f"📝 Relatório de erros exportado para: {filename}")
+    except Exception as e:
+        logger.error(f"❌ Falha ao exportar relatório de erros: {str(e)}")
