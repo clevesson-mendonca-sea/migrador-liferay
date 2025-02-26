@@ -9,7 +9,6 @@ class Config:
         self.liferay_user = os.getenv('LIFERAY_USERNAME', '')
         self.liferay_pass = os.getenv('LIFERAY_PASSWORD', '')
         self.site_id = os.getenv('LIFERAY_SITE_ID', '')
-        self.company_id = os.getenv('LIFERAY_COMPANY_ID', '')
         self.secretariat_name = os.getenv('LIFERAY_SECRETARIAT_NAME', '')
         self.sheet_id = os.getenv('SPREADSHEET_ID', '')
         self.folder_type = os.getenv('FOLDER_TYPE', 'journal')

@@ -349,8 +349,14 @@ class ContentProcessor:
                 # 3. Verifica se é um documento
                 is_document = any(doc_path in cleaned_url.lower() for doc_path in self.DOCUMENT_PATHS)
                 
-                # 4. Processa documentos
-                if is_document:
+                # Verifica se é uma URL de imagem
+                is_image_url = any(cleaned_url.lower().endswith(ext) for ext in ['.jpg', '.jpeg', '.png', '.gif', '.svg', '.webp'])
+                
+                # Verifica se é um link para imagem (href aponta para imagem)
+                is_link_to_image = tag.name == 'a' and attr == 'href' and is_image_url
+                
+                # 4. Processa documentos ou links para imagens
+                if is_document or is_image_url:
                     try:
                         # Constrói URL completa se for relativa
                         full_url = cleaned_url
@@ -365,9 +371,10 @@ class ContentProcessor:
                             tag[attr] = original_url  # Mantém a URL original em caso de erro
                             return
 
-                        # Verificar se a URL é de imagem para log específico
-                        is_image = any(full_url.lower().endswith(ext) for ext in ['.jpg', '.jpeg', '.png', '.gif', '.svg', '.webp'])
-                        if is_image:
+                        # Log para links que apontam para imagens
+                        if is_link_to_image:
+                            logger.info(f"Processando link para imagem: {full_url}")
+                        elif is_image_url:
                             logger.info(f"Processando imagem: {full_url}")
 
                         # Use a função existente para migrar o documento
@@ -383,7 +390,9 @@ class ContentProcessor:
                             self.cache.add_url(original_url, relative_url)
                             tag[attr] = relative_url
                             
-                            if is_image:
+                            if is_link_to_image:
+                                logger.info(f"Link para imagem migrado com sucesso: {original_url} -> {relative_url}")
+                            elif is_image_url:
                                 logger.info(f"Imagem migrada com sucesso: {original_url} -> {relative_url}")
                         else:
                             logger.warning(f"Falha na migração do documento: {full_url}")
@@ -407,7 +416,7 @@ class ContentProcessor:
                 logger.error(f"Erro crítico processando URL {url}: {str(e)}")
                 self.cache.mark_failed(url)
                 tag[attr] = url  # Mantém a URL original em caso de erro crítico
-
+                                          
     def _clean_url_before_processing(self, url: str) -> str:
         """Limpa e normaliza a URL antes de processá-la"""
         if not url:
