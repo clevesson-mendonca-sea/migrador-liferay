@@ -17,6 +17,7 @@ class ContentProcessor:
         {'type': 'class', 'value': 'col-md-8 col-md-offset-1'},
         {'type': 'class', 'value': 'col-md-8 col-md-offset-1 pull-right'},
         {'type': 'class', 'value': 'col-md-8 col-md-offset-1 pull-right col-xs-12'},
+        {'type': 'class', 'value': 'col-md-8 col-md-offset-2 corpo-principal'},
         {'type': 'class', 'value': 'col-md-8'},
     ]
     
@@ -530,21 +531,36 @@ class ContentProcessor:
             logger.error(f"Error cleaning bootstrap classes: {str(e)}")
             return html_content
 
-    def _detect_collapsible_type(self, html_content: str) -> str:
+    def _detect_content_type(self, html_content: str) -> str:
         """
-        Detecta o tipo de conteúdo colapsável
-        Retorna: 'panel', 'button', 'mixed', 'none'
+        Detecta o tipo de conteúdo: 'tabs', 'panel', 'button', 'mixed', 'none'
         """
         try:
             soup = BeautifulSoup(html_content, 'html.parser')
             
-            # Verifica padrão de painel tradicional (panel-default, panel-success)
+            # Verificar se existe uma estrutura de abas
+            tab_list = soup.find('ul', class_='nav-tabs')
+            tab_content = soup.find('div', class_='tab-content')
+            
+            if tab_list and tab_content:
+                # Verifica se há mais de uma aba
+                tab_items = tab_list.find_all('li')
+                
+                # Log detalhado
+                logger.info(f"Found {len(tab_items)} tab items")
+                for tab_item in tab_items:
+                    tab_text = tab_item.get_text(strip=True)
+                    logger.info(f"Tab text: {tab_text}")
+                
+                if len(tab_items) > 1:
+                    return 'tabs'
+                
             panels = soup.select('div.panel, div.panel-default, div.panel-success')
             has_panel = bool(panels)
             
             # Verifica padrão de botão com collapse
-            has_button_collapse = False
             buttons = soup.select('button.btn.btn-primary[data-toggle="collapse"], button.btn[data-toggle="collapse"]')
+            has_button_collapse = False
             
             if buttons:
                 for button in buttons:
@@ -580,19 +596,16 @@ class ContentProcessor:
                 if meaningful_p:
                     has_regular_content = True
             
-            # Determina o tipo com lógica aprimorada
             if has_panel and has_button_collapse:
-                return 'mixed'  # Mixed type (panel + button)
-            elif has_panel and has_regular_content:
-                return 'mixed'  # Mixed type (regular + panel)
+                return 'mixed'
             elif has_panel:
                 return 'panel'
             elif has_button_collapse:
                 return 'button'
-            else:
-                return 'none'
+            
+            return 'none'
         except Exception as e:
-            logger.error(f"Error detecting collapsible type: {str(e)}")
+            logger.error(f"Error detecting content type: {str(e)}")
             return 'none'
         
     def _is_collapsible_content(self, html_content: str) -> bool:
@@ -603,7 +616,7 @@ class ContentProcessor:
             return self._content_type_cache[content_hash]
             
         try:
-            collapsible_type = self._detect_collapsible_type(html_content)
+            collapsible_type = self._detect_content_type(html_content)
             result = collapsible_type != 'none'
             
             self._content_type_cache[content_hash] = result
@@ -612,6 +625,15 @@ class ContentProcessor:
         except Exception as e:
             logger.error(f"Error checking collapsible content: {str(e)}")
             self._content_type_cache[content_hash] = False
+            return False
+
+    def is_tabs_content(self, html_content: str) -> bool:
+        """Verifica se o conteúdo é de abas"""
+        try:
+            content_type = self._detect_content_type(html_content)
+            return content_type == 'tabs'
+        except Exception as e:
+            logger.error(f"Error checking tabs content: {str(e)}")
             return False
 
     async def fetch_and_process_content(self, url: str, folder_id: Optional[int] = None) -> Dict[str, any]:
@@ -623,6 +645,12 @@ class ContentProcessor:
                 return {"success": False, "error": "No content found"}
 
             logger.info(f"Processando conteúdo da URL: {url}")
+            
+            # Detecta o tipo de conteúdo
+            content_type = self._detect_content_type(html_content)
+            
+            # Log detalhado do tipo de conteúdo
+            logger.info(f"Detected content type: {content_type}")
             
             # Contar imagens no conteúdo original
             soup_original = BeautifulSoup(html_content, 'html.parser')
@@ -712,7 +740,7 @@ class ContentProcessor:
                 if img_count_original > img_count_final:
                     final_content = str(soup_final)
             
-            collapsible_type = self._detect_collapsible_type(final_content)
+            collapsible_type = self._detect_content_type(final_content)
             
             # Verifica se é misto (tem conteúdo regular + colapsável)
             is_mixed = collapsible_type == 'mixed'
@@ -727,7 +755,7 @@ class ContentProcessor:
                 for section in mixed_sections:
                     if section['type'] == 'collapsible':
                         # Verificar se esta seção é realmente colapsável
-                        section_collapsible_type = self._detect_collapsible_type(section['content'])
+                        section_collapsible_type = self._detect_content_type(section['content'])
                         # Se o tipo for 'none', vamos forçar para 'panel' se tiver uma div com classe panel
                         if section_collapsible_type == 'none':
                             section_soup = BeautifulSoup(section['content'], 'html.parser')

@@ -4,7 +4,6 @@ from bs4 import BeautifulSoup
 import logging
 from creators.collapse_content_creator import CollapseContentProcessor
 
-
 class MixedContentProcessor:
     def __init__(self, config):
         self.config = config
@@ -13,13 +12,29 @@ class MixedContentProcessor:
         if not hasattr(self, 'page_creator'):
             from creators.page_creator import PageCreator
             self.page_creator = PageCreator(config)
+        
+        from creators.tab_content_creator import TabContentProcessor
+        self.tab_processor = TabContentProcessor(config)
             
     def split_content(self, html_content: str) -> List[Dict[str, str]]:
         try:
             soup = BeautifulSoup(html_content, 'html.parser')
             
-            # Encontra todos os painéis colapsáveis
+            tab_list = soup.find('ul', class_='nav-tabs')
+            tab_content = soup.find('div', class_='tab-content')
+            
+            # Detecta painéis colapsáveis
             panels = soup.find_all('div', class_=lambda c: c and any(panel_cls in c for panel_cls in ['panel', 'panel-default', 'panel-success']))
+            
+            # Se houver abas, trata de forma diferente
+            if tab_list and tab_content:
+                # Verifica se há mais de uma aba
+                tab_items = tab_list.find_all('li')
+                if len(tab_items) > 1:
+                    return [{
+                        'type': 'tabs',
+                        'content': html_content
+                    }]
             
             if not panels:
                 # Se não há painéis, retorna todo o conteúdo como regular
@@ -80,6 +95,17 @@ class MixedContentProcessor:
             sections = self.split_content(html_content)
             
             content_ids = []
+            
+            # Tratamento para conteúdo de abas (adicionado)
+            if len(sections) == 1 and sections[0]['type'] == 'tabs':
+                content_id = await self.tab_processor.create_tab_content(
+                    web_content_creator, title, sections[0]['content'], folder_id
+                )
+                
+                if content_id:
+                    content_ids.append(content_id)
+                
+                return content_ids
             
             # Verifica se temos múltiplas seções e atualiza o layout da página se necessário
             if len(sections) > 1:

@@ -16,3 +16,4 @@ class Config:
         self.content_structure_id = os.getenv('LIFERAY_CONTENT_STRUCTURE_ID', '')
         self.colapse_structure_id = os.getenv('LIFERAY_COLAPSE_STRUCTURE_ID', '')
         self.display_template_key = os.getenv('LIFERAY_DISPLAY_TEMPLETE_KEY', '')
+        self.tab_structure_id = os.getenv('LIFERAY_TAB_STRUCTURE_ID', '')

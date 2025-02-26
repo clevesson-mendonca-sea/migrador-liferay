@@ -15,6 +15,7 @@ from processors.web_content_processor import ContentProcessor
 from creators.folder_creator import FolderCreator
 from creators.document_creator import DocumentCreator
 from creators.collapse_content_creator import CollapseContentProcessor
+from creators.tab_content_creator import TabContentProcessor
 from cache.web_content_cache import ContentCache
 from processors.web_content_mixed import MixedContentProcessor
 from core.url_utils import UrlUtils
@@ -36,6 +37,7 @@ class WebContentCreator:
         self.folder_creator = FolderCreator(config)
         self.document_creator = DocumentCreator(config)
         self.collapse_processor = CollapseContentProcessor(config)
+        self.tab_processor = TabContentProcessor(config)
         self.mixed_processor = MixedContentProcessor(config)
         self.url_utils = UrlUtils()
         self.cache = ContentCache()
@@ -331,7 +333,16 @@ class WebContentCreator:
             content_results = []
 
             # Processamento condicional baseado no tipo de conteúdo
-            if process_result["is_collapsible"]:
+            if process_result.get("collapsible_type") == 'tabs':
+                logger.info(f"Creating tab content for {title}")
+                if not hasattr(self, 'tab_processor'):
+                    from creators.tab_content_creator import TabContentProcessor
+                    self.tab_processor = TabContentProcessor(self.config)
+                
+                content_result = await self.tab_processor.create_tab_content(
+                    self, title, process_result["content"], folder_id
+                )
+            elif process_result["is_collapsible"]:
                 logger.info(f"Creating collapsible content for {title}")
                 content_result = await self.collapse_processor.create_collapse_content(
                     self, title, process_result["content"], folder_id
