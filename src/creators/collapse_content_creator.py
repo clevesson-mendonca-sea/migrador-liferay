@@ -17,6 +17,18 @@ class CollapseContentProcessor:
         Funciona tanto para panel-heading quanto para botões.
         """
         try:
+            # Verifica se o parent tem panel-success
+            parent = element.parent
+            if parent and hasattr(parent, 'get') and parent.get('class'):
+                parent_classes = ' '.join(parent.get('class', [])).lower() if isinstance(parent.get('class'), list) else parent.get('class', '').lower()
+                if 'panel-success' in parent_classes:
+                    return "Verde"
+            
+            # Verifica se o próprio elemento tem panel-success
+            element_classes = ' '.join(element.get('class', [])).lower() if isinstance(element.get('class'), list) else element.get('class', '').lower()
+            if 'panel-success' in element_classes:
+                return "Verde"
+                
             # Verifica o estilo background
             style = element.get('style', '').lower()
             if 'background' in style:
@@ -40,7 +52,6 @@ class CollapseContentProcessor:
             elif 'btn-danger' in classes or 'btn-warning' in classes:
                 return "Vermelho"
             
-            # Cor padrão
             return "Azul"
         except Exception as e:
             logger.error(f"Error determining panel color: {str(e)}")

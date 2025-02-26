@@ -349,8 +349,8 @@ class WebContentCreator:
             if page_data:
                 association_tasks = []
                 if content_results:
-                    for result in content_results:
-                        association_tasks.append(self.associate_content_with_page_portlet(result, page_data))
+                    for i, result in enumerate(content_results):
+                        association_tasks.append(self.associate_content_with_page_portlet(result, page_data, portlet_index=i))
                 else:
                     association_tasks.append(self.associate_content_with_page_portlet(content_result, page_data))
                 
@@ -551,9 +551,16 @@ class WebContentCreator:
             logger.error(f"Error getting portlet instance: {str(e)}")
             return self.DEFAULT_PORTLET_ID
 
-    async def associate_content_with_page_portlet(self, content: Union[Dict[str, Union[int, str]], str, int], page_data: Union[Dict, int, str]) -> bool:
+    async def associate_content_with_page_portlet(self, content: Union[Dict[str, Union[int, str]], str, int], 
+                                                page_data: Union[Dict, int, str], 
+                                                portlet_index: int = 0) -> bool:
         """
         Associa um conteúdo ao portlet Journal Content de uma página com retry aprimorado
+        
+        Args:
+            content: Conteúdo a ser associado
+            page_data: Dados da página
+            portlet_index: Índice do portlet a ser usado (0 = primeiro, 1 = segundo, etc.)
         """
         try:
             # Busca página se necessário
@@ -565,12 +572,21 @@ class WebContentCreator:
             else:
                 page_info = page_data
             
-            # Busca ID de portlet disponível
-            portlet_id = await self.get_journal_portlet_instance(page_info)
-            if not portlet_id:
-                logger.warning(f"No portlet found for page: {page_info.get('title')}")
+            # Obter todos os portlets disponíveis
+            portlets = page_info.get('portlets', [])
+            
+            # Verificar se há portlets suficientes
+            if not portlets:
+                logger.warning(f"No portlets found for page: {page_info.get('title')}")
                 return False
-
+            
+            # Selecionar o portlet pelo índice especificado
+            if portlet_index >= len(portlets):
+                logger.warning(f"Portlet index {portlet_index} out of range, using first available portlet")
+                portlet_id = portlets[0].get('portletId', self.DEFAULT_PORTLET_ID)
+            else:
+                portlet_id = portlets[portlet_index].get('portletId', self.DEFAULT_PORTLET_ID)
+            
             # Normaliza ID do portlet
             if not portlet_id.startswith('p_p_id_'):
                 portlet_id = portlet_id.replace('p_p_id_', '')
@@ -593,7 +609,7 @@ class WebContentCreator:
             async def associate_content():
                 status, result = await self._controlled_request('post', association_url, params=params)
                 if status in (200, 201):
-                    logger.info(f"Association result: {result}")
+                    logger.info(f"Association result (portlet index {portlet_index}): {result}")
                     return result.get('status') == 'SUCCESS'
                 raise Exception(f"Association request failed with status {status}")
 
@@ -601,9 +617,9 @@ class WebContentCreator:
             return await self._retry_operation(associate_content, max_retries=4)
             
         except Exception as e:
-            logger.error(f"Error associating content: {str(e)}")
+            logger.error(f"Error associating content to portlet {portlet_index}: {str(e)}")
             return False
-    
+        
     async def create_and_associate_content(self, source_url: str, title: str, hierarchy: List[str], 
                                         page_identifier: Union[str, int], page_friendly_url: str = None) -> ContentResponse:
         """

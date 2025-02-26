@@ -212,11 +212,29 @@ class ContentProcessor:
             if first_heading and not first_heading.find('img'):
                 elements_to_remove.append(first_heading)
         
-        # Remove margin-top divs - verificar se não contêm imagens
+        # Remove margin-top divs - verificar se não contêm imagens nem conteúdo significativo
         for div in soup.find_all('div', class_=lambda c: c and 'margin-top' in c):
-            if not div.find('img'):
+            # Verifica se não tem imagens
+            has_image = bool(div.find('img'))
+            
+            # Verifica se não tem conteúdo de texto significativo (mais que apenas espaços)
+            has_text = bool(div.get_text(strip=True))
+            
+            # Verifica se não tem links
+            has_links = bool(div.find('a'))
+            
+            # Verifica se não tem tabelas
+            has_tables = bool(div.find('table'))
+            
+            # Verifica se não tem listas
+            has_lists = bool(div.find(['ul', 'ol']))
+            
+            # Se não tem nenhum conteúdo significativo, marca para remoção
+            if not (has_image or has_text or has_links or has_tables or has_lists):
                 elements_to_remove.append(div)
-        
+            else:
+                logger.info(f"Mantendo div margin-top com conteúdo: {div.get_text(strip=True)[:50]}...")
+                
         # Remover elementos marcados (que não contenham imagens)
         for element in elements_to_remove:
             if not element.find('img'):  # Verificação adicional
@@ -512,7 +530,8 @@ class ContentProcessor:
             soup = BeautifulSoup(html_content, 'html.parser')
             
             # Verifica padrão de painel tradicional (panel-default, panel-success)
-            has_panel = bool(soup.select('div.panel, div.panel-default, div.panel-success'))
+            panels = soup.select('div.panel, div.panel-default, div.panel-success')
+            has_panel = bool(panels)
             
             # Verifica padrão de botão com collapse
             has_button_collapse = False
@@ -525,20 +544,48 @@ class ContentProcessor:
                         has_button_collapse = True
                         break
             
-            # Determina o tipo
+            # Verifica se há conteúdo significativo além dos panels
+            has_regular_content = False
+            
+            if has_panel:
+                # Cria uma cópia da sopa
+                regular_soup = BeautifulSoup(str(soup), 'html.parser')
+                
+                # Remove todos os painéis
+                for panel in regular_soup.select('div.panel, div.panel-default, div.panel-success'):
+                    panel.decompose()
+                
+                # Remove divs com datas e vazios
+                for div in regular_soup.find_all('div', style=lambda s: s and 'font-size:14px' in s):
+                    div.decompose()
+                
+                for div in regular_soup.find_all('div', class_=lambda c: c and 'margin-top' in c):
+                    div.decompose()
+                
+                # Verifica se sobrou texto significativo
+                remaining_text = regular_soup.get_text(strip=True)
+                has_regular_content = len(remaining_text) > 50  # Texto com mais de 50 caracteres é significativo
+                
+                # Também verifica se há parágrafos com conteúdo
+                meaningful_p = regular_soup.find('p', string=lambda s: s and len(s.strip()) > 20)
+                if meaningful_p:
+                    has_regular_content = True
+            
+            # Determina o tipo com lógica aprimorada
             if has_panel and has_button_collapse:
-                return 'mixed'
+                return 'mixed'  # Mixed type (panel + button)
+            elif has_panel and has_regular_content:
+                return 'mixed'  # Mixed type (regular + panel)
             elif has_panel:
                 return 'panel'
             elif has_button_collapse:
                 return 'button'
             else:
                 return 'none'
-                
         except Exception as e:
             logger.error(f"Error detecting collapsible type: {str(e)}")
             return 'none'
-
+        
     def _is_collapsible_content(self, html_content: str) -> bool:
         """Verifica se o conteúdo é colapsável com cache"""
         # Use cache when possible
@@ -656,16 +703,47 @@ class ContentProcessor:
                 if img_count_original > img_count_final:
                     final_content = str(soup_final)
             
-            # Detectar tipo de colapsável
             collapsible_type = self._detect_collapsible_type(final_content)
             
-            return {
+            # Verifica se é misto (tem conteúdo regular + colapsável)
+            is_mixed = collapsible_type == 'mixed'
+            
+            mixed_sections = []
+            if is_mixed and hasattr(self.creator, 'mixed_processor'):
+                # Aqui está a separação do conteúdo misto
+                mixed_sections = self.creator.mixed_processor.split_content(final_content)
+                logger.info(f"Conteúdo misto detectado com {len(mixed_sections)} seções")
+                
+                # Verificar cada seção para garantir que seções colapsáveis são marcadas corretamente
+                for section in mixed_sections:
+                    if section['type'] == 'collapsible':
+                        # Verificar se esta seção é realmente colapsável
+                        section_collapsible_type = self._detect_collapsible_type(section['content'])
+                        # Se o tipo for 'none', vamos forçar para 'panel' se tiver uma div com classe panel
+                        if section_collapsible_type == 'none':
+                            section_soup = BeautifulSoup(section['content'], 'html.parser')
+                            if section_soup.select('div.panel, div.panel-default, div.panel-success'):
+                                logger.warning("Forçando tipo 'panel' para seção marcada como colapsável")
+                                section_collapsible_type = 'panel'
+                        
+                        section['collapsible_type'] = section_collapsible_type
+                        logger.info(f"Seção colapsável com tipo: {section_collapsible_type}")
+                    else:
+                        section['collapsible_type'] = 'none'
+            
+            result = {
                 "success": True,
                 "content": final_content,
                 "is_collapsible": collapsible_type in ('panel', 'button'),
-                "has_mixed_content": collapsible_type == 'mixed',
+                "has_mixed_content": is_mixed,
                 "collapsible_type": collapsible_type
             }
+            
+            # Adiciona informações sobre seções se for misto
+            if is_mixed and mixed_sections:
+                result["mixed_sections"] = mixed_sections
+            
+            return result
 
         except Exception as e:
             logger.error(f"Error processing content from {url}: {str(e)}")
