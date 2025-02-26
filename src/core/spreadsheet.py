@@ -135,7 +135,7 @@ async def get_sheet_data(is_update=False):
 
     # Process page types
     page_type = [
-        row[12] if len(row) > 12 and row[12].strip() not in ["", "-"] else "widget"
+        row[14] if len(row) > 14 and row[14].strip() not in ["", "-"] else "widget"
         for row in rows
     ]
 
@@ -155,7 +155,7 @@ async def get_sheet_data(is_update=False):
 
     # Process column types
     column_type = [
-        row[16] if len(row) > 16 and row[16].strip() not in ["", "-"] else "1_column"
+        row[17] if len(row) > 17 and row[17].strip() not in ["", "-"] else "1_column"
         for row in rows
     ]
 
@@ -179,9 +179,11 @@ async def get_sheet_data(is_update=False):
                 title = hierarchy[-1]
                 visibility = row[7].strip().lower() if len(row) > 7 and row[7] else 'menu'
                 is_visible = visibility == 'menu'
-                
+
                 # Extract menu title
                 menu_title = row[8].strip() if len(row) > 8 and row[8] else None
+                # Extract category
+                category = row[11].strip() if len(row) > 11 and row[11] else "-"
 
                 # Get source and destination URLs
                 source_url = row[0].strip() if row[0] else ''
@@ -190,7 +192,7 @@ async def get_sheet_data(is_update=False):
                 # Build complete URLs
                 complete_source_url = url_utils.build_url(source_url, base_domain)
                 complete_dest_url = url_utils.build_url(dest_url, base_domain)
-                link_vincular = row[15].strip() if len(row) > 15 and row[15] else ""
+                link_vincular = row[16].strip() if len(row) > 16 and row[16] else ""
 
                 if title.strip():
                     page_data = {
@@ -202,7 +204,8 @@ async def get_sheet_data(is_update=False):
                         'visible': is_visible,
                         'column_type': column_type_formatted[index],
                         'menu_title': menu_title,
-                        "url_vincular": link_vincular
+                        "url_vincular": link_vincular,
+                        "category": category
                     }
                     pages.append(page_data)
 

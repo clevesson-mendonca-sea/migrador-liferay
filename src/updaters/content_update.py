@@ -1,7 +1,10 @@
 import logging
+import traceback
+from configs.config import Config
+from creators.vocabulary_creator import VocabularyCreator
 from typing import Dict, Optional, List
 import aiohttp
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, FeatureNotFound
 from creators.document_creator import DocumentCreator
 from creators.web_content_creator import WebContentCreator
 from creators.folder_creator import FolderCreator
@@ -35,30 +38,45 @@ class ContentUpdater:
 
     async def get_content_by_id(self, article_id: str) -> Optional[Dict]:
         try:
-            url = f"{self.config.liferay_url}/api/jsonws/journal.journalarticle/get-article"
+            # Primeira tentativa: usando a API Headless Delivery
+            headless_url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/structured-contents/{article_id}"
+            
+            async with self.session.get(headless_url) as response:
+                if response.status == 200:
+                    content = await response.json()
+                    if content:
+                        return content
+                    else:
+                        logger.info(f"Nenhum conteúdo retornado via Headless API para articleId: {article_id}")
+                else:
+                    logger.warning(f"Headless API retornou status {response.status} para articleId: {article_id}")
+                    try:
+                        error_data = await response.json()
+                        logger.warning(f"Detalhes do erro Headless: {error_data}")
+                    except:
+                        pass
+
+            # Segunda tentativa: usando a API JSONWS
+            jsonws_url = f"{self.config.liferay_url}/api/jsonws/journal.journalarticle/get-article"
             
             params = {
                 'groupId': self.config.site_id,
                 'articleId': article_id,
             }
             
-            logger.info(f"Buscando artigo por articleId: {article_id}")
-            
-            async with self.session.get(url, params=params) as response:
+            async with self.session.get(jsonws_url, params=params) as response:
                 if response.status == 200:
                     content = await response.json()
-                    print(content)
                     if content and len(content) > 0:
-                        logger.info(f"Artigo {article_id} encontrado com sucesso")
                         return content
                     else:
-                        logger.info(f"Nenhum artigo encontrado com articleId: {article_id}")
+                        logger.info(f"Nenhum artigo encontrado via JSONWS API para articleId: {article_id}")
                         return None
-                        
-                logger.error(f"Erro ao buscar artigo {article_id}: {response.status}")
+                
+                logger.error(f"Erro ao buscar artigo {article_id} via JSONWS API: {response.status}")
                 try:
                     error_data = await response.json()
-                    logger.error(f"Detalhes do erro: {error_data}")
+                    logger.error(f"Detalhes do erro JSONWS: {error_data}")
                 except:
                     pass
                 return None
@@ -67,8 +85,6 @@ class ContentUpdater:
             logger.error(f"Erro ao buscar conteúdo {article_id}: {str(e)}")
             return None
 
-
-    
     async def create_article_folder(self, article_title: str) -> Optional[str]:
         try:
             # self, title: str, parent_id: int = 0, folder_type: str = 'journal', hierarchy: List[str] = None
@@ -260,6 +276,149 @@ class ContentUpdater:
 
         return str(soup)
 
+    async def associate_category_to_migrated_content(self, content_id, title: str, category: str, categories_mapping: Dict[str, int]) -> bool:
+        """
+        Associa categorias a um conteúdo migrado.
+
+        Args:
+            content_id: ID do conteúdo (pode ser um dict, str ou int).
+            title: Título do conteúdo para logs.
+            category: String de categorias separadas por vírgula.
+            categories_mapping: Dicionário de mapeamento de nomes de categorias para IDs.
+
+        Returns:
+            bool: True se a associação foi bem-sucedida, False caso contrário.
+        """
+        try:
+            if self.session is None:
+                logger.info("Inicializando sessão")
+                await self.initialize_session()
+
+            # Extrai o Article ID do content_id
+            article_id = self._extract_article_id(content_id)
+            if not article_id:
+                logger.error(f"Não foi possível extrair um ID numérico válido do content_id: {content_id}")
+                return False
+
+            # Processa a string de categorias
+            categories = self._process_categories(category)
+            if not categories:
+                logger.info(f"Nenhuma categoria válida encontrada para '{title}'")
+                return False
+
+            # Obtém os IDs das categorias
+            category_ids = self._get_category_ids(categories, categories_mapping, title)
+            if not category_ids:
+                logger.warning(f"Nenhuma categoria válida encontrada no mapeamento para '{title}'")
+                return False
+
+            # Busca o artigo pelo ID
+            article = await self.get_content_by_id(article_id)
+            if not article:
+                logger.error(f"Não foi possível obter o artigo com ID {article_id}")
+                return False
+
+            # Extrai o ID do artigo
+            article_id = self._extract_article_id(article)
+            if not article_id:
+                logger.error("Artigo não possui ID numérico")
+                return False
+
+            update_url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/structured-contents/{article_id}"
+
+            payload = {'taxonomyCategoryIds': category_ids}
+
+            async with self.session.patch(update_url, json=payload) as update_response:
+                if update_response.status in [200, 201, 204]:
+                    response_data = await update_response.json()
+                    logger.info(f"✓ Categorias {categories} associadas ao conteúdo '{title}'")
+                    return True
+
+                logger.error(f"Erro ao associar categorias {categories} ao conteúdo '{title}': {update_response.status}")
+                try:
+                    error_data = await update_response.json()
+                    logger.error(f"Detalhes do erro: {error_data}")
+                except:
+                    pass
+                return False
+
+        except Exception as e:
+            logger.error(f"Erro ao associar categorias ao conteúdo '{title}': {str(e)}")
+            logger.error(f"Stack trace: {traceback.format_exc()}")
+            return False
+
+    def _process_categories(self, category: str) -> List[str]:
+        """
+        Processa a string de categorias separadas por vírgula.
+
+        Args:
+            category: String de categorias.
+
+        Returns:
+            List[str]: Lista de categorias processadas.
+        """
+        if not category or category.strip() == "-":
+            return []
+
+        categories = []
+        for cat in category.split(','):
+            cat = cat.strip()
+            if cat.startswith('- '):
+                cat = cat[2:].strip()  # Remove o prefixo "- "
+            if cat:  # Ignora strings vazias
+                categories.append(cat)
+        return categories
+
+    def _get_category_ids(self, categories: List[str], categories_mapping: Dict[str, int], title: str) -> List[int]:
+        """
+        Obtém os IDs das categorias com base no mapeamento.
+
+        Args:
+            categories: Lista de nomes de categorias.
+            categories_mapping: Dicionário de mapeamento de nomes para IDs.
+            title: Título do conteúdo para logs.
+
+        Returns:
+            List[int]: Lista de IDs das categorias.
+        """
+        category_ids = []
+        for cat in categories:
+            if cat in categories_mapping:
+                category_ids.append(categories_mapping[cat])
+            else:
+                logger.warning(f"Categoria '{cat}' não encontrada no mapeamento para '{title}'")
+        return category_ids
+
+    def _extract_article_id(self, content_id):
+        """
+        Extrai o ID numérico do content_id, que pode ser um dict, str ou int.
+
+        Args:
+            content_id: ID do conteúdo em vários formatos.
+
+        Returns:
+            str: ID numérico extraído ou None se inválido.
+        """
+        article_id = None
+
+        # Formato 1: {'id': {'id': 416227, 'key': '416225'}, 'key': "{'id': 416227, 'key': '416225'}"}
+        if isinstance(content_id, dict) and 'id' in content_id and isinstance(content_id['id'], dict) and 'id' in content_id['id']:
+            article_id = content_id['id']['id']
+        
+        # Formato 2: {'id': 416308, 'key': '416306'}
+        elif isinstance(content_id, dict) and 'id' in content_id:
+            article_id = content_id['id']
+        
+        # Formato 3: content_id é uma string ou número diretamente
+        elif isinstance(content_id, (str, int)):
+            article_id = str(content_id)
+        
+        if not article_id:
+            logger.error(f"Não foi possível extrair um ID numérico válido do content_id: {content_id}")
+            return None
+
+        return article_id
+    
     async def close(self):
         if self.session:
             await self.session.close()
