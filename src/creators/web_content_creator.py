@@ -245,6 +245,12 @@ class WebContentCreator:
         
         friendly_url = self.url_utils.sanitize_content_path(title)
 
+        # Limitar título se necessário (por exemplo, 255 caracteres é um limite comum)
+        if len(title) > 255:
+           truncated_title = title[:250] + "..."
+           logger.info(f"Título truncado para criação de conteúdo: '{title}' -> '{truncated_title}'")
+           title = truncated_title
+
         try:
             content_data = {
                 "contentStructureId": self.config.content_structure_id,

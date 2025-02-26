@@ -184,7 +184,7 @@ class FolderCreator:
 
     async def create_folder(self, title: str, parent_id: int = 0, folder_type: str = 'journal', hierarchy: List[str] = None) -> int:
         """Create a folder in Liferay with retry and improved caching"""
-        normalized_title = normalize_folder_name(title)
+        normalized_title = normalize_folder_name(title, None, folder_type)
         if not normalized_title:
             logger.error(f"Nome de pasta inválido: {title}")
             return 0
@@ -291,7 +291,7 @@ class FolderCreator:
 
     async def ensure_folder_exists(self, title: str, parent_id: int = 0, folder_type: str = 'journal') -> int:
         """Ensure a folder exists, using optimized cache and bulk folder fetching"""
-        normalized_title = normalize_folder_name(title)
+        normalized_title = normalize_folder_name(title, None, folder_type)
         comparison_key = self.get_comparison_key(normalized_title)
         
         # Fast path: Check multi-level cache first
@@ -364,7 +364,7 @@ class FolderCreator:
                     self.hierarchy_cache[full_path_cache_key] = current_parent_id
 
             # Handle final folder if needed
-            final_normalized = normalize_folder_name(final_title)
+            final_normalized = normalize_folder_name(final_title, None, folder_type)
             if not hierarchy_levels or self.get_comparison_key(hierarchy_levels[-1]) != self.get_comparison_key(final_title):
                 logger.info(f"Criando pasta final: {final_title} (Parent: {current_parent_id})")
                 final_folder_id = await self.ensure_folder_exists(final_title, current_parent_id, folder_type)

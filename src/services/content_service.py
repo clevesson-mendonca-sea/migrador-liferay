@@ -151,22 +151,54 @@ async def migrate_contents(pages):
                         source_url=source_url, title=title, hierarchy=page['hierarchy']
                     )
                     
-                    if content_id:
-                        content_mapping[title] = content_id
-                        logger.info(f"✅ Migrado: {title} (ID: {content_id})")
+                    article_id = None
+                    
+                    # Formato 1: {'id': {'id': 416227, 'key': '416225'}, 'key': "{'id': 416227, 'key': '416225'}"}
+                    if isinstance(content_id, dict) and 'id' in content_id and isinstance(content_id['id'], dict) and 'id' in content_id['id']:
+                        article_id = content_id['id']['id']
+                    
+                    # Formato 2: {'id': 416308, 'key': '416306'}
+                    elif isinstance(content_id, dict) and 'id' in content_id:
+                        article_id = content_id['id']
+                    
+                    # Formato 3: content_id é uma string ou número diretamente
+                    elif isinstance(content_id, (str, int)):
+                        article_id = str(content_id)
+                    
+                    if article_id:
+                        # Garantir que o ID é do tipo correto (inteiro)
+                        if isinstance(article_id, str) and article_id.isdigit():
+                            article_id = int(article_id)
+                        elif not isinstance(article_id, int):
+                            article_id = 0
                         
-                        # Associa a categoria ao conteúdo migrado (em paralelo)
-                        if category and category != '-' and categories_mapping:
-                            asyncio.create_task(
-                                content_updater.associate_category_to_migrated_content(
-                                    content_id=content_id,
-                                    title=title,
-                                    category=category,
-                                    categories_mapping=categories_mapping
+                        # Verificar se é um ID válido (maior que zero)
+                        if article_id > 0:
+                            content_mapping[title] = article_id
+                            logger.info(f"✅ Migrado: {title} (ID: {article_id})")
+                            
+                            # Associa a categoria ao conteúdo migrado (em paralelo)
+                            if category and category != '-' and categories_mapping:
+                                asyncio.create_task(
+                                    content_updater.associate_category_to_migrated_content(
+                                        content_id=article_id,
+                                        title=title,
+                                        category=category,
+                                        categories_mapping=categories_mapping
+                                    )
                                 )
-                            )
+                        else:
+                            error_msg = f"Falha ao migrar - ID inválido após extração: {content_id}"
+                            logger.error(f"❌ {error_msg}: {title}")
+                            error_details.append({
+                                'index': index + 1,
+                                'title': title,
+                                'url': source_url,
+                                'error': error_msg,
+                                'stack': None,
+                            })
                     else:
-                        error_msg = f"Falha ao migrar - ID não retornado"
+                        error_msg = f"Falha ao migrar - ID não pôde ser extraído: {content_id}"
                         logger.error(f"❌ {error_msg}: {title}")
                         error_details.append({
                             'index': index + 1,
