@@ -86,7 +86,6 @@ async def migrate_pages(pages):
                     ), 
                     timeout=30
                 )
-                
                 if page_id:
                     logger.info(f"Página criada: {page['title']} (ID: {page_id}) tipo({page['type']})")
                     page_mapping[page['title']] = page_id

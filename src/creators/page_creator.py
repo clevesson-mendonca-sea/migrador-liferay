@@ -74,7 +74,7 @@ class PageCreator:
         update = {
             "groupId": str(self.config.site_id),
             "privateLayout": "false",
-            "layoutId": page_id,
+            "layoutId": str(page_id),
             "typeSettings": type_settings
         }
         
@@ -144,29 +144,48 @@ class PageCreator:
         return 0
 
     def _get_type_settings(self, column_type: str, url_vinculada: str) -> str:
-        random_id = random.randint(10000, 99999)  # Gera um número aleatório de 5 dígitos
-        settings = {
-            "1_column": (
+        """
+        Generate type settings for page layout based on column type and linked URL
+        
+        Args:
+            column_type: Type of column layout ("1_column", "2_columns_ii", etc.)
+            url_vinculada: URL to link to (if any)
+            
+        Returns:
+            str: Formatted type settings string for Liferay API
+        """
+        random_id = random.randint(10000, 99999)
+        
+        layout_template_map = {
+            "1_column": "1_column",
+            "2_columns_ii": "2_columns_ii"
+        }
+        layout_template_id = layout_template_map.get(column_type, column_type)
+        
+        type_settings = ""
+        
+        if column_type == "1_column":
+            type_settings = (
+                f"layout-template-id={layout_template_id}\n"
                 f"column-1=com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_{random_id}\n"
-                f"layout-template-id={column_type}\n"
-            ),
-            "2_columns_ii": (
+            )
+        elif column_type == "2_columns_ii":
+            type_settings = (
+                f"layout-template-id={layout_template_id}\n"
                 f"column-1=com_liferay_site_navigation_menu_web_portlet_SiteNavigationMenuPortlet_INSTANCE_{random_id}\n"
                 f"column-2=com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_{random_id}\n"
-                f"layout-template-id={column_type}\n"
             )
-        }
+        else:
+            type_settings = (
+                f"layout-template-id=1_column\n"
+                f"column-1=com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_{random_id}\n"
+            )
         
-        if len(url_vinculada) > 1:
-            settings = {
-                "1_column": (
-                    f"column-1=com_liferay_journal_content_web_portlet_JournalContentPortlet_INSTANCE_{random_id}\nlayoutUpdateable=true\nurl={url_vinculada}\n"
-                    f"layout-template-id={column_type}\n"
-                )
-            }
+        if url_vinculada and len(url_vinculada) > 1:
+            type_settings += f"layoutUpdateable=true\nurl={url_vinculada}\n"
+        
+        return type_settings
 
-        return settings.get(column_type, "")
-    
     def _extract_menu_portlet_id(self, type_settings: str) -> str:
         """
         Extrai o ID do portlet de menu das configurações de tipo

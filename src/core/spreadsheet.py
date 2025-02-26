@@ -148,7 +148,6 @@ async def get_sheet_data(is_update=False):
         rows = rows[1:]
 
         column_mapping = get_column_mapping(headers)
-        print(column_mapping)
 
         # Verifica se as colunas obrigatórias estão presentes
         required_columns = ['hierarquia', 'de', 'para', 'visibilidade', 'menu lateral', 'categoria', 'layout', 'tipo de pagina', 'link da pagina para a qual redireciona']
