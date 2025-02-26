@@ -1,5 +1,6 @@
 import logging
 import traceback
+import asyncio
 from tqdm.asyncio import tqdm
 from configs.config import Config
 from creators.web_content_creator import WebContentCreator
@@ -106,8 +107,6 @@ async def create_vocabulary_and_categories(pages, secretariat_name):
     finally:
         await vocabulary_creator.close()
         
-import asyncio
-
 async def migrate_contents(pages):
     """
     Migra conteúdos e exibe uma barra de progresso.

@@ -1,12 +1,9 @@
 import logging
 import traceback
-from configs.config import Config
-from creators.vocabulary_creator import VocabularyCreator
 from typing import Dict, Optional, List
 import aiohttp
 from bs4 import BeautifulSoup, FeatureNotFound
 from creators.document_creator import DocumentCreator
-from creators.web_content_creator import WebContentCreator
 from creators.folder_creator import FolderCreator
 
 logger = logging.getLogger(__name__)
