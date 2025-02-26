@@ -220,6 +220,12 @@ class CollapseContentProcessor:
             if not content_fields:
                 raise Exception("No valid content fields were generated")
 
+            # Limitar título se necessário (por exemplo, 255 caracteres é um limite comum)
+            if len(title) > 255:
+                truncated_title = title[:250] + "..."
+                logger.info(f"Título truncado para criação de conteúdo: '{title}' -> '{truncated_title}'")
+                title = truncated_title
+
             # Monta o payload com a estrutura exata esperada
             content_data = {
                 "contentStructureId": self.structure_id,
