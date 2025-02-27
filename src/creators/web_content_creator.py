@@ -1039,7 +1039,7 @@ class WebContentCreator:
                 # Esperar todas as tarefas com timeout para não bloquear indefinidamente
                 done, pending = await asyncio.wait(
                     background_tasks, 
-                    timeout=60  # Timeout de 60 segundos
+                    timeout=3000  # Timeout de 60 segundos
                 )
                 
                 if pending:

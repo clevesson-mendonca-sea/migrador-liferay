@@ -724,7 +724,7 @@ class ContentProcessor:
                 
                 # Tornar links relativos
                 base_domain = self.url_utils.extract_domain(url)
-                # final_content = self._make_links_relative(final_content, base_domain)
+                final_content = self._make_links_relative(final_content, base_domain)
                 
                 # Detectar tipo de conteúdo novamente após a limpeza
                 collapsible_type = self._detect_content_type(final_content)
@@ -766,7 +766,7 @@ class ContentProcessor:
             
             # Tornar links relativos
             base_domain = self.url_utils.extract_domain(url)
-            # final_content = self._make_links_relative(final_content, base_domain)
+            final_content = self._make_links_relative(final_content, base_domain)
             
             # Verificar imagens após todo o processamento
             soup_final = BeautifulSoup(final_content, 'html.parser')
