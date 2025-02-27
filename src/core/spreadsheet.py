@@ -118,12 +118,13 @@ def build_page_data(row: List[str], column_mapping: Dict[str, int], base_domain:
         'category': category
     }
 
-async def get_sheet_data(is_update=False):
+async def get_sheet_data(is_update=False, specific_row_index=None):
     """
     Obtém e processa os dados da planilha do Google Sheets.
     
     Args:
         is_update (bool): Se deve buscar dados de atualização.
+        specific_row_index (int, optional): Índice específico da linha a ser processada.
     
     Returns:
         List[Dict]: Lista de paginas processadas.
@@ -162,16 +163,30 @@ async def get_sheet_data(is_update=False):
 
         # Processa as linhas da planilha
         pages = []
-        for row in rows:
+        
+        if specific_row_index is not None:
+            row_to_process = rows[specific_row_index - 2]
+            
             try:
-                if all(row[:1]) and len(row) > column_mapping['hierarquia'] and row[column_mapping['hierarquia']]:
-                    page_data = build_page_data(row, column_mapping, base_domain)
+                if all(row_to_process[:1]) and len(row_to_process) > column_mapping['hierarquia'] and row_to_process[column_mapping['hierarquia']]:
+                    page_data = build_page_data(row_to_process, column_mapping, base_domain)
                     if page_data:
                         pages.append(page_data)
             except Exception as e:
-                logger.error(f"Erro ao processar linha: {row}")
+                logger.error(f"Erro ao processar linha {specific_row_index}: {row_to_process}")
                 logger.error(f"Detalhes do erro: {str(e)}")
                 logger.error(traceback.format_exc())
+        else:
+            for row in rows:
+                try:
+                    if all(row[:1]) and len(row) > column_mapping['hierarquia'] and row[column_mapping['hierarquia']]:
+                        page_data = build_page_data(row, column_mapping, base_domain)
+                        if page_data:
+                            pages.append(page_data)
+                except Exception as e:
+                    logger.error(f"Erro ao processar linha: {row}")
+                    logger.error(f"Detalhes do erro: {str(e)}")
+                    logger.error(traceback.format_exc())
 
         logger.info(f"Total de paginas processadas: {len(pages)}")
         return pages
