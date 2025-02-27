@@ -313,6 +313,19 @@ class ContentProcessor:
             logger.error(f"Erro ao remover título h3: {str(e)}")
             return html_content
 
+    def _make_links_relative(self, soup: BeautifulSoup) -> None:
+        """Limpa e converte URLs para formato relativo no HTML"""
+        for tag_name, attrs in self._url_tag_selectors.items():
+            for tag in soup.find_all(tag_name):
+                if isinstance(attrs, list):
+                    for attr in attrs:
+                        if url := tag.get(attr):
+                            cleaned_url = self._clean_url(url, self.base_domain)
+                            tag[attr] = cleaned_url
+                elif url := tag.get(attrs):
+                    cleaned_url = self._clean_url(url, self.base_domain)
+                    tag[attrs] = cleaned_url
+
     async def _process_url_batch(self, urls_to_process: List[Tuple[Tag, str, str]], base_domain: str, folder_id: int, base_url: str) -> None:
         """Processa um lote de URLs em paralelo com limites de concorrência"""
         tasks = []
@@ -716,6 +729,10 @@ class ContentProcessor:
             
             # Remover título
             final_content = self._remove_title_from_content(cleaned_content)
+            
+            # Tornar links relativos
+            base_domain = self.url_utils.extract_domain(url)
+            final_content = self._make_links_relative(final_content, base_domain)
             
             # Verificar imagens após todo o processamento
             soup_final = BeautifulSoup(final_content, 'html.parser')
