@@ -93,11 +93,12 @@ class ContentProcessor:
             if not parsed.netloc:
                 return url
                 
-            url_domain = parsed.netloc.lower()
-            
+            url_domain = parsed.netloc.lower().replace('www.', '')
+
             if base_domain not in self._domain_cache:
                 base_domain_parsed = urlparse(base_domain)
-                self._domain_cache[base_domain] = base_domain_parsed.netloc.lower() if base_domain_parsed.netloc else base_domain.lower()
+                base_netloc = base_domain_parsed.netloc.lower().replace('www.', '') if base_domain_parsed.netloc else base_domain.lower().replace('www.', '')
+                self._domain_cache[base_domain] = base_netloc
             base_netloc = self._domain_cache[base_domain]
             
             # Se não for do mesmo domínio, retorna a URL original sem modificações
