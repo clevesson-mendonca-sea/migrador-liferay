@@ -314,18 +314,44 @@ class ContentProcessor:
             logger.error(f"Erro ao remover título h3: {str(e)}")
             return html_content
 
-    def _make_links_relative(self, soup: BeautifulSoup) -> None:
-        """Limpa e converte URLs para formato relativo no HTML"""
+    def _make_links_relative(self, html_content: Union[str, BeautifulSoup], base_domain: Optional[str] = None) -> str:
+        """
+        Limpa e converte URLs para formato relativo no HTML
+        
+        Args:
+            html_content (Union[str, BeautifulSoup]): Conteúdo HTML para processar
+            base_domain (Optional[str], optional): Domínio base para normalização de URLs. Defaults to None.
+        
+        Returns:
+            str: Conteúdo HTML com URLs relativas
+        """
+        # Se for string, converte para BeautifulSoup
+        if isinstance(html_content, str):
+            soup = BeautifulSoup(html_content, 'html.parser')
+        else:
+            soup = html_content
+
+        # Se base_domain não for fornecido, tenta obter do atributo da classe
+        if base_domain is None:
+            base_domain = getattr(self, 'base_domain', None)
+
+        # Se ainda não tiver base_domain, retorna o conteúdo original
+        if not base_domain:
+            logger.warning("No base domain provided for link relativization")
+            return str(soup)
+
         for tag_name, attrs in self._url_tag_selectors.items():
             for tag in soup.find_all(tag_name):
                 if isinstance(attrs, list):
                     for attr in attrs:
                         if url := tag.get(attr):
-                            cleaned_url = self._clean_url(url, self.base_domain)
+                            cleaned_url = self._clean_url(url, base_domain)
                             tag[attr] = cleaned_url
                 elif url := tag.get(attrs):
-                    cleaned_url = self._clean_url(url, self.base_domain)
+                    cleaned_url = self._clean_url(url, base_domain)
                     tag[attrs] = cleaned_url
+
+        return str(soup)
 
     async def _process_url_batch(self, urls_to_process: List[Tuple[Tag, str, str]], base_domain: str, folder_id: int, base_url: str) -> None:
         """Processa um lote de URLs em paralelo com limites de concorrência"""
@@ -692,6 +718,10 @@ class ContentProcessor:
                 
                 # Remover título
                 final_content = self._remove_title_from_content(cleaned_content)
+                
+                # Tornar links relativos
+                base_domain = self.url_utils.extract_domain(url)
+                final_content = self._make_links_relative(final_content, base_domain)
                 
                 # Detectar tipo de conteúdo novamente após a limpeza
                 collapsible_type = self._detect_content_type(final_content)
