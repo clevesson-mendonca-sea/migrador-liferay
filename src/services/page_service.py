@@ -73,7 +73,7 @@ async def migrate_pages(pages):
                 await asyncio.sleep(0.5)
             
             try:
-                page_id = await asyncio.wait_for(
+                result = await asyncio.wait_for(
                     creator.create_hierarchy(
                         hierarchy=page['hierarchy'],
                         final_title=page['title'],
@@ -86,8 +86,19 @@ async def migrate_pages(pages):
                     ), 
                     timeout=30
                 )
-                if page_id:
-                    logger.info(f"Página criada: {page['title']} (ID: {page_id}) tipo({page['type']})")
+                
+                # Extrair page_id da tupla (page_id, plid)
+                if isinstance(result, tuple) and len(result) == 2:
+                    page_id, plid = result
+                else:
+                    page_id = result
+                    plid = 0
+                
+                logger.debug(f"ID retornado: {page_id} (tipo: {type(page_id).__name__})")
+                
+                # Verificar se o page_id é um valor válido (maior que zero)
+                if page_id and int(page_id) > 0:
+                    logger.info(f"Página criada: {page['title']} (ID: {page_id}, PLID: {plid}) tipo({page['type']})")
                     page_mapping[page['title']] = page_id
                     successful += 1
                     
@@ -97,8 +108,8 @@ async def migrate_pages(pages):
                         if partial_hierarchy not in hierarchy_cache:
                             hierarchy_cache[partial_hierarchy] = True
                 else:
-                    error_msg = "Falha ao criar página - ID não retornado"
-                    logger.error(f"Falha ao criar página: {page['title']} {page['type']}")
+                    error_msg = f"Falha ao criar página - ID inválido ou zero: {page_id}"
+                    logger.error(f"❌ {error_msg}: {page['title']} tipo({page['type']})")
                     
                     error_details.append({
                         'index': i + 1,
