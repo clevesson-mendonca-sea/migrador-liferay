@@ -649,7 +649,7 @@ class ContentValidator:
                 all_valid = False
 
             if all_valid:
-                logger.info(f"✓ Página {title} validada com sucesso")
+                logger.info(f"✅ Página {title} validada com sucesso")
                 
             return all_valid
 

@@ -1,6 +1,6 @@
 import asyncio
 from asyncio.log import logger
-from datetime import datetime
+from datetime import datetime, time
 import logging
 from logging.handlers import RotatingFileHandler
 import traceback
@@ -8,7 +8,7 @@ from typing import List, Optional, Dict, Union, Any, Tuple
 import aiohttp
 from aiohttp import ClientTimeout, BasicAuth, TCPConnector
 from dataclasses import dataclass
-from bs4 import BeautifulSoup, Tag
+from bs4 import BeautifulSoup, Comment, Tag
 from functools import lru_cache
 import json
 from processors.web_content_processor import ContentProcessor
@@ -48,7 +48,10 @@ class WebContentCreator:
         self._site_pages_url = f"{config.liferay_url}/o/headless-delivery/v1.0/sites/{config.site_id}/site-pages"
         self.content_processor = ContentProcessor(self)
         self._request_semaphore = asyncio.Semaphore(20)
-
+        self._background_tasks = set()
+        self._associated_content_ids = set()
+        self._association_lock = asyncio.Lock()
+        
     def _setup_logging(self):
         """Configura o logging"""
         if logger.handlers:
@@ -195,6 +198,77 @@ class WebContentCreator:
             except Exception as e:
                 logger.error(f"Unexpected error during {method} to {url}: {str(e)}")
                 raise
+          
+    async def _check_cached_content(self, title: str, html_content: Optional[str] = None) -> Optional[Dict[str, Union[int, str]]]:
+        """
+        Verifica o conteúdo em cache com validação adicional
+        
+        Args:
+            title: Título do conteúdo
+            html_content: Conteúdo HTML para comparação detalhada (opcional)
+        
+        Returns:
+            Dicionário com detalhes do conteúdo em cache ou None
+        """
+        try:
+            # Busca conteúdos em cache para o título
+            cached_content_ids = self.cache.get_contents(title)
+            
+            if not cached_content_ids:
+                return None
+            
+            # Verifica cada conteúdo em cache
+            for cached_content_id in cached_content_ids:
+                try:
+                    # Busca detalhes do conteúdo
+                    url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/structured-contents/{cached_content_id}"
+                    status, data = await self._controlled_request('get', url)
+                    
+                    if status == 200:
+                        # Se não há conteúdo para comparação, retorna o primeiro
+                        if not html_content:
+                            return {"id": cached_content_id, "key": data.get('key')}
+                        
+                        # Compara o conteúdo se fornecido
+                        content_fields = data.get('contentFields', [])
+                        content_field = next((field for field in content_fields 
+                                            if field.get('name') == 'content'), None)
+                        
+                        if content_field:
+                            existing_content = content_field.get('contentFieldValue', {}).get('data', '')
+                            
+                            # Usa BeautifulSoup para comparação de conteúdo limpo
+                            from bs4 import BeautifulSoup
+                            import re
+                            
+                            def clean_content(content):
+                                if not content:
+                                    return ''
+                                soup = BeautifulSoup(content, 'html.parser')
+                                # Remove comentários, normaliza espaços
+                                for comment in soup.find_all(text=lambda text: isinstance(text, Comment)):
+                                    comment.extract()
+                                # Remove tags de estilo, remove espaços extras
+                                text = re.sub(r'\s+', ' ', soup.get_text()).strip()
+                                return text
+                            
+                            # Compara conteúdos limpos
+                            if clean_content(existing_content) == clean_content(html_content):
+                                logger.info(f"Using cached content with exact match: {title} (ID: {cached_content_id})")
+                                return {"id": cached_content_id, "key": data.get('key')}
+                            
+                            # Se os conteúdos forem diferentes, continua para o próximo
+                            logger.debug(f"Cached content {cached_content_id} does not match current content")
+                    
+                except Exception as e:
+                    logger.warning(f"Error checking cached content {cached_content_id}: {str(e)}")
+            
+            # Nenhum conteúdo em cache corresponde
+            return None
+            
+        except Exception as e:
+            logger.error(f"Error in cache check for {title}: {str(e)}")
+            return None
             
     @lru_cache(maxsize=200)
     def _get_content_url(self, folder_id: int) -> str:
@@ -290,28 +364,17 @@ class WebContentCreator:
             return {"id": 0, "key": ""}
     
     async def migrate_content(self, source_url: str, title: str, hierarchy: List[str]) -> Dict[str, Union[int, str]]:
-        """Migra conteúdo e retorna tanto o ID quanto a key do conteúdo"""
         try:
-            # Verifica cache primeiro para evitar operações desnecessárias
-            cached_content_id = self.cache.get_content(title)
-            if cached_content_id:
-                logger.info(f"Using cached content for {title}")
-                # Buscar a key se estiver usando cache
-                url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/structured-contents/{cached_content_id}"
-                status, data = await self._controlled_request('get', url)
-                if status == 200:
-                    return {"id": cached_content_id, "key": data.get('key')}
-                return {"id": cached_content_id, "key": str(cached_content_id)}
-
-            # Primeiro busca os dados da página
-            page_data = await self.find_page_by_title_or_id(title)
-            logger.info(f"Found page data: {bool(page_data)}")
-
-            # Cria recursos necessários em paralelo para melhor performance
-            folder_results = await asyncio.gather(
-                self.folder_creator.create_folder_hierarchy(hierarchy, title, 'journal'),
-                self.folder_creator.create_folder_hierarchy(hierarchy, title, 'documents')
+            # Executa operações de busca de página e criação de pastas em paralelo
+            page_data, folder_results = await asyncio.gather(
+                self.find_page_by_title_or_id(title),
+                asyncio.gather(
+                    self.folder_creator.create_folder_hierarchy(hierarchy, title, 'journal'),
+                    self.folder_creator.create_folder_hierarchy(hierarchy, title, 'documents')
+                )
             )
+            
+            # Desempacota resultados de pastas
             folder_id, folder_id_dl = folder_results
 
             if not folder_id:
@@ -320,62 +383,96 @@ class WebContentCreator:
             # Verifica conteúdo existente - evita duplicação
             existing_content = await self.find_existing_content(title, folder_id)
             if existing_content:
+                # Associa em background se página existir
                 if page_data:
-                    await self.associate_content_with_page_portlet(existing_content, page_data)
+                    await self._background_associate_content(existing_content, page_data)
                 return existing_content
 
-            # Processa o conteúdo - com lógica otimizada
-            process_result = await self.content_processor.fetch_and_process_content(source_url, folder_id_dl)
-            if not process_result["success"]:
-                raise Exception(process_result["error"])
+            # Usa fetch_and_process_content com skip_images=True
+            processed_content = await self.content_processor.fetch_and_process_content(
+                source_url, 
+                folder_id=folder_id_dl, 
+                skip_images=True
+            )
 
+            # Verifica se o processamento foi bem-sucedido
+            if not processed_content.get('success'):
+                raise Exception(processed_content.get('error', 'Failed to process content'))
+
+            # Extrai o conteúdo processado
+            cleaned_content = processed_content['content']
+            
+            # Verifica cache primeiro para evitar operações desnecessárias
+            cached_content = await self._check_cached_content(title, cleaned_content)
+            if cached_content:
+                return cached_content
+            
+            # Determina tipo de conteúdo de forma mais eficiente
+            content_type = processed_content.get('collapsible_type', 'none')
+            logger.info(f"Processing content: {title} (type: {content_type})")
+
+            # Processamento condicional com chamadas assíncronas mais eficientes
             content_result = None
             content_results = []
 
-            # Processamento condicional baseado no tipo de conteúdo
-            if process_result.get("collapsible_type") == 'tabs':
-                logger.info(f"Creating tab content for {title}")
-                if not hasattr(self, 'tab_processor'):
-                    from creators.tab_content_creator import TabContentProcessor
-                    self.tab_processor = TabContentProcessor(self.config)
-                
-                content_result = await self.tab_processor.create_tab_content(
-                    self, title, process_result["content"], folder_id
-                )
-            elif process_result["is_collapsible"]:
-                logger.info(f"Creating collapsible content for {title}")
-                content_result = await self.collapse_processor.create_collapse_content(
-                    self, title, process_result["content"], folder_id
-                )
-            elif process_result["has_mixed_content"]:
-                logger.info(f"Creating mixed content for {title}")
-                content_results = await self.mixed_processor.process_mixed_content(
-                    self, title, process_result["content"], folder_id, folder_id_dl, source_url
-                )
-                content_result = content_results[0] if content_results else None
+            # Usa dicionário de mapeamento para simplificar lógica
+            content_type_handlers = {
+                'tabs': self.tab_processor.create_tab_content,
+                'panel': self.collapse_processor.create_collapse_content,
+                'button': self.collapse_processor.create_collapse_content,
+                'mixed': self.mixed_processor.process_mixed_content
+            }
+
+            # Seleciona o processador apropriado
+            handler = content_type_handlers.get(content_type)
+            if handler:
+                if content_type == 'mixed':
+                    content_results = await handler(
+                        self, title, cleaned_content, folder_id, folder_id_dl, source_url
+                    )
+                    content_result = content_results[0] if content_results else None
+                else:
+                    content_result = await handler(
+                        self, title, cleaned_content, folder_id, source_url, folder_id_dl
+                    )
             else:
-                logger.info(f"Creating regular content for {title}")
+                # Fallback para criação de conteúdo regular
                 content_result = await self.create_structured_content(
-                    title, process_result["content"], folder_id
+                    title, cleaned_content, folder_id
                 )
 
             if not content_result:
                 raise Exception("Failed to create content in Liferay")
 
+            # Prepara resultados para associação
+            content_results_for_association = content_results if content_results else [content_result]
+
             # Associa conteúdos à página de forma otimizada
             if page_data:
-                association_tasks = []
-                if content_results:
-                    for i, result in enumerate(content_results):
-                        association_tasks.append(self.associate_content_with_page_portlet(result, page_data, portlet_index=i))
-                else:
-                    association_tasks.append(self.associate_content_with_page_portlet(content_result, page_data))
+                # Usa list comprehension para criar tarefas de associação
+                association_tasks = [
+                    self._background_associate_content(result, page_data, portlet_index=i)
+                    for i, result in enumerate(content_results_for_association)
+                ]
                 
-                # Executa todas as associações em paralelo
-                if association_tasks:
-                    await asyncio.gather(*association_tasks)
+                # Executa associações em paralelo
+                await asyncio.gather(*association_tasks)
 
+            # Agenda processamento de imagens para conteúdo regular
+            if content_type not in ('tabs', 'panel', 'button', 'mixed'):
+                content_id = content_result.get("id", 0)
+                if content_id:
+                    self._schedule_background_update(
+                        content_id, 
+                        title, 
+                        cleaned_content, 
+                        source_url, 
+                        folder_id_dl
+                    )
+            
+            # Adiciona ao cache
             self.cache.add_content(title, content_result)
+
             return content_result
 
         except Exception as e:
@@ -384,8 +481,18 @@ class WebContentCreator:
             self._log_error("Content Migration", source_url, error_msg, title, hierarchy)
             return {"id": 0, "key": ""}
     
-    async def find_existing_content(self, title: str, folder_id: int) -> Optional[Dict[str, Union[int, str]]]:
-        """Busca conteúdo existente com cache aprimorado"""
+    async def find_existing_content(self, title: str, folder_id: int, html_content: Optional[str] = None) -> Optional[Dict[str, Union[int, str]]]:
+        """
+        Busca conteúdo existente com verificação adicional de conteúdo
+        
+        Args:
+            title: Título do conteúdo
+            folder_id: ID da pasta
+            html_content: Conteúdo HTML para comparação (opcional)
+        
+        Returns:
+            Dicionário com detalhes do conteúdo existente ou None
+        """
         # Verifica cache primeiro
         cached_id = self.cache.get_content(title)
         if cached_id:
@@ -403,30 +510,88 @@ class WebContentCreator:
             
             params = {
                 'filter': f"title eq '{safe_title}'",
-                'fields': 'id,title,key',
+                'fields': 'id,title,key,contentFields',
                 'page': 1,
-                'pageSize': 5  # Busca mais resultados para comparação exata
+                'pageSize': 20  # Aumenta o número de resultados para busca detalhada
             }
             
             status, data = await self._controlled_request('get', url, params=params)
             if status == 200:
+                # Filtrar conteúdos com o mesmo título
+                matching_contents = []
                 for content in data.get('items', []):
-                    # Comparação case-insensitive para maior compatibilidade
+                    # Comparação case-insensitive para título
                     if content['title'].lower() == title.lower():
-                        content_id = int(content['id'])
-                        content_key = content['key']
-                        result = {"id": content_id, "key": content_key}
-                        self.cache.add_content(title, content_id)
-                        logger.info(f"Found existing content: {title} (ID: {content_id}, Key: {content_key})")
-                        return result
+                        # Se conteúdo HTML fornecido, compara detalhadamente
+                        if html_content:
+                            # Busca o campo de conteúdo
+                            content_field = next((field for field in content.get('contentFields', []) 
+                                                if field.get('name') == 'content'), None)
                             
-            logger.info(f"No existing content found with title: {title}")
-            return None
+                            if content_field:
+                                existing_content = content_field.get('contentFieldValue', {}).get('data', '')
+                                
+                                # Usa BeautifulSoup para comparação de conteúdo limpo
+                                from bs4 import BeautifulSoup
+                                
+                                # Remove tags, espaços extras, etc. para comparação
+                                def clean_content(content):
+                                    if not content:
+                                        return ''
+                                    soup = BeautifulSoup(content, 'html.parser')
+                                    # Remove comentários, normaliza espaços
+                                    for comment in soup.find_all(text=lambda text: isinstance(text, Comment)):
+                                        comment.extract()
+                                    return ' '.join(soup.get_text().split())
+                                
+                                # Compara conteúdos limpos
+                                if clean_content(existing_content) == clean_content(html_content):
+                                    content_id = int(content['id'])
+                                    content_key = content['key']
+                                    matching_contents.append({
+                                        "id": content_id, 
+                                        "key": content_key,
+                                        "match_score": 1  # Conteúdo idêntico
+                                    })
+                                else:
+                                    # Pode ser quase igual, adiciona com pontuação menor
+                                    content_id = int(content['id'])
+                                    content_key = content['key']
+                                    matching_contents.append({
+                                        "id": content_id, 
+                                        "key": content_key,
+                                        "match_score": 0.5  # Conteúdo similar
+                                    })
+                        else:
+                            # Se não tiver conteúdo para comparar, retorna o primeiro
+                            content_id = int(content['id'])
+                            content_key = content['key']
+                            matching_contents.append({
+                                "id": content_id, 
+                                "key": content_key,
+                                "match_score": 0.5
+                            })
+                
+                # Ordena por match_score decrescente
+                if matching_contents:
+                    best_match = max(matching_contents, key=lambda x: x['match_score'])
+                    logger.info(f"Found existing content: {title} (ID: {best_match['id']}, Key: {best_match['key']})")
                     
+                    # Adiciona ao cache
+                    self.cache.add_content(title, best_match['id'])
+                    
+                    return {
+                        "id": best_match['id'], 
+                        "key": best_match['key']
+                    }
+                
+                logger.info(f"No existing content found with title: {title}")
+                return None
+                        
         except Exception as e:
             self._log_error("Content Search", title, str(e))
             return None
-
+        
     @lru_cache(maxsize=100)
     def _parse_content_portlets(self, html_content: str) -> List[Dict[str, str]]:
         """Parse portlets de conteúdo de HTML com caching"""
@@ -626,9 +791,9 @@ class WebContentCreator:
             async def associate_content():
                 status, result = await self._controlled_request('post', association_url, params=params)
                 if status in (200, 201):
-                    logger.info(f"Association result (portlet index {portlet_index}): {result}")
+                    logger.info(f"[ASSOCIAÇÃO] ✅ {result.get('message')}")
                     return result.get('status') == 'SUCCESS'
-                raise Exception(f"Association request failed with status {status}")
+                raise Exception(f"[ASSOCIAÇÃO] ❌ {status}, {result}")
 
             # Tenta associar com retry
             return await self._retry_operation(associate_content, max_retries=4)
@@ -668,18 +833,241 @@ class WebContentCreator:
             logger.error(error_msg)
             self._log_error("Content Association", source_url, error_msg, title, hierarchy)
             return ContentResponse(content_id=0, is_new=False, error=error_msg)
+
+    async def update_content_with_processed_images(self, content_id: int, html_content: str, source_url: str, folder_id_dl: int) -> bool:
+        """
+        Atualiza um conteúdo já criado com imagens processadas
+        
+        Args:
+            content_id: ID do conteúdo a atualizar
+            html_content: Conteúdo HTML sem imagens processadas
+            source_url: URL de origem para referência
+            folder_id_dl: ID da pasta de documentos
+            
+        Returns:
+            bool: True se a atualização foi bem-sucedida
+        """
+        try:
+            # Verifica se o ContentUpdater já foi inicializado
+            if not hasattr(self, 'content_updater'):
+                from updaters.content_update import ContentUpdater
+                self.content_updater = ContentUpdater(self.config)
+                await self.content_updater.initialize_session()
+                
+            logger.info(f"Processando imagens para conteúdo ID {content_id}")
+            
+            # Processa as imagens usando o ContentUpdater existente
+            processed_html = await self.content_updater.process_content_images(
+                content=html_content,
+                folder_id=folder_id_dl,
+                base_url=source_url
+            )
+            
+            # Verifica se houve mudanças
+            if processed_html == html_content:
+                logger.info(f"Nenhuma alteração de imagem necessária para o conteúdo ID {content_id}")
+                return True
+                
+            # Preparar payload para atualização via Headless API
+            update_data = {
+                "contentFields": [
+                    {
+                        "contentFieldValue": {
+                            "data": processed_html
+                        },
+                        "name": "content"
+                    }
+                ]
+            }
+            
+            # Atualizar o conteúdo
+            url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/structured-contents/{content_id}"
+            
+            status, result = await self._controlled_request('patch', url, json=update_data)
+            
+            
+            if status in (200, 201, 204):
+                logger.info(f"✅ Conteúdo {content_id} atualizado com imagens processadas")
+                return True
+                
+            logger.error(f"Erro ao atualizar conteúdo {content_id}: {status} - {result}")
+            return False
+            
+        except Exception as e:
+            error_msg = f"Erro ao atualizar conteúdo com imagens: {str(e)}"
+            logger.error(error_msg)
+            self._log_error("Content Update", str(content_id), error_msg)
+            return False
     
+    async def _background_update_content_with_images(self, content_id: int, title: str, html_content: str, source_url: str, folder_id_dl: int):
+        """
+        Função em background para processar imagens e atualizar conteúdo
+        sem bloquear o fluxo principal de migração
+        """
+        try:
+            logger.info(f"[BACKGROUND] Iniciando processamento de imagens para {title} (ID: {content_id})")
+            
+            # Verifica se o ContentUpdater já foi inicializado
+            if not hasattr(self, 'content_updater'):
+                from updaters.content_update import ContentUpdater
+                self.content_updater = ContentUpdater(self.config)
+                await self.content_updater.initialize_session()
+            
+            # Processa as imagens usando o ContentUpdater existente
+            processed_html = await self.content_updater.process_content_images(
+                content=html_content,
+                folder_id=folder_id_dl,
+                base_url=source_url
+            )
+            
+            # Verifica se houve mudanças
+            if processed_html == html_content:
+                logger.info(f"[BACKGROUND] Nenhuma alteração de imagem necessária para {title}")
+                return
+            
+            # Preparar payload para atualização via Headless API
+            update_data = {
+                "contentFields": [
+                    {
+                        "contentFieldValue": {
+                            "data": processed_html
+                        },
+                        "name": "content"
+                    }
+                ]
+            }
+            
+            # Atualizar o conteúdo
+            url = f"{self.config.liferay_url}/o/headless-delivery/v1.0/structured-contents/{content_id}"
+            
+            status, result = await self._controlled_request('patch', url, json=update_data)
+            
+            if status in (200, 201, 204):
+                logger.info(f"[BACKGROUND] ✅ Conteúdo {title} (ID: {content_id}) atualizado com imagens processadas")
+            else:
+                logger.error(f"[BACKGROUND] Erro ao atualizar conteúdo {title} (ID: {content_id}): {status}")
+        
+        except Exception as e:
+            error_msg = f"[BACKGROUND] Erro ao atualizar conteúdo {title} com imagens: {str(e)}"
+            logger.error(error_msg)
+            self._log_error("Background Content Update", source_url, error_msg, title)
+        finally:
+            # Remove a tarefa da lista de tarefas em background
+            if task := asyncio.current_task():
+                self._background_tasks.discard(task)
+
+    def _schedule_background_update(self, content_id: int, title: str, html_content: str, source_url: str, folder_id_dl: int):
+        """
+        Agenda a atualização de imagens para ser executada em background
+        
+        Args:
+            content_id: ID do conteúdo a ser atualizado
+            title: Título do conteúdo (para logs)
+            html_content: Conteúdo HTML sem processamento de imagens
+            source_url: URL de origem
+            folder_id_dl: ID da pasta de documentos
+        """
+        # Cria uma tarefa em background
+        task = asyncio.create_task(
+            self._background_update_content_with_images(
+                content_id, title, html_content, source_url, folder_id_dl
+            )
+        )
+        
+        # Adiciona à lista de tarefas em background
+        self._background_tasks.add(task)
+        
+        # Log que a tarefa foi agendada
+        logger.info(f"Agendada atualização de imagens em background para {title} (ID: {content_id})")
+    
+    async def _background_associate_content(self, content: Dict[str, Union[int, str]], page_data: Dict, portlet_index: int = 0):
+        """
+        Função em background para associar conteúdo ao portlet
+        
+        Args:
+            content: Dicionário com detalhes do conteúdo
+            page_data: Dados da página
+            portlet_index: Índice do portlet a ser usado
+        """
+        try:
+            logger.info(f"[BACKGROUND] Iniciando associação de conteúdo ao portlet {portlet_index}")
+            
+            # Tenta associar o conteúdo ao portlet
+            association_success = await self.associate_content_with_page_portlet(
+                content, page_data, portlet_index
+            )
+            
+            if association_success:
+                logger.info(f"[BACKGROUND] Conteúdo associado com sucesso ao portlet {portlet_index}")
+            else:
+                logger.warning(f"[BACKGROUND] Falha na associação de conteúdo ao portlet {portlet_index}")
+        
+        except Exception as e:
+            error_msg = f"[BACKGROUND] Erro na associação de conteúdo: {str(e)}"
+            logger.error(error_msg)
+            self._log_error("Background Content Association", "", error_msg)
+        finally:
+            # Remove a tarefa da lista de tarefas em background
+            if task := asyncio.current_task():
+                self._background_tasks.discard(task)
+
     async def close(self):
-        """Fecha recursos de forma eficiente"""
+        """Fecha recursos de forma eficiente, aguardando tarefas em background"""
         if not self.session:
             return
             
         try:
+            # Lista de tarefas pendentes das diferentes classes
+            background_tasks = []
+            
+            # Tarefas do próprio WebContentCreator
+            if hasattr(self, '_background_tasks') and self._background_tasks:
+                background_tasks.extend(list(self._background_tasks))
+                
+            # Tarefas do CollapseContentProcessor
+            if hasattr(self, 'collapse_processor') and hasattr(self.collapse_processor, '_background_tasks'):
+                background_tasks.extend(list(self.collapse_processor._background_tasks))
+                
+            # Tarefas do TabContentProcessor
+            if hasattr(self, 'tab_processor') and hasattr(self.tab_processor, '_background_tasks'):
+                background_tasks.extend(list(self.tab_processor._background_tasks))
+                
+            # Aguardar tarefas em background antes de fechar
+            if background_tasks:
+                logger.info(f"Aguardando {len(background_tasks)} tarefas em background concluírem...")
+                
+                # Esperar todas as tarefas com timeout para não bloquear indefinidamente
+                done, pending = await asyncio.wait(
+                    background_tasks, 
+                    timeout=60  # Timeout de 60 segundos
+                )
+                
+                if pending:
+                    logger.warning(f"{len(pending)} tarefas em background não concluídas no timeout")
+                
+                # Cancela as tarefas pendentes
+                for task in pending:
+                    task.cancel()
+                    
+                logger.info(f"{len(done)} tarefas em background concluídas com sucesso")
+            
+            # Fecha as sessões
             close_tasks = [
                 self.session.close(),
                 self.folder_creator.close(),
                 self.document_creator.close()
             ]
+            
+            # Fecha processadores específicos se tiverem método close
+            if hasattr(self, 'collapse_processor') and hasattr(self.collapse_processor, 'close'):
+                close_tasks.append(self.collapse_processor.close())
+                
+            if hasattr(self, 'tab_processor') and hasattr(self.tab_processor, 'close'):
+                close_tasks.append(self.tab_processor.close())
+            
+            # Fecha ContentUpdater se existir
+            if hasattr(self, 'content_updater'):
+                close_tasks.append(self.content_updater.close())
             
             await asyncio.gather(*close_tasks)
             

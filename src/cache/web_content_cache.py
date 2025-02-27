@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional, Union
 
 class ContentCache:
     def __init__(self):
@@ -17,11 +17,32 @@ class ContentCache:
         self.filename_cache = {}     # filename -> document_info
         self.document_cache = {}     # doc_id -> document_info
         
-    def add_content(self, title: str, content_id: int):
-        self.content_cache[title.lower()] = content_id
+    def add_content(self, title: str, content_info: Union[int, dict]):
+        """
+        Adiciona informações de conteúdo para um título, permitindo múltiplos registros
+        """
+        if title not in self.content_cache:
+            self.content_cache[title] = set()
+        
+        if isinstance(content_info, dict):
+            content_id = content_info.get('id')
+            if content_id is not None:
+                self.content_cache[title].add(content_id)
+        elif isinstance(content_info, int):
+            self.content_cache[title].add(content_info)
+
+    def get_contents(self, title: str) -> Optional[List[int]]:
+        """
+        Retorna lista de IDs de conteúdo para um título
+        """
+        return list(self.content_cache.get(title, set()))
 
     def get_content(self, title: str) -> Optional[int]:
-        return self.content_cache.get(title.lower())
+        """
+        Mantém compatibilidade para retornar o primeiro ID
+        """
+        contents = self.get_contents(title)
+        return contents[0] if contents else None
 
     def add_page(self, title: str, page_id: int):
         self.page_cache[title.lower()] = page_id

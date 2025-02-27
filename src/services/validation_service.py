@@ -35,7 +35,7 @@ async def validate_content(pages):
             validation_results[page['title']] = is_valid
             
             if is_valid:
-                logger.info(f"✓ Página validada com sucesso: {page['title']}")
+                logger.info(f"✅ Página validada com sucesso: {page['title']}")
             else:
                 logger.error(f"✗ Erros encontrados na página: {page['title']}")
 

@@ -636,15 +636,25 @@ class ContentProcessor:
             logger.error(f"Error checking tabs content: {str(e)}")
             return False
 
-    async def fetch_and_process_content(self, url: str, folder_id: Optional[int] = None) -> Dict[str, any]:
-        """Busca e processa conteúdo completo com processamento paralelo"""
+    async def fetch_and_process_content(self, url: str, folder_id: Optional[int] = None, skip_images: bool = False) -> Dict[str, any]:
+        """
+        Busca e processa conteúdo com opção de pular processamento de imagens
+        
+        Args:
+            url: URL do conteúdo a ser buscado
+            folder_id: ID da pasta de documentos
+            skip_images: Se True, pula o processamento de imagens
+            
+        Returns:
+            Dict com resultados do processamento
+        """
         try:
             # Busca conteúdo
             html_content = await self.creator.fetch_content(url)
             if not html_content:
                 return {"success": False, "error": "No content found"}
 
-            logger.info(f"Processando conteúdo da URL: {url}")
+            logger.info(f"Processando conteúdo da URL: {url} (skip_images={skip_images})")
             
             # Detecta o tipo de conteúdo
             content_type = self._detect_content_type(html_content)
@@ -657,12 +667,38 @@ class ContentProcessor:
             img_count_original = len(soup_original.find_all('img'))
             if img_count_original > 0:
                 logger.info(f"Conteúdo original contém {img_count_original} imagens")
+            
+            # Se skip_images é True, pula o processamento normal e apenas faz a limpeza básica
+            if skip_images:
+                # Limpar classes Bootstrap
+                cleaned_content = self._clean_first_div_bootstrap(html_content)
                 
-                # Listar todas as imagens para debug
-                for img in soup_original.find_all('img'):
-                    logger.debug(f"Imagem original: {img.get('src', 'sem-src')}")
-
-            # Processar conteúdo
+                # Limpar conteúdo (remoção de datas, etc.)
+                cleaned_content = self._clean_content(cleaned_content)
+                
+                # Remover título
+                final_content = self._remove_title_from_content(cleaned_content)
+                
+                # Detectar tipo de conteúdo novamente após a limpeza
+                collapsible_type = self._detect_content_type(final_content)
+                
+                # Verificar se é misto
+                is_mixed = collapsible_type == 'mixed'
+                
+                result = {
+                    "success": True,
+                    "content": final_content,
+                    "original_content": html_content,  # Importante para o update posterior
+                    "is_collapsible": collapsible_type in ('panel', 'button'),
+                    "has_mixed_content": is_mixed,
+                    "collapsible_type": collapsible_type,
+                    "original_image_count": img_count_original,
+                    "skip_images": True
+                }
+                
+                return result
+            
+            # Se não pular, continua com o processamento normal (incluindo imagens)
             processed_content = await self.process_content(html_content, url, folder_id)
             
             if not processed_content:
@@ -671,109 +707,40 @@ class ContentProcessor:
             # Verificar imagens após processamento inicial
             soup_processed = BeautifulSoup(processed_content, 'html.parser')
             img_count_processed = len(soup_processed.find_all('img'))
-            if img_count_processed != img_count_original:
-                logger.warning(f"Após processamento inicial: {img_count_processed}/{img_count_original} imagens")
             
             # Limpar classes Bootstrap
             cleaned_content = self._clean_first_div_bootstrap(processed_content)
             
-            # Verificar imagens após limpeza de Bootstrap
-            soup_cleaned = BeautifulSoup(cleaned_content, 'html.parser')
-            img_count_cleaned = len(soup_cleaned.find_all('img'))
-            if img_count_cleaned != img_count_processed:
-                logger.warning(f"Após limpeza de Bootstrap: {img_count_cleaned}/{img_count_processed} imagens")
-            
             # Limpar conteúdo (remoção de datas, etc.)
             cleaned_content = self._clean_content(cleaned_content)
-            
-            # Verificar imagens após limpeza de conteúdo
-            soup_after_clean = BeautifulSoup(cleaned_content, 'html.parser')
-            img_count_after_clean = len(soup_after_clean.find_all('img'))
-            if img_count_after_clean != img_count_cleaned:
-                logger.warning(f"Após limpeza de conteúdo: {img_count_after_clean}/{img_count_cleaned} imagens")
             
             # Remover título
             final_content = self._remove_title_from_content(cleaned_content)
             
-            # Verificar imagens após remoção de título
+            # Verificar imagens após todo o processamento
             soup_final = BeautifulSoup(final_content, 'html.parser')
             img_count_final = len(soup_final.find_all('img'))
-            if img_count_final != img_count_after_clean:
-                logger.warning(f"Após remoção de título: {img_count_final}/{img_count_after_clean} imagens")
             
-            # Verificar se alguma imagem foi perdida completamente
-            if img_count_original > 0 and img_count_final < img_count_original:
-                logger.warning(f"ALERTA: {img_count_original - img_count_final} imagens foram perdidas durante o processamento")
-                
-                # Tentar recuperar imagens perdidas
-                original_imgs = soup_original.find_all('img')
-                final_imgs = soup_final.find_all('img')
-                final_srcs = [img.get('src', '') for img in final_imgs]
-                
-                for img in original_imgs:
-                    original_src = img.get('src', '')
-                    if original_src and original_src not in final_srcs:
-                        logger.info(f"Tentando recuperar imagem perdida: {original_src}")
-                        
-                        # Encontrar a URL migrada no cache
-                        migrated_src = self.cache.get_url(original_src)
-                        if migrated_src:
-                            # Criar uma nova tag de imagem com a URL migrada
-                            container_p = soup_final.new_tag('p')
-                            new_img = soup_final.new_tag('img', src=migrated_src)
-                            
-                            # Copiar atributos importantes da imagem original
-                            for attr in ['alt', 'width', 'height', 'class', 'style']:
-                                if attr_value := img.get(attr):
-                                    new_img[attr] = attr_value
-                            
-                            # Adicionar a imagem recuperada ao conteúdo
-                            container_p.append(new_img)
-                            if soup_final.body:
-                                soup_final.body.append(container_p)
-                            else:
-                                soup_final.append(container_p)
-                            
-                            logger.info(f"Imagem recuperada: {original_src} -> {migrated_src}")
-                
-                # Usar o HTML atualizado com imagens recuperadas
-                if img_count_original > img_count_final:
-                    final_content = str(soup_final)
-            
+            # Detectar tipo de conteúdo novamente após a limpeza
             collapsible_type = self._detect_content_type(final_content)
             
-            # Verifica se é misto (tem conteúdo regular + colapsável)
+            # Verificar se é misto
             is_mixed = collapsible_type == 'mixed'
             
             mixed_sections = []
             if is_mixed and hasattr(self.creator, 'mixed_processor'):
-                # Aqui está a separação do conteúdo misto
+                # Separação do conteúdo misto
                 mixed_sections = self.creator.mixed_processor.split_content(final_content)
                 logger.info(f"Conteúdo misto detectado com {len(mixed_sections)} seções")
-                
-                # Verificar cada seção para garantir que seções colapsáveis são marcadas corretamente
-                for section in mixed_sections:
-                    if section['type'] == 'collapsible':
-                        # Verificar se esta seção é realmente colapsável
-                        section_collapsible_type = self._detect_content_type(section['content'])
-                        # Se o tipo for 'none', vamos forçar para 'panel' se tiver uma div com classe panel
-                        if section_collapsible_type == 'none':
-                            section_soup = BeautifulSoup(section['content'], 'html.parser')
-                            if section_soup.select('div.panel, div.panel-default, div.panel-success'):
-                                logger.warning("Forçando tipo 'panel' para seção marcada como colapsável")
-                                section_collapsible_type = 'panel'
-                        
-                        section['collapsible_type'] = section_collapsible_type
-                        logger.info(f"Seção colapsável com tipo: {section_collapsible_type}")
-                    else:
-                        section['collapsible_type'] = 'none'
             
             result = {
                 "success": True,
                 "content": final_content,
                 "is_collapsible": collapsible_type in ('panel', 'button'),
                 "has_mixed_content": is_mixed,
-                "collapsible_type": collapsible_type
+                "collapsible_type": collapsible_type,
+                "original_image_count": img_count_original,
+                "processed_image_count": img_count_final
             }
             
             # Adiciona informações sobre seções se for misto
@@ -785,7 +752,78 @@ class ContentProcessor:
         except Exception as e:
             logger.error(f"Error processing content from {url}: {str(e)}")
             return {"success": False, "error": str(e)}
+
+    async def process_only_images(self, html_content: str, base_url: str, folder_id: int) -> str:
+        """
+        Processa apenas as imagens de um conteúdo HTML
         
+        Args:
+            html_content: Conteúdo HTML com imagens
+            base_url: URL base para processamento
+            folder_id: ID da pasta de documentos
+            
+        Returns:
+            str: Conteúdo HTML com imagens processadas
+        """
+        if not html_content:
+            return ""
+            
+        soup = BeautifulSoup(html_content, 'html.parser')
+        base_domain = self.url_utils.extract_domain(base_url)
+        
+        # Contagem de imagens
+        img_count = len(soup.find_all('img'))
+        logger.info(f"Processando {img_count} imagens no conteúdo")
+        
+        # Coleta URLs apenas de imagens
+        urls_to_process = []
+        
+        # Processar tags <img>
+        for img in soup.find_all('img'):
+            for attr in ['src', 'data-src']:
+                if url := img.get(attr):
+                    # Limpa o URL antes de processar
+                    url = self._clean_url_before_processing(url)
+                    if not url:
+                        continue
+                        
+                    urls_to_process.append((img, attr, url))
+                    break  # Processa apenas o primeiro atributo válido
+        
+        # Processar links que apontam para imagens
+        for a in soup.find_all('a'):
+            href = a.get('href')
+            if not href:
+                continue
+                
+            href = self._clean_url_before_processing(href)
+            if not href:
+                continue
+                
+            # Verifica se é link para imagem
+            is_image_link = any(href.lower().endswith(ext) for ext in ['.jpg', '.jpeg', '.png', '.gif', '.svg', '.webp'])
+            
+            if is_image_link:
+                urls_to_process.append((a, 'href', href))
+        
+        # Se não encontrou URLs para processar, retorna o conteúdo original
+        if not urls_to_process:
+            logger.info("Nenhuma imagem encontrada para processar")
+            return html_content
+        
+        # Processa URLs em lotes
+        batch_size = 20
+        for i in range(0, len(urls_to_process), batch_size):
+            batch = urls_to_process[i:i + batch_size]
+            await self._process_url_batch(batch, base_domain, folder_id, base_url)
+        
+        # Contagem final de imagens
+        img_count_after = len(soup.find_all('img'))
+        if img_count != img_count_after:
+            logger.warning(f"Mudança no número de imagens: {img_count} -> {img_count_after}")
+        
+        return str(soup)
+
     async def _is_collapsible_content_async(self, html_content: str) -> bool:
         """Versão assíncrona do verificador de conteúdo colapsável"""
         # Offload to thread pool for better performance on CPU-bound task

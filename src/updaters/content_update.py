@@ -186,7 +186,7 @@ class ContentUpdater:
                 
                 async with self.session.put(update_url, json=payload) as response:
                     if response.status in (200, 201):
-                        logger.info(f"✓ Artigo {article_id} atualizado com sucesso")
+                        logger.info(f"✅ Artigo {article_id} atualizado com sucesso")
                         return True
                         
                     logger.error(f"Erro ao atualizar artigo {article_id}: {response.status}")
@@ -328,7 +328,7 @@ class ContentUpdater:
             async with self.session.patch(update_url, json=payload) as update_response:
                 if update_response.status in [200, 201, 204]:
                     response_data = await update_response.json()
-                    logger.info(f"✓ Categorias {categories} associadas ao conteúdo '{title}'")
+                    logger.info(f"✅ Categorias {categories} associadas ao conteúdo '{title}'")
                     return True
 
                 logger.error(f"Erro ao associar categorias {categories} ao conteúdo '{title}': {update_response.status}")

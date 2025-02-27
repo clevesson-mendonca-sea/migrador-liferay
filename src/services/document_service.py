@@ -59,7 +59,7 @@ async def migrate_documents(pages):
                     )
                     
                     if migrated_urls:
-                        logger.info(f"✓ Arquivos migrados da página {page['url']}:")
+                        logger.info(f"✅ Arquivos migrados da página {page['url']}:")
                         for url in migrated_urls:
                             logger.info(f"  - {url}")
                         results[page['url']] = migrated_urls
