@@ -471,7 +471,7 @@ class WebContentCreator:
                     )
             
             # Adiciona ao cache
-            self.cache.add_content(title, content_result)
+            # self.cache.add_content(title, content_result)
 
             return content_result
 
