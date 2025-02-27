@@ -345,12 +345,15 @@ class ContentProcessor:
                 if isinstance(attrs, list):
                     for attr in attrs:
                         if url := tag.get(attr):
-                            cleaned_url = self._clean_url(url, base_domain)
-                            tag[attr] = cleaned_url
+                            if not any(doc_path in url for doc_path in self.DOCUMENT_PATHS):
+                                cleaned_url = self._clean_url(url, base_domain)
+                                tag[attr] = cleaned_url
                 elif url := tag.get(attrs):
-                    cleaned_url = self._clean_url(url, base_domain)
-                    tag[attrs] = cleaned_url
+                    if not any(doc_path in url for doc_path in self.DOCUMENT_PATHS):
+                        cleaned_url = self._clean_url(url, base_domain)
+                        tag[attrs] = cleaned_url
 
+        # Retorna como string
         return str(soup)
 
     async def _process_url_batch(self, urls_to_process: List[Tuple[Tag, str, str]], base_domain: str, folder_id: int, base_url: str) -> None:
