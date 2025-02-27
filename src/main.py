@@ -33,7 +33,7 @@ async def main():
 
     try:
         # Get and process sheet data
-        pages = await get_sheet_data(is_update=args.update, specific_row_index=47)
+        pages = await get_sheet_data(is_update=args.update, specific_row_index=None)
 
         if not pages:
             logger.error("Nenhuma página válida encontrada na planilha")
